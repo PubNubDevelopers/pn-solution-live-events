@@ -10,7 +10,6 @@
   },
   "dependencies": {
     "@heroui/react": "^2.7.5",
-    "@next/font": "^14.2.15",
     "@pubnub/chat": "^0.11.7",
     "framer-motion": "^12.5.0",
     "next": "15.2.3",

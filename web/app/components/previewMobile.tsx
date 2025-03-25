@@ -1,11 +1,11 @@
-import ChatWidget from './chatWidget'
+import ChatWidget from '../widget-chat/chatWidget'
 
-export default function PreviewMobile ({  }) {
+export default function PreviewMobile ({ chat }) {
   
     return (
       <div className='relative w-full'>
           <div className='text-5xl'>I am the Mobile Preview</div>
-          <ChatWidget />
+          <ChatWidget className={""} chat={chat}/>
       </div>
     )
   }

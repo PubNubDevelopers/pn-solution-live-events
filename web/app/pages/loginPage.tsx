@@ -6,7 +6,8 @@ export default function LoginPage ({ setLoginPageShown, setUserId }) {
         className='text-5xl cursor-pointer'
         onClick={() => {
             setLoginPageShown(false)
-          setUserId('TODO-CHANGE-ME')
+            //  todo
+          setUserId('user-03')
         }}
       >
         Login

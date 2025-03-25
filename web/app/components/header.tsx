@@ -3,7 +3,7 @@ import React from 'react'
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
 
-export default function Header ({}) {
+export default function Header ({ setTabletPreview }) {
   return (
     <div className='hidden sm:flex flex-row w-full justify-between h-[92px] select-none fixed items-center px-6 bg-navy900'>
       <div className='bg-white h-[52px] rounded-lg place-content-center p-3'>
@@ -19,6 +19,22 @@ export default function Header ({}) {
       </div>
       <div className='text-navy100 font-bold text-2xl'>I AM THE HEADER</div>
       <div className='flex flex-row gap-4'>
+        <div
+          className='text-navy100 cursor-pointer underline'
+          onClick={() => {
+            setTabletPreview(false)
+          }}
+        >
+          Portrait
+        </div>{' '}
+        <div
+          className='text-navy100 cursor-pointer underline'
+          onClick={() => {
+            setTabletPreview(true)
+          }}
+        >
+          Landscape
+        </div>
       </div>
     </div>
   )

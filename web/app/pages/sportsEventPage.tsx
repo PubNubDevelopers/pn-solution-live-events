@@ -1,7 +1,7 @@
 'use client'
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
-import { Chat } from '@pubnub/chat'
+import { Chat, User } from '@pubnub/chat'
 import Header from '../components/header'
 import SideMenu from '../components/sideMenu'
 import PreviewTablet from '../components/previewTablet'
@@ -18,6 +18,7 @@ export default function SportsEventPage ({ userId, isGuidedDemo }) {
   }
 
   //  App initialization
+  //  todo - if the login page pulls from Chat data, this needs to be moved to the login page init
   useEffect(() => {
     async function init () {
       if (!process.env.NEXT_PUBLIC_PUBNUB_PUBLISH_KEY) {
@@ -67,7 +68,8 @@ export default function SportsEventPage ({ userId, isGuidedDemo }) {
                       jobTitle: testUser.jobTitle,
                       currentMood: testUser.currentMood,
                       socialHandle: testUser.socialHandle,
-                      timezone: testUser.timezone
+                      timezone: testUser.timezone,
+                      score: 0
                     }
                   })
                 }
@@ -139,34 +141,24 @@ export default function SportsEventPage ({ userId, isGuidedDemo }) {
       className='h-screen flex bg-white'
       onClick={() => backgroundClicked()}
     >
-      <Header></Header>
+      <Header setTabletPreview={setTabletPreview}></Header>
 
       {/* TODO */}
       <div className='sm:hidden flex flex-col mt-10 h-screen justify-center w-full text-center gap-16 text-4xl'>
         This app is not designed for mobile
       </div>
 
-      <div className='hidden sm:flex flex-row w-full mt-[92px] pb-0 bg-navy900 text-white'>
-        <div className='flex flex-1 flex-col max-w-[366px] min-w-[366px]'>
+      <div className='hidden sm:flex flex-row w-full mt-[92px] pb-0 text-neutral-50'>
+        <div className='flex flex-1 flex-col max-w-[366px] min-w-[366px] bg-navy900'>
           <SideMenu></SideMenu>
         </div>
 
-        <div className='overflow-y-hidden bg-navy600 w-full overscroll-none z-10'>
-          <div className='flex flex-col '>
-            <div
-              className={`flex flex-col ${
-                tabletPreview
-                  ? 'm-8  border-4 border-brandAccentNavy1-50pc rounded-xl'
-                  : ''
-              }`}
-            >
-              {tabletPreview ? (
-                <PreviewTablet chat={chat}></PreviewTablet>
-              ) : (
-                <PreviewMobile chat={chat}></PreviewMobile>
-              )}
-            </div>
-          </div>
+        <div className='overflow-y-auto bg-navy900/40 w-full p-6 overscroll-none flex flex-row justify-center'>
+          {tabletPreview ? (
+            <PreviewTablet chat={chat}></PreviewTablet>
+          ) : (
+            <PreviewMobile chat={chat}></PreviewMobile>
+          )}
         </div>
       </div>
     </main>

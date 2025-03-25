@@ -10,7 +10,8 @@ export default function Home () {
   const [salesIntroPageShown, setSalesIntroPageShown] = useState(false)
   const [loginPageShown, setLoginPageShown] = useState(false)
   const [guidedDemo, setGuidedDemo] = useState(false)
-  const [userId, setUserId] = useState<string | null>("TODO-CHANGE-TO-NULL")
+  //  todo initialize userId to null
+  const [userId, setUserId] = useState<string | null>("user-03")
 
   useEffect(() => {
     //  NEXT_PUBLIC_GUIDED_DEMO can be ignored and omitted from your .env file

@@ -7,7 +7,7 @@ import SideMenu from '../components/sideMenu'
 import PreviewTablet from '../components/previewTablet'
 import PreviewMobile from '../components/previewMobile'
 
-export default function SportsEventPage ({ userId }) {
+export default function SportsEventPage ({ userId, isGuidedDemo }) {
   const [tabletPreview, setTabletPreview] = useState(true)
   const [chat, setChat] = useState<Chat | null>(null)
   const [loadMessage, setLoadMessage] = useState('Demo is initializing...')

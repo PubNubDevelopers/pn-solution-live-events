@@ -6,6 +6,7 @@ import Header from '../components/header'
 import SideMenu from '../components/sideMenu'
 import PreviewTablet from '../components/previewTablet'
 import PreviewMobile from '../components/previewMobile'
+import { testUsers, testPublicChannels } from '../data/testData'
 
 export default function SportsEventPage ({ userId, isGuidedDemo }) {
   const [tabletPreview, setTabletPreview] = useState(true)
@@ -41,6 +42,66 @@ export default function SportsEventPage ({ userId, isGuidedDemo }) {
           storeUserActivityInterval: 600000
         })
         setChat(localChat)
+
+        const testUser = await localChat.getUser('user-01')
+
+        if (!testUser) {
+          setLoadMessage(
+            'Populating keyset with users (this will take a few seconds'
+          )
+
+          const promises = [] as Promise<User | null | undefined>[]
+          for (const testUser of testUsers) {
+            const tempPromise = localChat
+              .getUser(testUser.id)
+              .then(returnedUser => {
+                if (!returnedUser) {
+                  return localChat.createUser(testUser.id, {
+                    name: testUser.name,
+                    profileUrl: testUser.avatar,
+                    email: testUser.email,
+                    externalId: testUser.externalId,
+                    type: 'member',
+                    custom: {
+                      location: testUser.location,
+                      jobTitle: testUser.jobTitle,
+                      currentMood: testUser.currentMood,
+                      socialHandle: testUser.socialHandle,
+                      timezone: testUser.timezone
+                    }
+                  })
+                }
+              })
+            if (tempPromise) {
+              promises.push(tempPromise)
+            }
+          }
+          await Promise.all(promises)
+        }
+
+        const testPublicChannel = await localChat.getChannel(
+          testPublicChannels[0].id
+        )
+        if (!testPublicChannel) {
+          setLoadMessage('Creating Public Channel data')
+          for (const channel of testPublicChannels) {
+            let newPublicChannel = await localChat.getChannel(channel.id)
+            if (!newPublicChannel) {
+              newPublicChannel = await localChat.createPublicConversation({
+                channelId: channel.id,
+                channelData: {
+                  name: channel.name,
+                  description: channel.description,
+                  custom: {
+                    profileUrl: channel.avatar
+                  }
+                }
+              })
+            } else {
+              break
+            }
+          }
+        }
       } catch {
         setLoadMessage(
           'Could not initialize Chat.  Please check your PubNub Keyset configuration'

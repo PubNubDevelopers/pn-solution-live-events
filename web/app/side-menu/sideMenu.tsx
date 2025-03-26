@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { motion, AnimatePresence } from 'motion/react'
 import { Accordion, AccordionItem } from '@heroui/react'
@@ -14,18 +14,20 @@ import {
 } from './sideMenuIcons'
 import SideMenuDataControls from './dataControls'
 import SelfLedHelp from './selfLedHelp'
+import { urls, channelId } from '../data/urls'
 
-export default function SideMenu ({ sideMenuOpen, isGuidedDemo }) {
+export default function SideMenu ({ sideMenuOpen, isGuidedDemo, chat }) {
   return (
     <AnimatePresence>
       {true && (
-        <div
-          className={`${!sideMenuOpen && 'hidden'}`}
-        >
+        <div className={`${!sideMenuOpen && 'hidden'}`}>
           <div className='flex flex-1 flex-col max-w-[366px] min-w-[366px] h-full bg-navy900'>
             <div className='flex flex-col w-full select-none mt-8 pb-8 overflow-y-auto overscroll-none h-full'>
               <div className='h-full'>
-                <SideMenuContents isGuidedDemo={isGuidedDemo} />
+                <SideMenuContents
+                  isGuidedDemo={isGuidedDemo}
+                  currentUser={chat?.currentUser}
+                />
               </div>
             </div>{' '}
           </div>
@@ -35,7 +37,7 @@ export default function SideMenu ({ sideMenuOpen, isGuidedDemo }) {
   )
 }
 
-function SideMenuContents ({ isGuidedDemo }) {
+function SideMenuContents ({ isGuidedDemo, currentUser }) {
   function accordionIndicator (isOpen) {
     return isOpen ? (
       <AnchorIcon className='text-neutral-100' transform='rotate(90)' />
@@ -53,24 +55,26 @@ function SideMenuContents ({ isGuidedDemo }) {
         isCompact={true}
         selectionMode='multiple'
         showDivider={false}
-        defaultExpandedKeys={['1', '2', '3', '4', '5', '6']}
+        defaultExpandedKeys={['1']}
       >
-        {isGuidedDemo && <AccordionItem
-          key={'1'}
-          indicator={({ isOpen }) => accordionIndicator(isOpen)}
-          className={accordionItemClass}
-          textValue={'Data Controls'}
-          title={
-            <div className={accordionTitleClass}>
-              <DataControlsIcon />
-              Data Controls
+        {isGuidedDemo && (
+          <AccordionItem
+            key={'1'}
+            indicator={({ isOpen }) => accordionIndicator(isOpen)}
+            className={accordionItemClass}
+            textValue={'Data Controls'}
+            title={
+              <div className={accordionTitleClass}>
+                <DataControlsIcon />
+                Data Controls
+              </div>
+            }
+          >
+            <div className='pt-2'>
+              <SideMenuDataControls />
             </div>
-          }
-        >
-          <div className='pt-2'>
-            <SideMenuDataControls />
-          </div>
-        </AccordionItem>}
+          </AccordionItem>
+        )}
         <AccordionItem
           key={'2'}
           indicator={({ isOpen }) => accordionIndicator(isOpen)}
@@ -84,7 +88,10 @@ function SideMenuContents ({ isGuidedDemo }) {
           }
         >
           <div className='pt-2'>
-            <SideMenuBizopsWorkspace />
+            <SideMenuBizopsWorkspace
+              isGuidedDemo={isGuidedDemo}
+              currentUser={currentUser}
+            />
           </div>
         </AccordionItem>
         <AccordionItem
@@ -100,7 +107,7 @@ function SideMenuContents ({ isGuidedDemo }) {
           }
         >
           <div className='pt-2'>
-            <SideMenuChatModeration />
+            <SideMenuChatModeration isGuidedDemo={isGuidedDemo} />
           </div>
         </AccordionItem>
         <AccordionItem
@@ -116,7 +123,7 @@ function SideMenuContents ({ isGuidedDemo }) {
           }
         >
           <div className='pt-2'>
-            <SideMenuDecisions />
+            <SideMenuDecisions isGuidedDemo={isGuidedDemo} />
           </div>
         </AccordionItem>
         <AccordionItem
@@ -132,7 +139,7 @@ function SideMenuContents ({ isGuidedDemo }) {
           }
         >
           <div className='pt-2'>
-            <SideMenuFunctions />
+            <SideMenuFunctions isGuidedDemo={isGuidedDemo} />
           </div>
         </AccordionItem>
         <AccordionItem
@@ -152,7 +159,7 @@ function SideMenuContents ({ isGuidedDemo }) {
           </div>
         </AccordionItem>
       </Accordion>
-      {!isGuidedDemo && <SelfLedHelp/>}
+      {!isGuidedDemo && <SelfLedHelp />}
     </div>
   )
 }
@@ -177,76 +184,116 @@ function TextWithLinkButton ({ label, buttonText, url }) {
   )
 }
 
-function SideMenuBizopsWorkspace ({}) {
+function SideMenuBizopsWorkspace ({ isGuidedDemo, currentUser }) {
+  const [userManagementUrl, setUserManagementUrl] =
+    useState('https://pubnub.com')
+  const [channelManagementUrl, setChannelManagementUrl] =
+    useState('https://pubnub.com')
+
+  useEffect(() => {
+    if (!currentUser) return
+    const userManagementBase = isGuidedDemo
+      ? urls.bizOpsWorkspace.userManagement.salesLed
+      : urls.bizOpsWorkspace.userManagement.selfLed
+    setUserManagementUrl(`${userManagementBase}${currentUser.id}`)
+    const channelManagementBase = isGuidedDemo
+      ? urls.bizOpsWorkspace.channelManagement.salesLed
+      : urls.bizOpsWorkspace.channelManagement.selfLed
+    setChannelManagementUrl(`${channelManagementBase}${channelId}`)
+  }, [isGuidedDemo, currentUser])
+
   return (
     <div className='flex flex-col gap-3 text-base font-semibold'>
-      {/* TODO: URL Needs to be set here */}
-
       <TextWithLinkButton
         label={'User Management'}
         buttonText={'View user'}
-        url={'http://www.google.com'}
+        url={userManagementUrl}
       />
-      {/* TODO: URL Needs to be set here */}
 
       <TextWithLinkButton
         label={'Channel Management'}
         buttonText={'View channel'}
-        url={'http://www.google.com'}
+        url={channelManagementUrl}
       />
     </div>
   )
 }
-function SideMenuChatModeration ({}) {
+
+function SideMenuChatModeration ({ isGuidedDemo }) {
+  const [channelModerationUrl, setChannelModerationUrl] =
+    useState('https://pubnub.com')
+  const [translateFunctionUrl, setTranslateFunctionUrl] =
+    useState('https://pubnub.com')
+
+  useEffect(() => {
+    const moderationBase = isGuidedDemo
+      ? urls.chatAndModeration.moderation.salesLed
+      : urls.chatAndModeration.moderation.selfLed
+    setChannelModerationUrl(`${moderationBase}${channelId}`)
+    setTranslateFunctionUrl(
+      isGuidedDemo
+        ? urls.chatAndModeration.translation.salesLed
+        : urls.chatAndModeration.translation.selfLed
+    )
+  }, [isGuidedDemo])
+
   return (
     <div className='flex flex-col gap-3 text-base font-semibold'>
-      {/* TODO: URL Needs to be set here */}
       <TextWithLinkButton
         label={'Language translation'}
         buttonText={'View Function'}
-        url={'http://www.google.com'}
+        url={translateFunctionUrl}
       />
-      {/* TODO: URL Needs to be set here */}
       <TextWithLinkButton
         label={'Moderation'}
         buttonText={'View Channel Monitor'}
-        url={'http://www.google.com'}
+        url={channelModerationUrl}
       />
     </div>
   )
 }
-function SideMenuDecisions ({}) {
+function SideMenuDecisions ({ isGuidedDemo }) {
   return (
     <div className='flex flex-col gap-3 text-base font-semibold'>
-      {/* TODO: URL Needs to be set here */}
       <TextWithLinkButton
         label={'Determine points'}
         buttonText={'View'}
-        url={'http://www.google.com'}
+        url={
+          isGuidedDemo
+            ? urls.decisions.determinePoints.salesLed
+            : urls.decisions.determinePoints.selfLed
+        }
       />
-      {/* TODO: URL Needs to be set here */}
       <TextWithLinkButton
         label={'Custom ads'}
         buttonText={'View'}
-        url={'http://www.google.com'}
+        url={
+          isGuidedDemo
+            ? urls.decisions.customAds.salesLed
+            : urls.decisions.customAds.selfLed}
       />
-      {/* TODO: URL Needs to be set here */}
       <TextWithLinkButton
         label={'Something custom?'}
         buttonText={'Create new'}
-        url={'http://www.google.com'}
+        url={
+          isGuidedDemo
+            ? urls.decisions.createNew.salesLed
+            : urls.decisions.createNew.selfLed}
       />
     </div>
   )
 }
-function SideMenuFunctions ({}) {
+function SideMenuFunctions ({ isGuidedDemo }) {
   return (
     <div className='flex flex-col gap-3 text-base font-semibold'>
       {/* TODO: URL Needs to be set here */}
       <TextWithLinkButton
         label={'Score Summary'}
         buttonText={'View Function'}
-        url={'http://www.google.com'}
+        url={
+          isGuidedDemo
+            ? urls.functions.scoreSummary.salesLed
+            : urls.functions.scoreSummary.selfLed}
       />
       <div className='text-neutral50 font-normal'>
         Experience in the demo by asking "What's the score?" in the match
@@ -256,6 +303,8 @@ function SideMenuFunctions ({}) {
   )
 }
 function SideMenuPushNotifications ({}) {
+  //  todo set this to the correct emulator Url
+  const emulatorUrl = "https://www.google.com"
   return (
     <div className='flex flex-col gap-4 text-base font-semibold'>
       <div className='text-neutral50 font-normal'>
@@ -267,15 +316,11 @@ function SideMenuPushNotifications ({}) {
         </ul>
       </div>
       <div className='w-fit'>
-        <div
+      <a href={`${emulatorUrl}`} target='_blank' className={`no-underline`}><div
           className='flex flex-row h-10 items-center py-1 px-3 border-1 border-navy600 rounded-md cursor-pointer'
-          onClick={e => {
-            console.log('TODO: Launch Emulator')
-            e.stopPropagation()
-          }}
         >
           Open emulator
-        </div>
+        </div></a>
       </div>
     </div>
   )

@@ -111,12 +111,13 @@ export default function SideMenuDataControls ({}) {
         <Slider
           aria-label={'Occupancy slider'}
           color={'secondary'}
+          size={'md'}
           classNames={{
             filler: 'bg-brandAccent3',
-            track: 'bg-brandAccent3',
+            track: 'bg-neutral200',
             thumb: ['bg-brandAccent3']
           }}
-          defaultValue={2}
+          defaultValue={1}
           maxValue={3}
           minValue={1}
           step={1}

@@ -175,9 +175,9 @@ export default function SportsEventPage ({ userId, isGuidedDemo }) {
       </div>
 
       <div className='hidden sm:flex flex-row w-full mt-[92px] pb-0 bg-navy900/40 text-neutral-50'>
-        <SideMenu sideMenuOpen={sideMenuOpen} isGuidedDemo={isGuidedDemo}></SideMenu>
+        <SideMenu sideMenuOpen={sideMenuOpen} isGuidedDemo={isGuidedDemo} chat={chat}></SideMenu>
 
-        <div className='overflow-y-auto w-full p-6 overscroll-none flex flex-row justify-center'>
+        <div className='overflow-y-auto w-full p-6 overscroll-none flex flex-row items-center justify-center'>
           {tabletPreview ? (
             <PreviewTablet chat={chat} guidesShown={guidesShown}></PreviewTablet>
           ) : (

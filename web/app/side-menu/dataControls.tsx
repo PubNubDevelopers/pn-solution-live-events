@@ -52,7 +52,7 @@ export default function SideMenuDataControls ({}) {
     'End match',
     'Tag user in message'
   ]
-  const [occupancy, setOccupancy] = useState(2)
+  const [occupancy, setOccupancy] = useState<number | number[]>(2)
 
   useEffect(() => {
     console.log('ToDo: User has adjusted occupancy to ' + occupancy)
@@ -110,14 +110,13 @@ export default function SideMenuDataControls ({}) {
         <div className=''>Occupancy</div>
         <Slider
           aria-label={'Occupancy slider'}
-          textValue={''}
           color={'secondary'}
           classNames={{
             filler: 'bg-brandAccent3',
             track: 'bg-brandAccent3',
             thumb: ['bg-brandAccent3']
           }}
-          defaultValue={occupancy}
+          defaultValue={2}
           maxValue={3}
           minValue={1}
           step={1}

@@ -152,7 +152,7 @@ function SideMenuContents ({ isGuidedDemo }) {
           </div>
         </AccordionItem>
       </Accordion>
-      {isGuidedDemo && <SelfLedHelp/>}
+      {!isGuidedDemo && <SelfLedHelp/>}
     </div>
   )
 }

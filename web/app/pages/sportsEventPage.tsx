@@ -75,6 +75,23 @@ export default function SportsEventPage ({ userId, isGuidedDemo }) {
                     }
                   })
                 }
+                else {
+                  return localChat.updateUser(testUser.id, {
+                    name: testUser.name,
+                    profileUrl: testUser.avatar,
+                    email: testUser.email,
+                    externalId: testUser.externalId,
+                    type: 'member',
+                    custom: {
+                      location: testUser.location,
+                      jobTitle: testUser.jobTitle,
+                      currentMood: testUser.currentMood,
+                      socialHandle: testUser.socialHandle,
+                      timezone: testUser.timezone,
+                      score: 0
+                    }
+                  })
+                }
               })
             if (tempPromise) {
               promises.push(tempPromise)

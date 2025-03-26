@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { Chat, User } from '@pubnub/chat'
 import Header from '../components/header'
-import SideMenu from '../components/sideMenu'
+import SideMenu from '../side-menu/sideMenu'
 import PreviewTablet from '../components/previewTablet'
 import PreviewMobile from '../components/previewMobile'
 import { testUsers, testPublicChannels } from '../data/testData'
@@ -158,7 +158,7 @@ export default function SportsEventPage ({ userId, isGuidedDemo }) {
       </div>
 
       <div className='hidden sm:flex flex-row w-full mt-[92px] pb-0 bg-navy900/40 text-neutral-50'>
-        <SideMenu sideMenuOpen={sideMenuOpen}></SideMenu>
+        <SideMenu sideMenuOpen={sideMenuOpen} isGuidedDemo={isGuidedDemo}></SideMenu>
 
         <div className='overflow-y-auto w-full p-6 overscroll-none flex flex-row justify-center'>
           {tabletPreview ? (

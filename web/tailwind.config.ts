@@ -82,10 +82,13 @@ export default {
     heroui({
       themes: {
         light: {
-          colors: {},
+          colors: {
+            secondary: "#589CFF",
+          },
         },
         dark: {
           colors: {
+            secondary: "#589CFF",
             danger: "#DD8D90",
           },
         },

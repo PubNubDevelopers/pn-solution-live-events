@@ -1,7 +1,7 @@
 export default function SalesIntroPage ({ setSalesIntroPageShown, setLoginPageShown }) {
   return (
     <>
-        <div className=''>
+        <div className='select-none'>
           <div className='text-5xl'>I am the Sales Intro Page</div>
           <div
             className='text-5xl cursor-pointer'

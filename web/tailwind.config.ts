@@ -45,6 +45,11 @@ export default {
         neutral200: "#E5E5E5",
         neutral100: "#F5F5F5",
         neutral50: "#FAFAFA",
+        brandAccent1: "#001862",
+        brandAccent2: "#001E79",
+        brandAccent3: "#589CFF",
+        brandAccent4: "#CBDDF4",
+        brandAccent5: "#EEF5FF",        
 
         success800: "#166534",
         success700: "#15803D",

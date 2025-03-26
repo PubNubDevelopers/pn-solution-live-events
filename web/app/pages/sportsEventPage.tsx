@@ -10,6 +10,8 @@ import { testUsers, testPublicChannels } from '../data/testData'
 
 export default function SportsEventPage ({ userId, isGuidedDemo }) {
   const [tabletPreview, setTabletPreview] = useState(true)
+  const [sideMenuOpen, setSideMenuOpen] = useState(true)
+  const [guidesShown, setGuidesShown] = useState(false)
   const [chat, setChat] = useState<Chat | null>(null)
   const [loadMessage, setLoadMessage] = useState('Demo is initializing...')
 
@@ -138,26 +140,31 @@ export default function SportsEventPage ({ userId, isGuidedDemo }) {
 
   return (
     <main
-      className='h-screen flex bg-white'
+      className='h-screen flex bg-white select-none'
       onClick={() => backgroundClicked()}
     >
-      <Header setTabletPreview={setTabletPreview}></Header>
+      <Header
+        sideMenuOpen={sideMenuOpen}
+        setSideMenuOpen={setSideMenuOpen}
+        tabletPreview={tabletPreview}
+        setTabletPreview={setTabletPreview}
+        guidesShown={guidesShown}
+        setGuidesShown={setGuidesShown}
+      ></Header>
 
-      {/* TODO */}
+      {/* TODO - check works ok */}
       <div className='sm:hidden flex flex-col mt-10 h-screen justify-center w-full text-center gap-16 text-4xl'>
         This app is not designed for mobile
       </div>
 
-      <div className='hidden sm:flex flex-row w-full mt-[92px] pb-0 text-neutral-50'>
-        <div className='flex flex-1 flex-col max-w-[366px] min-w-[366px] bg-navy900'>
-          <SideMenu></SideMenu>
-        </div>
+      <div className='hidden sm:flex flex-row w-full mt-[92px] pb-0 bg-navy900/40 text-neutral-50'>
+        <SideMenu sideMenuOpen={sideMenuOpen}></SideMenu>
 
-        <div className='overflow-y-auto bg-navy900/40 w-full p-6 overscroll-none flex flex-row justify-center'>
+        <div className='overflow-y-auto w-full p-6 overscroll-none flex flex-row justify-center'>
           {tabletPreview ? (
-            <PreviewTablet chat={chat}></PreviewTablet>
+            <PreviewTablet chat={chat} guidesShown={guidesShown}></PreviewTablet>
           ) : (
-            <PreviewMobile chat={chat}></PreviewMobile>
+            <PreviewMobile chat={chat} guidesShown={guidesShown}></PreviewMobile>
           )}
         </div>
       </div>

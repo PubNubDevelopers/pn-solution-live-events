@@ -105,9 +105,7 @@ export default function Header ({
           />
         </div>
         <div
-          className={`flex h-11 w-11 border-1 hover:bg-navy800 ${
-            sideMenuOpen ? 'border-brandAccent3' : 'border-navy600'
-          } shadow-sm items-center justify-center rounded-md text-neutral50 cursor-pointer`}
+          className={`flex h-11 w-11 border-1 hover:bg-navy800 border-brandAccent3 shadow-sm items-center justify-center rounded-md text-neutral50 cursor-pointer`}
           onClick={e => {
             setSideMenuOpen(!sideMenuOpen)
             e.stopPropagation()

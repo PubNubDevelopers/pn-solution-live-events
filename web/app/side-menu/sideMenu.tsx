@@ -47,7 +47,7 @@ function SideMenuContents ({ isGuidedDemo, currentUser }) {
   }
   const accordionItemClass = `pl-4 pr-4 pt-3 pb-2 bg-navy900 hover:bg-navy900 data-[open]:bg-navy900`
   const accordionTitleClass =
-    'flex flex-row gap-3 w-full text-base font-semibold uppercase text-neutral-50'
+    'flex flex-row gap-3 w-full text-base items-center font-semibold uppercase text-neutral-50'
 
   return (
     <div className='flex flex-col justify-between h-full'>

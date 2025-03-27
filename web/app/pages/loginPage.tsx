@@ -12,7 +12,7 @@ export default function LoginPage ({
   isGuidedDemo,
   setLoadMessage
 }) {
-  const [userArray, setUserArray] = useState(testUsers)
+  const [userArray, setUserArray] = useState(null)
 
   const ArrowBack = props => {
     return (
@@ -149,7 +149,7 @@ export default function LoginPage ({
         .sort((a, b) => a.sort - b.sort)
         .map(a => a.value)
     }
-    const shuffledArray = shuffle(userArray)
+    const shuffledArray = shuffle(testUsers)
     setUserArray(shuffledArray)
     init()
   }, [])
@@ -190,7 +190,7 @@ export default function LoginPage ({
           <div className='text-5xl font-extrabold'>Choose a user to log in</div>
         </div>
         <div className='flex flex-row gap-6'>
-          {userArray.slice(0, 4).map((user, index) => {
+          {userArray?.slice(0, 4).map((user, index) => {
             return (
               <LoginAvatar
                 key={index}

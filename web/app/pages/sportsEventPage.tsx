@@ -31,7 +31,7 @@ export default function SportsEventPage ({ chat, userId, isGuidedDemo }) {
               priority
             />
           </div>
-          <div className='text-4xl select-none'>{loadMessage}</div>
+          <div className='text-4xl select-none'>Initializing...</div>
         </div>
       </main>
     )

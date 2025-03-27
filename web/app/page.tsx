@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
+import { Chat, User } from '@pubnub/chat'
 import SalesIntroPage from './pages/salesIntroPage'
 import LoginPage from './pages/loginPage'
 import SportsEventPage from './pages/sportsEventPage'

@@ -52,8 +52,8 @@ export default function LoginPage ({
       }
       try {
         const localChat = await Chat.init({
-          publishKey: process.env.NEXT_PUBLIC_PUBNUB_PUBLISH_KEY,
-          subscribeKey: process.env.NEXT_PUBLIC_PUBNUB_SUBSCRIBE_KEY,
+          publishKey: process.env.NEXT_PUBLIC_PUBNUB_PUBLISH_KEY as string,
+          subscribeKey: process.env.NEXT_PUBLIC_PUBNUB_SUBSCRIBE_KEY as string,
           userId: 'user-02',  //  Don't use the same user ID here as you use in the next line, to test whether any users already exist
           typingTimeout: 5000,
           storeUserActivityTimestamps: true,
@@ -156,8 +156,8 @@ export default function LoginPage ({
 
   async function login (userId) {
     const localChat = await Chat.init({
-      publishKey: process.env.NEXT_PUBLIC_PUBNUB_PUBLISH_KEY,
-      subscribeKey: process.env.NEXT_PUBLIC_PUBNUB_SUBSCRIBE_KEY,
+      publishKey: process.env.NEXT_PUBLIC_PUBNUB_PUBLISH_KEY as string,
+      subscribeKey: process.env.NEXT_PUBLIC_PUBNUB_SUBSCRIBE_KEY as string,
       userId: userId,
       typingTimeout: 5000,
       storeUserActivityTimestamps: true,

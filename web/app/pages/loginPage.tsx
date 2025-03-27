@@ -189,7 +189,7 @@ export default function LoginPage ({
           )}
           <div className='text-5xl font-extrabold'>Choose a user to log in</div>
         </div>
-        <div className='flex flex-row gap-8'>
+        <div className='flex flex-row gap-6'>
           {userArray.slice(0, 4).map((user, index) => {
             return (
               <LoginAvatar
@@ -213,12 +213,12 @@ export default function LoginPage ({
 function LoginAvatar ({ id, avatarUrl, name, personSelected }) {
   return (
     <div
-      className='flex flex-col gap-3 px-2 items-center cursor-pointer'
+      className='flex flex-col gap-3 p-2 items-center cursor-pointer hover:bg-navy800 rounded-lg'
       onClick={() => {
         personSelected(id)
       }}
     >
-      <div className=''>
+      <div className='px-3'>
         <Image
           src={avatarUrl}
           alt='Avatar'

@@ -10,8 +10,9 @@ export default function Home () {
   const [salesIntroPageShown, setSalesIntroPageShown] = useState(false)
   const [loginPageShown, setLoginPageShown] = useState(false)
   const [guidedDemo, setGuidedDemo] = useState(false)
-  //  todo initialize userId to null
-  const [userId, setUserId] = useState<string | null>("user-03")
+  const [userId, setUserId] = useState<string | null>(null)
+  const [chat, setChat] = useState<Chat | null>(null)
+  const [loadMessage, setLoadMessage] = useState('Demo is initializing...')
 
   useEffect(() => {
     //  NEXT_PUBLIC_GUIDED_DEMO can be ignored and omitted from your .env file
@@ -34,12 +35,12 @@ export default function Home () {
 
   if (!salesIntroPageShown && loginPageShown && !userId) {
     return (
-      <LoginPage setLoginPageShown={setLoginPageShown} setUserId={setUserId} />
+      <LoginPage chat={chat} setChat={setChat} setLoginPageShown={setLoginPageShown} setSalesIntroPageShown={setSalesIntroPageShown} setUserId={setUserId} isGuidedDemo={guidedDemo} setLoadMessage={setLoadMessage}/>
     )
   }
 
   if (userId) {
-    return <SportsEventPage userId={userId} isGuidedDemo={guidedDemo} />
+    return <SportsEventPage chat={chat} userId={userId} isGuidedDemo={guidedDemo} />
   }
 
   if (!userId) {
@@ -56,7 +57,7 @@ export default function Home () {
               priority
             />
           </div>
-          <div className='text-4xl select-none'>Loading...{userId}</div>
+          <div className='text-4xl select-none'>{loadMessage}</div>
         </div>
       </main>
     )

@@ -12,7 +12,7 @@ export default function LoginPage ({
   isGuidedDemo,
   setLoadMessage
 }) {
-  const [userArray, setUserArray] = useState(null)
+  const [userArray, setUserArray] = useState<any | null>(null)
 
   const ArrowBack = props => {
     return (

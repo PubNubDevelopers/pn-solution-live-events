@@ -60,7 +60,7 @@ export default function SideMenuDataControls ({}) {
 
   return (
     <div className='flex flex-col gap-3 text-base font-semibold'>
-      <div className='flex flex-row gap-2 items-center justify-between'>
+      <div className='flex flex-row gap-2 h-11 items-center justify-between'>
         <div className=''>Simulation</div>
         <div className='flex flex-col'>
           <div
@@ -106,7 +106,7 @@ export default function SideMenuDataControls ({}) {
           <PlayCircle />
         </div>
       </div>
-      <div className='flex flex-row gap-4'>
+      <div className='flex flex-row gap-4 h-11 items-center'>
         <div className=''>Occupancy</div>
         <Slider
           aria-label={'Occupancy slider'}

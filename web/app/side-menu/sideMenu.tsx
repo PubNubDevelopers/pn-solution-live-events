@@ -177,7 +177,7 @@ function LinkButton ({ buttonText, url }) {
 
 function TextWithLinkButton ({ label, buttonText, url }) {
   return (
-    <div className='flex flex-row items-center justify-between'>
+    <div className='flex flex-row h-11 items-center justify-between'>
       <div className=''>{label}</div>
       <LinkButton buttonText={buttonText} url={url} />
     </div>

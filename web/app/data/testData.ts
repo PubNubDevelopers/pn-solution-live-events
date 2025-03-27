@@ -1,6 +1,6 @@
 export const testPublicChannels = [
     {
-      id: "public-euro2024",
+      id: "public-euro2024",  //  ToDo, this is currently defined in TWO places and is probably NOT the final channel name.
       name: "Euro 2024",
       description: "Public conversation about Euro 2024",
       avatar: "https://pn-solution-live-events.netlify.app/avatars/group/euro2024.png",

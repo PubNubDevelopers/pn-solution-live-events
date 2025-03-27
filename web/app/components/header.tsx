@@ -105,8 +105,8 @@ export default function Header ({
           />
         </div>
         <div
-          className={`flex h-11 w-11 border-1 hover:bg-navy700 ${
-            sideMenuOpen ? 'bg-navy700 border-brandAccent3' : 'border-navy600'
+          className={`flex h-11 w-11 border-1 hover:bg-navy800 ${
+            sideMenuOpen ? 'border-brandAccent3' : 'border-navy600'
           } shadow-sm items-center justify-center rounded-md text-neutral50 cursor-pointer`}
           onClick={e => {
             setSideMenuOpen(!sideMenuOpen)
@@ -149,7 +149,7 @@ export default function Header ({
           </div>
         </div>
         <div
-          className='flex flex-row gap-2 h-11 rounded-md border-1 border-brandAccent3 px-4 py-2 shadow-sm hover:shadow-[0px_4px_18px_0px_rgba(88,_156,_255,_0.8)] text-neutral50 items-center cursor-pointer'
+          className='flex flex-row gap-2 h-11 rounded-md border-1 border-brandAccent3 px-4 py-2 shadow-sm hover:bg-navy800 hover:shadow-[0px_4px_18px_0px_rgba(88,_156,_255,_0.8)] text-neutral50 items-center cursor-pointer'
           onClick={e => {
             setGuidesShown(!guidesShown)
             e.stopPropagation()

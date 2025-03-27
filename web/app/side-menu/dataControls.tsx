@@ -117,8 +117,8 @@ export default function SideMenuDataControls ({}) {
             track: 'bg-neutral200',
             thumb: ['bg-brandAccent3']
           }}
-          defaultValue={1}
-          maxValue={3}
+          defaultValue={3}
+          maxValue={10}
           minValue={1}
           step={1}
           onChange={setOccupancy}

@@ -167,7 +167,7 @@ function SideMenuContents ({ isGuidedDemo, currentUser }) {
 function LinkButton ({ buttonText, url }) {
   return (
     <a href={`${url}`} target='_blank' className={`no-underline`}>
-      <div className='flex flex-row gap-1 h-10 items-center py-1 px-3 border-1 border-navy600 rounded-md'>
+      <div className='flex flex-row gap-1 h-10 items-center py-1 px-3 border-1 border-navy600 hover:bg-navy800 rounded-md'>
         <div className=''>{buttonText}</div>
         <OpenInNewWindowIcon />
       </div>
@@ -317,7 +317,7 @@ function SideMenuPushNotifications ({}) {
       </div>
       <div className='w-fit'>
       <a href={`${emulatorUrl}`} target='_blank' className={`no-underline`}><div
-          className='flex flex-row h-10 items-center py-1 px-3 border-1 border-navy600 rounded-md cursor-pointer'
+          className='flex flex-row h-10 items-center py-1 px-3 border-1 border-navy600 hover:bg-navy800 rounded-md cursor-pointer'
         >
           Open emulator
         </div></a>

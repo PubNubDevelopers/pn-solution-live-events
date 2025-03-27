@@ -59,5 +59,5 @@ export const urls = {
     }
 }
 
-//  todo is this the final channel name?
+//  todo is this the final channel name?  It's also defined in the testPublicChannels object :/ 
 export const channelId = 'public-euro2024'

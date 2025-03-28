@@ -28,7 +28,7 @@ export default function GuideOverlay ({
   )
 }
 
-function Bubble ({ text, style, isVisible }) {
+function Bubble ({ text, style }) {
   const [bubbleShown, setBubbleShown] = useState(false)
   return (
     <div className={`flex ${style} w-fit gap-1`}>

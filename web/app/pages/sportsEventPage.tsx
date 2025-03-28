@@ -7,6 +7,7 @@ import SideMenu from '../side-menu/sideMenu'
 import PreviewTablet from '../components/previewTablet'
 import PreviewMobile from '../components/previewMobile'
 import { OpenInNewWindowIcon } from '../side-menu/sideMenuIcons'
+import { urls } from '../data/urls'
 
 export default function SportsEventPage ({
   chat,
@@ -80,8 +81,8 @@ export default function SportsEventPage ({
           {tabletPreview ? (
             <div className='flex flex-col gap-0'>
               {/* ToDo: Need a URL for the pop-out demo */}
-              <a
-                href={`https://www.pubnub.com/`}
+              {isGuidedDemo && (<a
+                href={`${isGuidedDemo ? urls.popoutView.salesLed : urls.popoutView.selfLed}`}
                 target='_blank'
                 className={`no-underline self-end pr-6`}
               >
@@ -91,7 +92,7 @@ export default function SportsEventPage ({
                   </div>
                   <OpenInNewWindowIcon />
                 </div>
-              </a>
+              </a>)}
               <PreviewTablet
                 chat={chat}
                 guidesShown={guidesShown}

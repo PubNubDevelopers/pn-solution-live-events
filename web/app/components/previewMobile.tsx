@@ -7,7 +7,7 @@ import PollsWidget from '../widget-polls/pollsWidget'
 import BotWidget from '../widget-bot/botWidget'
 import LiveCommentaryWidget from '../widget-liveCommentary/liveCommentaryWidget'
 
-export default function PreviewMobile ({ chat, guidesShown }) {
+export default function PreviewMobile ({ chat, guidesShown, logout }) {
   const defaultWidgetClasses =
     'rounded-lg border-1 border-navy200 bg-white shadow-sm'
 
@@ -68,7 +68,7 @@ export default function PreviewMobile ({ chat, guidesShown }) {
   function MobileHeader ({}) {
     return (
       <div className='flex flex-col w-full px-4 py-[11.5px]'>
-        <UserStatus chat={chat} />
+        <UserStatus chat={chat} logout={logout} />
         <div className='text-2xl font-bold'>Live Stream</div>
       </div>
     )

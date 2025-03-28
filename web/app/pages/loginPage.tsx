@@ -149,7 +149,8 @@ export default function LoginPage ({
         .sort((a, b) => a.sort - b.sort)
         .map(a => a.value)
     }
-    const shuffledArray = shuffle(testUsers)
+    const nonBots = testUsers.filter(user => user.id.includes('user'))
+    const shuffledArray = shuffle(nonBots)
     setUserArray(shuffledArray)
     init()
   }, [])

@@ -11,10 +11,10 @@ export default function ChatWidget ({
       {/* Guide overlay will be shown when the user requests */}
       <GuideOverlay
         guidesShown={guidesShown}
-        text={'This is the guide for Chat'}
+        text={<span>Chat uses <span className='font-bold'>Pub/Sub</span> and <span className='font-bold'>Presence</span>. <span className='font-bold'>Functions</span> are set up to give match updates when key phrases are used. <span className='font-bold'>Moderation</span> detects and blocks profanity.</span>}
         xOffset={`${isMobilePreview ? 'left-[0px]' : '-left-[60px]'}`}
         yOffset={''}
-        flexStyle={'flex-row-reverse'}
+        flexStyle={'flex-row items-start'}
       />
       <div className='text-5xl'>I am the Chat Widget.</div>
       <div className='text-medium'>

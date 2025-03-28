@@ -41,7 +41,7 @@ export default function Home () {
   }
 
   if (userId) {
-    return <SportsEventPage chat={chat} userId={userId} isGuidedDemo={guidedDemo} />
+    return <SportsEventPage chat={chat} userId={userId} setUserId={setUserId} setLoginPageShown={setLoginPageShown} isGuidedDemo={guidedDemo} />
   }
 
   if (!userId) {

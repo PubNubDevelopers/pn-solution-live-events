@@ -7,7 +7,7 @@ import PollsWidget from '../widget-polls/pollsWidget'
 import BotWidget from '../widget-bot/botWidget'
 import LiveCommentaryWidget from '../widget-liveCommentary/liveCommentaryWidget'
 
-export default function PreviewTablet ({ chat, guidesShown }) {
+export default function PreviewTablet ({ chat, guidesShown, logout }) {
   const defaultWidgetClasses =
     'rounded-lg border-1 border-navy200 bg-white shadow-sm'
 
@@ -16,7 +16,7 @@ export default function PreviewTablet ({ chat, guidesShown }) {
       <div className='w-full rounded-2xl bg-navy50 text-neutral-900 h-full overflow-y-auto overscroll-none'>
         <TabletHeader />
         <div className='flex flex-row px-6 gap-3 w-full h-full max-h-[680px] rounded-b-2xl'>
-          <div className='w-1/2 flex flex-col gap-4'>
+          <div className='w-3/5 flex flex-col gap-4'>
             <StreamWidget
               className={`${defaultWidgetClasses}`}
               isMobilePreview={false}
@@ -36,7 +36,7 @@ export default function PreviewTablet ({ chat, guidesShown }) {
               guidesShown={guidesShown}
             />
           </div>
-          <div className='w-1/2 flex flex-col gap-4'>
+          <div className='w-2/5 flex flex-col gap-4'>
             <ChatWidget
               className={`${defaultWidgetClasses}`}
               isMobilePreview={false}
@@ -71,7 +71,7 @@ export default function PreviewTablet ({ chat, guidesShown }) {
     return (
       <div className='flex flex-row items-center justify-between w-full px-6 py-[11.5px]'>
         <div className='text-3xl font-bold'>Live Stream</div>
-        <UserStatus chat={chat} />
+        <UserStatus chat={chat} logout={logout} />
       </div>
     )
   }

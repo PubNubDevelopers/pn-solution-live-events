@@ -3,7 +3,7 @@ import { Chat, User } from '@pubnub/chat'
 import Avatar from './avatar'
 import Cup from './icons/cup'
 
-export default function UserStatus ({ chat }) {
+export default function UserStatus ({ chat, logout }) {
   const [currentUser, setCurrentUser] = useState<User | null>(null)
 
   useEffect(() => {
@@ -19,7 +19,7 @@ export default function UserStatus ({ chat }) {
   }, [chat])
 
   return (
-    <div className='flex flex-row self-end gap-4'>
+    <div className='flex flex-row self-end gap-4 items-center'>
       <div className='flex flex-row gap-3 items-center'>
         <div className='flex flex-row gap-1 items-center'>
           <Cup className={''} width={20} height={20} />
@@ -31,6 +31,7 @@ export default function UserStatus ({ chat }) {
         <div className='text-lg font-semibold'>{currentUser?.name}</div>
       </div>
       <Avatar avatarUrl={currentUser?.profileUrl} />
+      <div className='text-base font-normal text-teal700 underline cursor-pointer' onClick={(e) => {logout();}}>Log out</div>
     </div>
   )
 }

@@ -7,14 +7,18 @@ import SideMenu from '../side-menu/sideMenu'
 import PreviewTablet from '../components/previewTablet'
 import PreviewMobile from '../components/previewMobile'
 
-export default function SportsEventPage ({ chat, userId, isGuidedDemo }) {
+export default function SportsEventPage ({ chat, userId, setUserId, setLoginPageShown, isGuidedDemo }) {
   const [tabletPreview, setTabletPreview] = useState(true)
   const [sideMenuOpen, setSideMenuOpen] = useState(true)
   const [guidesShown, setGuidesShown] = useState(false)
 
-
   function backgroundClicked () {
     console.log('background clicked')
+  }
+
+  function logout() {
+    setLoginPageShown(true)
+    setUserId(null)
   }
 
   if (!chat) {
@@ -61,9 +65,9 @@ export default function SportsEventPage ({ chat, userId, isGuidedDemo }) {
 
         <div className='overflow-y-auto w-full p-6 overscroll-none flex flex-row items-center justify-center'>
           {tabletPreview ? (
-            <PreviewTablet chat={chat} guidesShown={guidesShown}></PreviewTablet>
+            <PreviewTablet chat={chat} guidesShown={guidesShown} logout={logout}></PreviewTablet>
           ) : (
-            <PreviewMobile chat={chat} guidesShown={guidesShown}></PreviewMobile>
+            <PreviewMobile chat={chat} guidesShown={guidesShown} logout={logout}></PreviewMobile>
           )}
         </div>
       </div>

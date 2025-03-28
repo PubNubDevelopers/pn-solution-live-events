@@ -50,6 +50,7 @@ export default {
         brandAccent3: "#589CFF",
         brandAccent4: "#CBDDF4",
         brandAccent5: "#EEF5FF",        
+        cherry: "#CD2026",
 
         success800: "#166534",
         success700: "#15803D",

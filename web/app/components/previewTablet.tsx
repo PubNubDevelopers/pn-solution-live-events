@@ -48,6 +48,7 @@ export default function PreviewTablet ({
               visibleGuide={visibleGuide}
               setVisibleGuide={setVisibleGuide}
             />
+          <div className='min-h-3'></div>
           </div>
           <div className='w-2/5 flex flex-col gap-4'>
             <AdvertsOfferWidget
@@ -91,8 +92,9 @@ export default function PreviewTablet ({
               visibleGuide={visibleGuide}
               setVisibleGuide={setVisibleGuide}
             />
+          <div className='min-h-3'></div>
           </div>
-        </div>
+          </div>
       </div>
     </div>
   )

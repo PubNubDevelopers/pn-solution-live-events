@@ -32,14 +32,14 @@ export default function AdvertsWidget ({
   if (!isMobilePreview) {
     return (
       <div className={`${className} p-2`}>
-        <div className='flex flex-row gap-3 justify-between'>
+        <div className='flex flex-row gap-3 w-full justify-between overflow-x-scroll overscroll-none'>
           {adUrls.slice(0, 3).map((adUrl, index) => {
             return (
               <Image
                 key={index}
                 src={adUrl}
                 alt='Advert'
-                className='h-full w-full rounded-lg shadow-sm cursor-pointer'
+                className='h-auto max-h-[147px] w-auto rounded-lg shadow-sm cursor-pointer'
                 width={0}
                 sizes={'33vw'}
                 height={0}

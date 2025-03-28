@@ -6,8 +6,15 @@ import Header from '../components/header'
 import SideMenu from '../side-menu/sideMenu'
 import PreviewTablet from '../components/previewTablet'
 import PreviewMobile from '../components/previewMobile'
+import { OpenInNewWindowIcon } from '../side-menu/sideMenuIcons'
 
-export default function SportsEventPage ({ chat, userId, setUserId, setLoginPageShown, isGuidedDemo }) {
+export default function SportsEventPage ({
+  chat,
+  userId,
+  setUserId,
+  setLoginPageShown,
+  isGuidedDemo
+}) {
   const [tabletPreview, setTabletPreview] = useState(true)
   const [sideMenuOpen, setSideMenuOpen] = useState(true)
   const [guidesShown, setGuidesShown] = useState(false)
@@ -18,7 +25,7 @@ export default function SportsEventPage ({ chat, userId, setUserId, setLoginPage
     setVisibleGuide('')
   }
 
-  function logout() {
+  function logout () {
     setLoginPageShown(true)
     setUserId(null)
   }
@@ -63,13 +70,44 @@ export default function SportsEventPage ({ chat, userId, setUserId, setLoginPage
       </div>
 
       <div className='hidden sm:flex flex-row w-full mt-[92px] pb-0 bg-navy900/40 text-neutral-50'>
-        <SideMenu sideMenuOpen={sideMenuOpen} isGuidedDemo={isGuidedDemo} chat={chat}></SideMenu>
+        <SideMenu
+          sideMenuOpen={sideMenuOpen}
+          isGuidedDemo={isGuidedDemo}
+          chat={chat}
+        ></SideMenu>
 
         <div className='overflow-y-auto w-full p-6 overscroll-none flex flex-row items-center justify-center'>
           {tabletPreview ? (
-            <PreviewTablet chat={chat} guidesShown={guidesShown} visibleGuide={visibleGuide} setVisibleGuide={setVisibleGuide} logout={logout}></PreviewTablet>
+            <div className='flex flex-col gap-0'>
+              {/* ToDo: Need a URL for the pop-out demo */}
+              <a
+                href={`https://www.pubnub.com/`}
+                target='_blank'
+                className={`no-underline self-end pr-6`}
+              >
+                <div className='flex flex-row items-center gap-1 py-2 text-white'>
+                  <div className='text-white font-semibold text-base'>
+                    Open demo in new window
+                  </div>
+                  <OpenInNewWindowIcon />
+                </div>
+              </a>
+              <PreviewTablet
+                chat={chat}
+                guidesShown={guidesShown}
+                visibleGuide={visibleGuide}
+                setVisibleGuide={setVisibleGuide}
+                logout={logout}
+              ></PreviewTablet>
+            </div>
           ) : (
-            <PreviewMobile chat={chat} guidesShown={guidesShown} visibleGuide={visibleGuide} setVisibleGuide={setVisibleGuide} logout={logout}></PreviewMobile>
+            <PreviewMobile
+              chat={chat}
+              guidesShown={guidesShown}
+              visibleGuide={visibleGuide}
+              setVisibleGuide={setVisibleGuide}
+              logout={logout}
+            ></PreviewMobile>
           )}
         </div>
       </div>

@@ -11,9 +11,11 @@ export default function SportsEventPage ({ chat, userId, setUserId, setLoginPage
   const [tabletPreview, setTabletPreview] = useState(true)
   const [sideMenuOpen, setSideMenuOpen] = useState(true)
   const [guidesShown, setGuidesShown] = useState(false)
+  const [visibleGuide, setVisibleGuide] = useState('')
 
   function backgroundClicked () {
     console.log('background clicked')
+    setVisibleGuide('')
   }
 
   function logout() {
@@ -65,9 +67,9 @@ export default function SportsEventPage ({ chat, userId, setUserId, setLoginPage
 
         <div className='overflow-y-auto w-full p-6 overscroll-none flex flex-row items-center justify-center'>
           {tabletPreview ? (
-            <PreviewTablet chat={chat} guidesShown={guidesShown} logout={logout}></PreviewTablet>
+            <PreviewTablet chat={chat} guidesShown={guidesShown} visibleGuide={visibleGuide} setVisibleGuide={setVisibleGuide} logout={logout}></PreviewTablet>
           ) : (
-            <PreviewMobile chat={chat} guidesShown={guidesShown} logout={logout}></PreviewMobile>
+            <PreviewMobile chat={chat} guidesShown={guidesShown} visibleGuide={visibleGuide} setVisibleGuide={setVisibleGuide} logout={logout}></PreviewMobile>
           )}
         </div>
       </div>

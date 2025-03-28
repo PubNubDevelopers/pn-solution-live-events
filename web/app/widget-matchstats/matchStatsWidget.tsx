@@ -2,7 +2,9 @@ export default function MatchStatsWidget ({
   className,
   isMobilePreview,
   chat,
-  guidesShown
+  guidesShown,
+  visibleGuide,
+  setVisibleGuide
 }) {
   return (
     <div className={`${className}`}>

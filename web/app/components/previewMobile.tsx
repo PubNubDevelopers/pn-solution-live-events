@@ -7,7 +7,7 @@ import PollsWidget from '../widget-polls/pollsWidget'
 import BotWidget from '../widget-bot/botWidget'
 import LiveCommentaryWidget from '../widget-liveCommentary/liveCommentaryWidget'
 
-export default function PreviewMobile ({ chat, guidesShown, logout }) {
+export default function PreviewMobile ({ chat, guidesShown, visibleGuide, setVisibleGuide, logout }) {
   const defaultWidgetClasses =
     'rounded-lg border-1 border-navy200 bg-white shadow-sm'
 
@@ -22,42 +22,56 @@ export default function PreviewMobile ({ chat, guidesShown, logout }) {
               isMobilePreview={true}
               chat={chat}
               guidesShown={guidesShown}
+              visibleGuide={visibleGuide}
+              setVisibleGuide={setVisibleGuide}
             />
             <ChatWidget
               className={`${defaultWidgetClasses}`}
               isMobilePreview={true}
               chat={chat}
               guidesShown={guidesShown}
+              visibleGuide={visibleGuide}
+              setVisibleGuide={setVisibleGuide}
             />
             <PollsWidget
               className={`${defaultWidgetClasses}`}
               isMobilePreview={true}
               chat={chat}
               guidesShown={guidesShown}
+              visibleGuide={visibleGuide}
+              setVisibleGuide={setVisibleGuide}
             />
             <MatchStatsWidget
               className={`${defaultWidgetClasses}`}
               isMobilePreview={true}
               chat={chat}
               guidesShown={guidesShown}
+              visibleGuide={visibleGuide}
+              setVisibleGuide={setVisibleGuide}
             />
             <BotWidget
               className={`${defaultWidgetClasses}`}
               isMobilePreview={true}
               chat={chat}
               guidesShown={guidesShown}
+              visibleGuide={visibleGuide}
+              setVisibleGuide={setVisibleGuide}
             />
             <LiveCommentaryWidget
               className={`${defaultWidgetClasses}`}
               isMobilePreview={true}
               chat={chat}
               guidesShown={guidesShown}
+              visibleGuide={visibleGuide}
+              setVisibleGuide={setVisibleGuide}
             />
             <AdvertsWidget
               className={`${defaultWidgetClasses}`}
               isMobilePreview={true}
               chat={chat}
               guidesShown={guidesShown}
+              visibleGuide={visibleGuide}
+              setVisibleGuide={setVisibleGuide}
             />
           </div>
         </div>

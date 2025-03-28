@@ -2,7 +2,9 @@ export default function LiveCommentaryWidget ({
   className,
   isMobilePreview,
   chat,
-  guidesShown
+  guidesShown,
+  visibleGuide,
+  setVisibleGuide
 }) {
   return (
     <div className={`${className} px-6 pt-3 pb-4`}>

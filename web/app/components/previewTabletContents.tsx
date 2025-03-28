@@ -157,14 +157,6 @@ export default function TabletContents ({
               }}
             />
           )}
-          <TestChatWidget
-            className={`${defaultWidgetClasses}`}
-            isMobilePreview={false}
-            chat={chat}
-            guidesShown={guidesShown}
-            visibleGuide={visibleGuide}
-            setVisibleGuide={setVisibleGuide}
-          />
           <ChatWidget
             className={`${defaultWidgetClasses}`}
             isMobilePreview={false}
@@ -173,6 +165,14 @@ export default function TabletContents ({
             visibleGuide={visibleGuide}
             setVisibleGuide={setVisibleGuide}
           />
+          {/*<TestChatWidget*/}
+          {/*  className={`${defaultWidgetClasses}`}*/}
+          {/*  isMobilePreview={false}*/}
+          {/*  chat={chat}*/}
+          {/*  guidesShown={guidesShown}*/}
+          {/*  visibleGuide={visibleGuide}*/}
+          {/*  setVisibleGuide={setVisibleGuide}*/}
+          {/*/>*/}
           <PollsWidget
             className={`${defaultWidgetClasses}`}
             isMobilePreview={false}

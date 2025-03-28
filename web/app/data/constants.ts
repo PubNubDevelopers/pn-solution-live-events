@@ -24,6 +24,8 @@ export const illuminateUpgradeReaction = "illuminate-upgrade-reaction";
 //export const streamUrl = "https://youtu.be/IprCMEH8Vt4";
 export const streamUrl = "https://vimeo.com/1073970603"
 
+export const reactions = ["👍", "❤️", "😂", "😮", "👏"]
+
 export const ads = [
   {
     id: 1,

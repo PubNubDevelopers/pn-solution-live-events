@@ -78,9 +78,10 @@ function SideMenuContents ({ isGuidedDemo, currentUser }) {
           )}
         </Accordion>
 
-        <div className='text-white font-normal text-base px-6'>
-          This demo only uses a subset of PubNub features. Select 'How it works'
-          to see more information
+        <div className='flex flex-col gap-2.5 text-white font-normal text-base px-6'>
+          <div className='font-semibold'>Demo features</div>
+          <div className=''>This demo only uses a subset of PubNub features. Select 'How it works'
+          to see more information</div>
         </div>
 
         <Accordion

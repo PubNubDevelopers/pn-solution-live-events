@@ -3,6 +3,7 @@ import ChatWidget from '../widget-chat/chatWidget'
 import StreamWidget from '../widget-stream/streamWidget'
 import MatchStatsWidget from '../widget-matchstats/matchStatsWidget'
 import AdvertsWidget from '../widget-adverts/advertsWidget'
+import AdvertsOfferWidget from '../widget-adverts/advertsOfferWidget'
 import PollsWidget from '../widget-polls/pollsWidget'
 import BotWidget from '../widget-bot/botWidget'
 import LiveCommentaryWidget from '../widget-liveCommentary/liveCommentaryWidget'
@@ -49,6 +50,15 @@ export default function PreviewTablet ({
             />
           </div>
           <div className='w-2/5 flex flex-col gap-4'>
+            <AdvertsOfferWidget
+              className={`${defaultWidgetClasses}`}
+              isMobilePreview={false}
+              chat={chat}
+              guidesShown={guidesShown}
+              visibleGuide={visibleGuide}
+              setVisibleGuide={setVisibleGuide}
+              adUrl={'/ads/ad-offer1.png'}
+            />
             <ChatWidget
               className={`${defaultWidgetClasses}`}
               isMobilePreview={false}

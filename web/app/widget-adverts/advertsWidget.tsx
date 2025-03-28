@@ -15,17 +15,19 @@ export default function AdvertsWidget ({
   useEffect(() => {
     if (!isMobilePreview) return
     const mobileAdInterval = setInterval(() => {
-      if (currentAdId == adUrls.length - 1)
-      {
+      if (currentAdId == adUrls.length - 1) {
         setCurrentAdId(0)
+      } else {
+        setCurrentAdId(currentAdId + 1)
       }
-      else {
-        setCurrentAdId(currentAdId+1)
-      }
-    }, 10000);  //  Cycle through ads at this interval
+    }, 10000) //  Cycle through ads at this interval
 
     return () => clearInterval(mobileAdInterval)
   })
+
+  function adClicked (e, adId, adUrl) {
+    console.log('ToDo: ad clicked: ' + adId);e.stopPropagation()
+  }
 
   if (!isMobilePreview) {
     return (
@@ -34,15 +36,17 @@ export default function AdvertsWidget ({
           {adUrls.slice(0, 3).map((adUrl, index) => {
             return (
               <Image
-              key={index}
-              src={adUrl}
-              alt='Advert'
-              className='border-2 border-neutral200 rounded-lg shadow-sm'
-              width={242}
-              height={137}
-              priority
-            />
-              )
+                key={index}
+                src={adUrl}
+                alt='Advert'
+                className='h-full w-full rounded-lg shadow-sm cursor-pointer'
+                width={0}
+                sizes={'33vw'}
+                height={0}
+                onClick={(e) => {adClicked(e, index, adUrls[index])}}
+                priority
+              />
+            )
           })}
         </div>
       </div>
@@ -51,18 +55,19 @@ export default function AdvertsWidget ({
 
   if (isMobilePreview) {
     return (
-<div className={`${className} p-2`}>
-      
-      <div className='flex justify-center'>
-      <Image
-              src={adUrls[currentAdId]}
-              alt='Advert'
-              className='border-2 border-neutral200 rounded-lg shadow-sm'
-              width={242}
-              height={137}
-              priority
-            /></div>
-  </div>
+      <div className={`${className} p-2`}>
+        <div className='flex justify-center'>
+          <Image
+            src={adUrls[currentAdId]}
+            alt='Advert'
+            className='rounded-lg shadow-sm cursor-pointer'
+            width={402}
+            height={226}
+            onClick={(e) => {adClicked(e, currentAdId, adUrls[currentAdId])}}
+            priority
+          />
+        </div>
+      </div>
     )
   }
 }

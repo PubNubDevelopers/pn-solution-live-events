@@ -8,7 +8,7 @@ import {
   DataControlsIcon,
   BizOpsWorkspaceIcon,
   ChatModerationIcon,
-  DecisionsIcon,
+  IlluminateIcon,
   FunctionsIcon,
   PushNotificationsIcon
 } from './sideMenuIcons'
@@ -51,114 +51,129 @@ function SideMenuContents ({ isGuidedDemo, currentUser }) {
 
   return (
     <div className='flex flex-col justify-between h-full'>
-      <Accordion
-        isCompact={true}
-        selectionMode='multiple'
-        showDivider={false}
-        defaultExpandedKeys={['1']}
-      >
-        {isGuidedDemo && (
+      <div className=''>
+        <Accordion
+          isCompact={true}
+          selectionMode='multiple'
+          showDivider={false}
+          defaultExpandedKeys={['1']}
+        >
+          {isGuidedDemo && (
+            <AccordionItem
+              key={'1'}
+              indicator={({ isOpen }) => accordionIndicator(isOpen)}
+              className={`${accordionItemClass} pb-6`}
+              textValue={'Data Controls'}
+              title={
+                <div className={accordionTitleClass}>
+                  <DataControlsIcon />
+                  Data Controls
+                </div>
+              }
+            >
+              <div className='pt-2'>
+                <SideMenuDataControls />
+              </div>
+            </AccordionItem>
+          )}
+        </Accordion>
+
+        <div className='text-white font-normal text-base px-6'>
+          This demo only uses a subset of PubNub features. Select 'How it works'
+          to see more information
+        </div>
+
+        <Accordion
+          isCompact={true}
+          selectionMode='multiple'
+          showDivider={false}
+          defaultExpandedKeys={['']}
+        >
           <AccordionItem
-            key={'1'}
+            key={'2'}
             indicator={({ isOpen }) => accordionIndicator(isOpen)}
             className={accordionItemClass}
-            textValue={'Data Controls'}
+            textValue={'BizOps Workspace'}
             title={
               <div className={accordionTitleClass}>
-                <DataControlsIcon />
-                Data Controls
+                <BizOpsWorkspaceIcon />
+                BizOps Workspace
               </div>
             }
           >
             <div className='pt-2'>
-              <SideMenuDataControls />
+              <SideMenuBizopsWorkspace
+                isGuidedDemo={isGuidedDemo}
+                currentUser={currentUser}
+              />
             </div>
           </AccordionItem>
-        )}
-        <AccordionItem
-          key={'2'}
-          indicator={({ isOpen }) => accordionIndicator(isOpen)}
-          className={accordionItemClass}
-          textValue={'BizOps Workspace'}
-          title={
-            <div className={accordionTitleClass}>
-              <BizOpsWorkspaceIcon />
-              BizOps Workspace
+          <AccordionItem
+            key={'3'}
+            indicator={({ isOpen }) => accordionIndicator(isOpen)}
+            className={accordionItemClass}
+            textValue={'Chat & Moderation'}
+            title={
+              <div className={accordionTitleClass}>
+                <ChatModerationIcon />
+                Chat & Moderation
+              </div>
+            }
+          >
+            <div className='pt-2'>
+              <SideMenuChatModeration isGuidedDemo={isGuidedDemo} />
             </div>
-          }
-        >
-          <div className='pt-2'>
-            <SideMenuBizopsWorkspace
-              isGuidedDemo={isGuidedDemo}
-              currentUser={currentUser}
-            />
-          </div>
-        </AccordionItem>
-        <AccordionItem
-          key={'3'}
-          indicator={({ isOpen }) => accordionIndicator(isOpen)}
-          className={accordionItemClass}
-          textValue={'Chat & Moderation'}
-          title={
-            <div className={accordionTitleClass}>
-              <ChatModerationIcon />
-              Chat & Moderation
+          </AccordionItem>
+          <AccordionItem
+            key={'4'}
+            indicator={({ isOpen }) => accordionIndicator(isOpen)}
+            className={accordionItemClass}
+            textValue={'Illuminate'}
+            title={
+              <div className={accordionTitleClass}>
+                <IlluminateIcon />
+                Illuminate
+              </div>
+            }
+          >
+            <div className='pt-2'>
+              <SideMenuIlluminate isGuidedDemo={isGuidedDemo} />
             </div>
-          }
-        >
-          <div className='pt-2'>
-            <SideMenuChatModeration isGuidedDemo={isGuidedDemo} />
-          </div>
-        </AccordionItem>
-        <AccordionItem
-          key={'4'}
-          indicator={({ isOpen }) => accordionIndicator(isOpen)}
-          className={accordionItemClass}
-          textValue={'Decisions'}
-          title={
-            <div className={accordionTitleClass}>
-              <DecisionsIcon />
-              Decisions
+          </AccordionItem>
+          <AccordionItem
+            key={'5'}
+            indicator={({ isOpen }) => accordionIndicator(isOpen)}
+            className={accordionItemClass}
+            textValue={'Functions'}
+            title={
+              <div className={accordionTitleClass}>
+                <FunctionsIcon />
+                Functions
+              </div>
+            }
+          >
+            <div className='pt-2'>
+              <SideMenuFunctions isGuidedDemo={isGuidedDemo} />
             </div>
-          }
-        >
-          <div className='pt-2'>
-            <SideMenuDecisions isGuidedDemo={isGuidedDemo} />
-          </div>
-        </AccordionItem>
-        <AccordionItem
-          key={'5'}
-          indicator={({ isOpen }) => accordionIndicator(isOpen)}
-          className={accordionItemClass}
-          textValue={'Functions'}
-          title={
-            <div className={accordionTitleClass}>
-              <FunctionsIcon />
-              Functions
+          </AccordionItem>
+          <AccordionItem
+            key={'6'}
+            indicator={({ isOpen }) => accordionIndicator(isOpen)}
+            className={`${accordionItemClass} mb-8`}
+            textValue={'Push Notifications'}
+            title={
+              <div className={accordionTitleClass}>
+                <PushNotificationsIcon />
+                Push Notifications
+              </div>
+            }
+          >
+            <div className='pt-2'>
+              <SideMenuPushNotifications />
             </div>
-          }
-        >
-          <div className='pt-2'>
-            <SideMenuFunctions isGuidedDemo={isGuidedDemo} />
-          </div>
-        </AccordionItem>
-        <AccordionItem
-          key={'6'}
-          indicator={({ isOpen }) => accordionIndicator(isOpen)}
-          className={`${accordionItemClass} mb-8`}
-          textValue={'Push Notifications'}
-          title={
-            <div className={accordionTitleClass}>
-              <PushNotificationsIcon />
-              Push Notifications
-            </div>
-          }
-        >
-          <div className='pt-2'>
-            <SideMenuPushNotifications />
-          </div>
-        </AccordionItem>
-      </Accordion>
+          </AccordionItem>
+        </Accordion>
+      </div>
       {!isGuidedDemo && <SelfLedHelp />}
     </div>
   )
@@ -252,7 +267,7 @@ function SideMenuChatModeration ({ isGuidedDemo }) {
     </div>
   )
 }
-function SideMenuDecisions ({ isGuidedDemo }) {
+function SideMenuIlluminate ({ isGuidedDemo }) {
   return (
     <div className='flex flex-col gap-3 text-base font-semibold'>
       <TextWithLinkButton
@@ -260,8 +275,8 @@ function SideMenuDecisions ({ isGuidedDemo }) {
         buttonText={'View'}
         url={
           isGuidedDemo
-            ? urls.decisions.determinePoints.salesLed
-            : urls.decisions.determinePoints.selfLed
+            ? urls.illuminate.determinePoints.salesLed
+            : urls.illuminate.determinePoints.selfLed
         }
       />
       <TextWithLinkButton
@@ -269,16 +284,18 @@ function SideMenuDecisions ({ isGuidedDemo }) {
         buttonText={'View'}
         url={
           isGuidedDemo
-            ? urls.decisions.customAds.salesLed
-            : urls.decisions.customAds.selfLed}
+            ? urls.illuminate.customAds.salesLed
+            : urls.illuminate.customAds.selfLed
+        }
       />
       <TextWithLinkButton
         label={'Something custom?'}
         buttonText={'Create new'}
         url={
           isGuidedDemo
-            ? urls.decisions.createNew.salesLed
-            : urls.decisions.createNew.selfLed}
+            ? urls.illuminate.createNew.salesLed
+            : urls.illuminate.createNew.selfLed
+        }
       />
     </div>
   )
@@ -293,7 +310,8 @@ function SideMenuFunctions ({ isGuidedDemo }) {
         url={
           isGuidedDemo
             ? urls.functions.scoreSummary.salesLed
-            : urls.functions.scoreSummary.selfLed}
+            : urls.functions.scoreSummary.selfLed
+        }
       />
       <div className='text-neutral50 font-normal'>
         Experience in the demo by asking "What's the score?" in the match
@@ -304,7 +322,7 @@ function SideMenuFunctions ({ isGuidedDemo }) {
 }
 function SideMenuPushNotifications ({}) {
   //  todo set this to the correct emulator Url
-  const emulatorUrl = "https://www.google.com"
+  const emulatorUrl = 'https://www.google.com'
   return (
     <div className='flex flex-col gap-4 text-base font-semibold'>
       <div className='text-neutral50 font-normal'>
@@ -316,11 +334,11 @@ function SideMenuPushNotifications ({}) {
         </ul>
       </div>
       <div className='w-fit'>
-      <a href={`${emulatorUrl}`} target='_blank' className={`no-underline`}><div
-          className='flex flex-row h-10 items-center py-1 px-3 border-1 border-navy600 hover:bg-navy800 rounded-md cursor-pointer'
-        >
-          Open emulator
-        </div></a>
+        <a href={`${emulatorUrl}`} target='_blank' className={`no-underline`}>
+          <div className='flex flex-row h-10 items-center py-1 px-3 border-1 border-navy600 hover:bg-navy800 rounded-md cursor-pointer'>
+            Open emulator
+          </div>
+        </a>
       </div>
     </div>
   )

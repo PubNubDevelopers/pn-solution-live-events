@@ -196,7 +196,7 @@ export const ChatModerationIcon = props => {
   )
 }
 
-export const DecisionsIcon = props => {
+export const IlluminateIcon = props => {
   return (
     <svg
       aria-hidden='true'
@@ -209,36 +209,71 @@ export const DecisionsIcon = props => {
       {...props}
     >
       <path
-        d='M17.4944 3.88867H4.60802C4.15559 3.88867 3.78882 4.25544 3.78882 4.70787V17.6647C3.78882 18.1171 4.15559 18.4839 4.60802 18.4839H17.4944C17.9468 18.4839 18.3136 18.1171 18.3136 17.6647V4.70787C18.3136 4.25544 17.9468 3.88867 17.4944 3.88867Z'
+        d='M16 13.3149C16.56 13.3149 17.0144 12.8605 17.0144 12.3005C17.0144 11.7405 16.56 11.2861 16 11.2861C15.44 11.2861 14.9856 11.7405 14.9856 12.3005C14.9856 12.8605 15.44 13.3149 16 13.3149Z'
+        stroke='#F04349'
+        strokeWidth='0.64'
+        strokeLinecap='round'
+        strokeLinejoin='round'
+      />
+      <path
+        d='M12.5632 16.646C13.1232 16.646 13.5776 16.1916 13.5776 15.6316C13.5776 15.0716 13.1232 14.6172 12.5632 14.6172C12.0032 14.6172 11.5488 15.0716 11.5488 15.6316C11.5488 16.1916 12.0032 16.646 12.5632 16.646Z'
+        stroke='#F04349'
+        strokeWidth='0.64'
+        strokeLinecap='round'
+        strokeLinejoin='round'
+      />
+      <path
+        d='M16 19.5652V13.3828'
+        stroke='#F04349'
+        strokeWidth='0.64'
+        strokeLinecap='round'
+        strokeLinejoin='round'
+      />
+      <path
+        d='M14.5152 19.5648V17.616L13.3184 16.3936'
+        stroke='#F04349'
+        strokeWidth='0.64'
+        strokeLinecap='round'
+        strokeLinejoin='round'
+      />
+      <path
+        d='M17.4847 19.5648V17.616L18.6847 16.3936'
+        stroke='#F04349'
+        strokeWidth='0.64'
+        strokeLinecap='round'
+        strokeLinejoin='round'
+      />
+      <path
+        d='M19.4368 16.646C18.8768 16.646 18.4224 16.1916 18.4224 15.6316C18.4224 15.0716 18.8768 14.6172 19.4368 14.6172C19.9968 14.6172 20.4512 15.0716 20.4512 15.6316C20.4512 16.1916 19.9968 16.646 19.4368 16.646Z'
+        stroke='#F04349'
+        strokeWidth='0.64'
+        strokeLinecap='round'
+        strokeLinejoin='round'
+      />
+      <path
+        d='M12.2303 25.7725C12.7967 27.3021 14.2687 28.3613 15.9999 28.3613C17.7311 28.3613 19.1903 27.2861 19.7663 25.7725'
+        stroke='#F04349'
+        strokeWidth='0.64'
+        strokeLinecap='round'
+        strokeLinejoin='round'
+      />
+      <path
+        d='M18.7519 19.5651C21.9583 18.4515 24.2015 15.4243 24.2015 11.8403C24.2015 7.31227 20.5311 3.63867 15.9999 3.63867C11.4687 3.63867 7.79834 7.30907 7.79834 11.8403C7.79834 15.3635 10.0191 18.3651 13.1359 19.5267'
         stroke='white'
         strokeWidth='0.64'
         strokeLinecap='round'
         strokeLinejoin='round'
       />
       <path
-        d='M13.6865 18.5307V26.8123C13.6865 27.5323 14.2753 28.1115 15.0017 28.1115H26.8929C27.6193 28.1115 28.2081 27.5291 28.2081 26.8123V14.8187C28.2081 14.0987 27.6193 13.5195 26.8929 13.5195H18.3809'
+        d='M21.856 19.584H10.1504V22.6496H21.856V19.584Z'
         stroke='white'
         strokeWidth='0.64'
         strokeLinecap='round'
         strokeLinejoin='round'
       />
       <path
-        d='M8.63354 8.83203L13.5103 13.6928'
-        stroke='#F04349'
-        strokeWidth='0.64'
-        strokeLinecap='round'
-        strokeLinejoin='round'
-      />
-      <path
-        d='M13.5487 8.83203L8.63354 13.6544'
-        stroke='#F04349'
-        strokeWidth='0.64'
-        strokeLinecap='round'
-        strokeLinejoin='round'
-      />
-      <path
-        d='M17.8047 20.6426L20.2207 22.9178L24.4959 18.6426'
-        stroke='#F04349'
+        d='M21.856 22.6719H10.1504V25.7375H21.856V22.6719Z'
+        stroke='white'
         strokeWidth='0.64'
         strokeLinecap='round'
         strokeLinejoin='round'

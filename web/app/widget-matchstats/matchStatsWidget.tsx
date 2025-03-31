@@ -16,7 +16,7 @@ export default function MatchStatsWidget ({
   //  todo these stats need to be populated and updated from PubNub.  The PN message (or messages) will probably just contain the information in the 'info' fields - see definition of config
   const [matchStats, setMatchStats] = useState<any | null>(matchStatsConfig)
   const commonStatsBoxClasses =
-    'min-h-36 max-h-36 min-w-44 max-w-44 bg-white border-1 border-navy200 rounded-lg'
+    'min-h-36 max-h-36 min-w-44 max-w-56 bg-white border-1 border-navy200 rounded-lg'
 
     useEffect(() => {
       if (!chat) return
@@ -158,7 +158,7 @@ export default function MatchStatsWidget ({
           {giveStatsBox(matchStats?.statBox6)}
         </div>
         <div
-          className={`hidden lg:flex bg-white border-1 border-navy200 rounded-lg ${
+          className={`hidden lg:flex ${
             isMobilePreview ? 'col-span-2' : 'col-span-2 row-span-3'
           }`}
         >
@@ -369,9 +369,9 @@ function FeatureStats ({
   }
 
   return (
-    <div className='flex flex-col gap-6'>
+    <div className='flex flex-col gap-6 bg-white border-1 border-navy200 rounded-lg'>
       <div
-        className={`flex flex-row w-full justify-center`}
+        className={`flex flex-row w-full justify-center rounded-t-lg`}
         style={{ background: `${headerBackgroundColor}` }}
       >
         <Image

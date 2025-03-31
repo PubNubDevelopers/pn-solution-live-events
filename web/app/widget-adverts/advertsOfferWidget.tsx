@@ -20,10 +20,6 @@ export default function AdvertsOfferWidget ({
   return (
     <div className={`${className} p-2`}>
       <div className='flex flex-col items-center'>
-        {/* ToDo: Delete this div when ad is triggered */}
-        <div className='text-cherry text-sm font-semibold text-center'>
-          ToDo: Ad will only show when triggered
-        </div>
         <Image
           src={adUrl}
           alt='Advert'

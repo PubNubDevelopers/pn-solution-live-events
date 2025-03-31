@@ -65,14 +65,6 @@ export const urls = {
       salesLed: "https://pubnub.com",
     },
   },
-  popoutView: {
-    //  todo are these the correct URLs?
-    //  Note: Only the sales-led URL is available in this demo.  The self-led
-    //  URL is planned to be embedded within the docs.
-    selfLed: "https://pn-solution-live-events-popout.netlify.app/",
-    salesLed: "https://pn-solution-live-events-guided-popout.netlify.app/",
-  },
+  popoutView: "./popout/",
 };
 
-//  todo is this the final channel name?  It's also defined in the testPublicChannels object :/
-export const channelId = "public-euro2024";

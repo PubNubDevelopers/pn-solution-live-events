@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
-import { Chat, User } from '@pubnub/chat'
-import { testUsers, testPublicChannels } from '../data/testData'
+import { Chat, User, Channel } from '@pubnub/chat'
+import { testUsers, channelData } from '../data/testData'
 
 export default function LoginPage ({
   setLoginPageShown,
@@ -54,7 +54,7 @@ export default function LoginPage ({
         const localChat = await Chat.init({
           publishKey: process.env.NEXT_PUBLIC_PUBNUB_PUBLISH_KEY as string,
           subscribeKey: process.env.NEXT_PUBLIC_PUBNUB_SUBSCRIBE_KEY as string,
-          userId: 'user-02',  //  Don't use the same user ID here as you use in the next line, to test whether any users already exist
+          userId: 'user-02', //  Don't use the same user ID here as you use in the next line, to test whether any users already exist
           typingTimeout: 5000,
           storeUserActivityTimestamps: true,
           storeUserActivityInterval: 600000
@@ -113,28 +113,35 @@ export default function LoginPage ({
           await Promise.all(promises)
         }
 
-        const testPublicChannel = await localChat.getChannel(
-          testPublicChannels[0].id
-        )
+        const testPublicChannel = await localChat.getChannel(channelData[0].id)
         if (!testPublicChannel) {
           setLoadMessage('Creating Public Channel data')
-          for (const channel of testPublicChannels) {
-            let newPublicChannel = await localChat.getChannel(channel.id)
-            if (!newPublicChannel) {
-              newPublicChannel = await localChat.createPublicConversation({
-                channelId: channel.id,
-                channelData: {
-                  name: channel.name,
-                  description: channel.description,
-                  custom: {
-                    profileUrl: channel.avatar
+          const promises = [] as Promise<Channel | null | undefined>[]
+          for (const channelInfo of channelData) {
+            console.log('creating channel ' + channelInfo.id)
+            if (channelInfo.createInAppContext == true) {
+              const tempPromise = localChat
+                .getChannel(channelInfo.id)
+                .then(returnedChannel => {
+                  if (!returnedChannel) {
+                    return localChat.createPublicConversation({
+                      channelId: channelInfo.id,
+                      channelData: {
+                        name: channelInfo.name,
+                        description: channelInfo.description,
+                        custom: {
+                          profileUrl: channelInfo.avatar
+                        }
+                      }
+                    })
                   }
-                }
-              })
-            } else {
-              break
+                })
+              if (tempPromise) {
+                promises.push(tempPromise)
+              }
             }
           }
+          await Promise.all(promises)
         }
       } catch {
         setLoadMessage(

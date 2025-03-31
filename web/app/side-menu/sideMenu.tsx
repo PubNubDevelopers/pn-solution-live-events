@@ -14,7 +14,8 @@ import {
 } from './sideMenuIcons'
 import SideMenuDataControls from './dataControls'
 import SelfLedHelp from './selfLedHelp'
-import { urls, channelId } from '../data/urls'
+import { chatChannelId } from '../data/testData'
+import { urls } from '../data/urls'
 
 export default function SideMenu ({ sideMenuOpen, isGuidedDemo, chat }) {
   return (
@@ -25,6 +26,7 @@ export default function SideMenu ({ sideMenuOpen, isGuidedDemo, chat }) {
             <div className='flex flex-col w-full select-none mt-8 pb-8 overflow-y-auto overscroll-none h-full'>
               <div className='h-full'>
                 <SideMenuContents
+                  chat={chat}
                   isGuidedDemo={isGuidedDemo}
                   currentUser={chat?.currentUser}
                 />
@@ -37,7 +39,7 @@ export default function SideMenu ({ sideMenuOpen, isGuidedDemo, chat }) {
   )
 }
 
-function SideMenuContents ({ isGuidedDemo, currentUser }) {
+function SideMenuContents ({ chat, isGuidedDemo, currentUser }) {
   function accordionIndicator (isOpen) {
     return isOpen ? (
       <AnchorIcon className='text-neutral-100' transform='rotate(90)' />
@@ -72,7 +74,7 @@ function SideMenuContents ({ isGuidedDemo, currentUser }) {
               }
             >
               <div className='pt-2'>
-                <SideMenuDataControls />
+                <SideMenuDataControls chat={chat} />
               </div>
             </AccordionItem>
           )}
@@ -215,7 +217,7 @@ function SideMenuBizopsWorkspace ({ isGuidedDemo, currentUser }) {
     const channelManagementBase = isGuidedDemo
       ? urls.bizOpsWorkspace.channelManagement.salesLed
       : urls.bizOpsWorkspace.channelManagement.selfLed
-    setChannelManagementUrl(`${channelManagementBase}${channelId}`)
+    setChannelManagementUrl(`${channelManagementBase}${chatChannelId}`)
   }, [isGuidedDemo, currentUser])
 
   return (
@@ -245,7 +247,7 @@ function SideMenuChatModeration ({ isGuidedDemo }) {
     const moderationBase = isGuidedDemo
       ? urls.chatAndModeration.moderation.salesLed
       : urls.chatAndModeration.moderation.selfLed
-    setChannelModerationUrl(`${moderationBase}${channelId}`)
+    setChannelModerationUrl(`${moderationBase}${chatChannelId}`)
     setTranslateFunctionUrl(
       isGuidedDemo
         ? urls.chatAndModeration.translation.salesLed

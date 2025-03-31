@@ -1,12 +1,62 @@
-export const testPublicChannels = [
+export const channelData = [
   {
-    id: "public-euro2024", //  ToDo, this is currently defined in TWO places and is probably NOT the final channel name.
-    name: "Euro 2024",
+    id: "euro2024.chat", //  ToDo, this is currently defined in TWO places and is probably NOT the final channel name.
+    name: "Euro 2024 Chat",
     description: "Public conversation about Euro 2024",
     avatar:
       "https://pn-solution-live-events.netlify.app/avatars/group/euro2024.png",
+    createInAppContext: true,
+  },
+  {
+    id: "euro2024.commentary",
+    name: "Euro 2024 Live Commentary",
+    description: "Live commentary about Euro 2024",
+    avatar:
+      "https://pn-solution-live-events.netlify.app/avatars/group/euro2024.png",
+    createInAppContext: false,
+  },
+  {
+    id: "euro2024.livestream",
+    name: "Euro 2024 Stream Reactions and Control Events",
+    description: "Audience reactions to the Euro 2024 stream",
+    avatar:
+      "https://pn-solution-live-events.netlify.app/avatars/group/euro2024.png",
+    createInAppContext: false,
+  },
+  {
+    id: "euro2024.polls",
+    name: "Channel used to declare new polls by the poll designer",
+    description:
+      "Polls are published on this channel.  You can also choose to publish each poll on a separate channel, if you only want certain users to see certain polls.",
+    avatar:
+      "https://pn-solution-live-events.netlify.app/avatars/group/euro2024.png",
+    createInAppContext: false,
+  },
+  {
+    id: "euro2024.votes",
+    name: "Channel used for voter clients to declare their poll preference",
+    description:
+      "Voter client apps should not have read access to this channel, only write access.  Payload structure contains pollId, questionId, and choiceId",
+    avatar:
+      "https://pn-solution-live-events.netlify.app/avatars/group/euro2024.png",
+    createInAppContext: false,
+  },
+  {
+    id: "euro2024.results",
+    name: "This channel distributes the final results of polls",
+    description:
+      "If you publish each poll on a separate channel, you should also publish each poll result separately, and clients would subscribe to results.*",
+    avatar:
+      "https://pn-solution-live-events.netlify.app/avatars/group/euro2024.png",
+    createInAppContext: false,
   },
 ];
+export const chatChannelId = channelData[0].id;
+export const liveCommentaryChannelId = channelData[1].id;
+export const streamReactionsChannelId = channelData[2].id;
+export const pollDeclarations = channelData[3].id;
+export const pollVotes = channelData[4].id;
+export const pollResults = channelData[5].id;
 
 export const testUsers = [
   {

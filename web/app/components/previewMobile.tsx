@@ -9,17 +9,19 @@ import BotWidget from '../widget-bot/botWidget'
 import LiveCommentaryWidget from '../widget-liveCommentary/liveCommentaryWidget'
 
 export default function PreviewMobile ({
+  className,
   chat,
   guidesShown,
   visibleGuide,
   setVisibleGuide,
-  logout
+  logout,
+  showDynamicAd
 }) {
   const defaultWidgetClasses =
     'rounded-lg border-1 border-navy200 bg-white shadow-sm'
 
   return (
-    <div className='w-[460px] border-4 border-navy100 rounded-3xl bg-black px-2 py-[14px] h-full max-h-[954px]'>
+    <div className={`${className} w-[460px] border-4 border-navy100 rounded-3xl bg-black px-2 py-[14px] h-full max-h-[954px]`}>
       <div className='w-full rounded-2xl bg-navy50 text-neutral-900 h-full pb-2'>
         <div className='w-full h-full overflow-y-auto overscroll-none'>
           <MobileHeader />
@@ -32,15 +34,15 @@ export default function PreviewMobile ({
               visibleGuide={visibleGuide}
               setVisibleGuide={setVisibleGuide}
             />
-            <AdvertsOfferWidget
+            {showDynamicAd && <AdvertsOfferWidget
               className={`${defaultWidgetClasses}`}
               isMobilePreview={false}
               chat={chat}
               guidesShown={guidesShown}
               visibleGuide={visibleGuide}
               setVisibleGuide={setVisibleGuide}
-              adUrl={'/ads/ad-offer1.png'}
-            />
+              adUrl={'/ads/ad-offer2.png'}
+            />}
             <ChatWidget
               className={`${defaultWidgetClasses}`}
               isMobilePreview={true}

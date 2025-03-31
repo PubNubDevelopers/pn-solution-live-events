@@ -20,6 +20,7 @@ export default function SportsEventPage ({
   const [sideMenuOpen, setSideMenuOpen] = useState(true)
   const [guidesShown, setGuidesShown] = useState(false)
   const [visibleGuide, setVisibleGuide] = useState('')
+  const [showDynamicAd, setShowDynamicAd] = useState(false)
 
   function backgroundClicked () {
     console.log('background clicked')
@@ -77,12 +78,21 @@ export default function SportsEventPage ({
           chat={chat}
         ></SideMenu>
 
-        <div className='overflow-y-auto w-full p-6 overscroll-none flex flex-row items-center justify-center'>
-          {tabletPreview ? (
-            <div className='flex flex-col gap-0'>
-              {/* ToDo: Need a URL for the pop-out demo */}
-              {isGuidedDemo && (<a
-                href={`${isGuidedDemo ? urls.popoutView.salesLed : urls.popoutView.selfLed}`}
+        <div className='overflow-y-auto w-full p-6 overscroll-none flex flex-col items-center justify-center'>
+          {/*ToDo: Remove this test line */}
+          <div
+            className='text-cherry text-sm font-semibold text-right cursor-pointer'
+            onClick={() => {
+              setShowDynamicAd(!showDynamicAd)
+            }}
+          >
+            Show or hide dynamic ad manually, instead of via Illuminate. ToDo:
+            remove this text
+          </div>
+          <div className='flex flex-col gap-0'>
+            {isGuidedDemo && tabletPreview && (
+              <a
+                href={`${urls.popoutView}`}
                 target='_blank'
                 className={`no-underline self-end pr-6`}
               >
@@ -92,24 +102,27 @@ export default function SportsEventPage ({
                   </div>
                   <OpenInNewWindowIcon />
                 </div>
-              </a>)}
-              <PreviewTablet
-                chat={chat}
-                guidesShown={guidesShown}
-                visibleGuide={visibleGuide}
-                setVisibleGuide={setVisibleGuide}
-                logout={logout}
-              ></PreviewTablet>
-            </div>
-          ) : (
-            <PreviewMobile
+              </a>
+            )}
+            <PreviewTablet
+              className={`${!tabletPreview && 'hidden'}`}
               chat={chat}
               guidesShown={guidesShown}
               visibleGuide={visibleGuide}
               setVisibleGuide={setVisibleGuide}
               logout={logout}
-            ></PreviewMobile>
-          )}
+              showDynamicAd={showDynamicAd}
+            ></PreviewTablet>
+          </div>
+          <PreviewMobile
+            className={`${tabletPreview && 'hidden'}`}
+            chat={chat}
+            guidesShown={guidesShown}
+            visibleGuide={visibleGuide}
+            setVisibleGuide={setVisibleGuide}
+            logout={logout}
+            showDynamicAd={showDynamicAd}
+          ></PreviewMobile>
         </div>
       </div>
     </main>

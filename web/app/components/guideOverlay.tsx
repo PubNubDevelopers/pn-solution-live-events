@@ -12,7 +12,7 @@ export default function GuideOverlay ({
 }) {
   return (
     <div className={`${!guidesShown && 'hidden'} relative`}>
-      <div className={`absolute z-50 ${xOffset} ${yOffset}`}>
+      <div className={`absolute ${xOffset} ${yOffset}`}>
         <Bubble
           id={id}
           text={text}
@@ -43,7 +43,7 @@ function Bubble ({ id, text, style, visibleGuide, setVisibleGuide }) {
   return (
     <div className={`flex ${style} w-fit gap-1`}>
       <div
-        className={`min-w-60 max-w-72 min-h-16 p-4 border-1 text-neutral700 font-normal text-sm rounded-lg content-center z-10 ${
+        className={`min-w-60 max-w-72 min-h-16 p-4 border-1 text-neutral700 font-normal text-sm rounded-lg content-center z-30 ${
           visibleGuide == id
             ? 'bg-white border-navy300 text-navy900 shadow-lg'
             : 'bg-transparent border-transparent text-transparent'
@@ -74,7 +74,7 @@ function ColouredDot ({
 }) {
   return (
     <div
-      className='flex w-6 h-6 bg-brandAccent1 rounded-full items-center justify-center shadow-[0px_0px_12px_2px_rgba(59,130,246,1.00)] cursor-pointer'
+      className='flex w-6 h-6 bg-brandAccent1 rounded-full items-center justify-center shadow-[0px_0px_12px_2px_rgba(59,130,246,1.00)] cursor-pointer z-20'
       onClick={e => {
         setVisibleGuide(id)
         setBubbleIsRead(true)

@@ -11,8 +11,8 @@ export default function StreamWidget ({
   visibleGuide,
   setVisibleGuide
 }) {
-  //const [activeChannel, setActiveChannel] = useState<Channel | null>(null)
-  const [occupancy, setOccupancy] = useState(1)
+  //  ToDo: Currently this is only the occupancy from the Data Controls - need to add any other real presence count (including ourselves)
+  const [occupancy, setOccupancy] = useState(0)
 
   useEffect(() => {
     if (!chat) return

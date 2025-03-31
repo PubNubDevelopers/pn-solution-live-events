@@ -50,6 +50,15 @@ export const channelData = [
       "https://pn-solution-live-events.netlify.app/avatars/group/euro2024.png",
     createInAppContext: false,
   },
+  {
+    id: "euro2024.match-stats",
+    name: "This channel distributes statistics associated with the match",
+    description:
+      "Statistics update in real time in sync with the stream",
+    avatar:
+      "https://pn-solution-live-events.netlify.app/avatars/group/euro2024.png",
+    createInAppContext: false,
+  },
 ];
 export const chatChannelId = channelData[0].id;
 export const liveCommentaryChannelId = channelData[1].id;
@@ -57,6 +66,7 @@ export const streamReactionsChannelId = channelData[2].id;
 export const pollDeclarations = channelData[3].id;
 export const pollVotes = channelData[4].id;
 export const pollResults = channelData[5].id;
+export const matchStatsChannelId = channelData[6].id;
 
 export const testUsers = [
   {

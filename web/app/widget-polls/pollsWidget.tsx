@@ -96,7 +96,7 @@ export default function PollsWidget ({
     <div className={`${className} px-6 pt-3 pb-4`}>
       {/* ToDo: Remove this testing div */}
       <div className='flex flex-row text-cherry font-semibold'>
-        Testing:...{' '}
+        LOCAL Testing:...{' '}
         <div
           className='cursor-pointer'
           onClick={() => {

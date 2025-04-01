@@ -40,6 +40,14 @@ export default function SideMenuDataControls ({ chat }) {
 
 
   useEffect(() => {
+    async function triggerSimulation(selectedSimulation) {
+      const res = await fetch('https://ps.pndsn.com/v1/blocks/sub-key/sub-c-12de08da-d5db-4255-8c4f-d9059385670a/simulate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ simulate: selectedSimulation, channel: streamReactionsChannelId, count: 120 })
+      });
+      console.log(await res.json());
+    }
     async function sendControlMessage(occupancy)
     {
       if (chat)
@@ -94,8 +102,9 @@ export default function SideMenuDataControls ({ chat }) {
             selectedSimulation == 0 ? 'text-navy500' : 'text-neutral50'
           } cursor-pointer`}
           onClick={e => {
+            triggerSimulation(`${simulationNames[selectedSimulation]}`) 
             console.log(
-              `ToDo: Simulating ${simulationNames[selectedSimulation]}`
+              `Simulating ${simulationNames[selectedSimulation]}`
             )
             e.stopPropagation()
           }}

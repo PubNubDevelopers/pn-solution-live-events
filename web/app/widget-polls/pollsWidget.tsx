@@ -16,7 +16,7 @@ export default function PollsWidget ({
   //  ToDo - Remove test polls when integrate with back end
   const testPolls = [
     {
-      id: 1,  //  Assume this increments when we only show the most recent results
+      id: 1, //  Assume this increments when we only show the most recent results
       title: 'Who will get more yellow cards?',
       victoryPoints: 2,
       isPollOpen: true,
@@ -198,13 +198,15 @@ export default function PollsWidget ({
                 />
               )
             })
-          )}
-          <PollCardTitle text='Results' />
-          {polls
-            ?.filter(poll => poll.isPollOpen == false || poll.answered == true)
-            .sort((a, b) => b.id - a.id) // Sort by ID descending
-            .slice(0, 3) // Limit to 3 entries
-            .map((poll, index) => {
+        )}
+        {polls?.filter(
+          poll => poll.isPollOpen == false || poll.answered == true
+        ).length > 0 && <PollCardTitle text='Results' />}
+        {polls
+          ?.filter(poll => poll.isPollOpen == false || poll.answered == true)
+          .sort((a, b) => b.id - a.id) // Sort by ID descending
+          .slice(0, 3) // Limit to 3 entries
+          .map((poll, index) => {
             return (
               <PollRowWithButton
                 key={index}

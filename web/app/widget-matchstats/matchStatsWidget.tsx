@@ -404,7 +404,7 @@ function FeatureStats ({
           <div className='font-semibold text-base'>
             {infoListItems.title ?? ''}
           </div>
-          <div className='px-4 pt-1 list-disc text-sm'>
+          <div className='px-4 pt-1 list-disc text-sm pb-4'>
             {infoListItems.bullets?.map((bulletText, index) => {
               return <li key={index}>{bulletText}</li>
             })}

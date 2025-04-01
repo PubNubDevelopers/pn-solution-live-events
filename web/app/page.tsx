@@ -36,12 +36,28 @@ export default function Home () {
 
   if (!salesIntroPageShown && loginPageShown && !userId) {
     return (
-      <LoginPage chat={chat} setChat={setChat} setLoginPageShown={setLoginPageShown} setSalesIntroPageShown={setSalesIntroPageShown} setUserId={setUserId} isGuidedDemo={guidedDemo} setLoadMessage={setLoadMessage}/>
+      <LoginPage
+        chat={chat}
+        setChat={setChat}
+        setLoginPageShown={setLoginPageShown}
+        setSalesIntroPageShown={setSalesIntroPageShown}
+        setUserId={setUserId}
+        isGuidedDemo={guidedDemo}
+        setLoadMessage={setLoadMessage}
+      />
     )
   }
 
   if (userId) {
-    return <SportsEventPage chat={chat} userId={userId} setUserId={setUserId} setLoginPageShown={setLoginPageShown} isGuidedDemo={guidedDemo} />
+    return (
+      <SportsEventPage
+        chat={chat}
+        userId={userId}
+        setUserId={setUserId}
+        setLoginPageShown={setLoginPageShown}
+        isGuidedDemo={guidedDemo}
+      />
+    )
   }
 
   if (!userId) {

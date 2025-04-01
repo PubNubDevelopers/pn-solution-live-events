@@ -1,3 +1,4 @@
+import { useState, useRef } from 'react'
 import UserStatus from './userStatus'
 import ChatWidget from '../widget-chat/chatWidget'
 import StreamWidget from '../widget-stream/streamWidget'
@@ -7,6 +8,7 @@ import AdvertsOfferWidget from '../widget-adverts/advertsOfferWidget'
 import PollsWidget from '../widget-polls/pollsWidget'
 import BotWidget from '../widget-bot/botWidget'
 import LiveCommentaryWidget from '../widget-liveCommentary/liveCommentaryWidget'
+import Notification from './notification'
 
 export default function TabletContents ({
   chat,
@@ -14,14 +16,52 @@ export default function TabletContents ({
   visibleGuide,
   setVisibleGuide,
   logout,
-  showDynamicAd,  //  todo testing only... this should come from PubNub, not from app state
+  showDynamicAd, //  todo testing only... this should come from PubNub, not from app state
   heightConstrained = true
 }) {
+  const [notificationHeading, setNotificationHeading] = useState(null)
+  const [notification, setNotification] = useState(null)
+  const [notificationImageUrl, setNotificationImageUrl] = useState(null)
+  const notificationTimer = useRef<any | null>(null)
   const defaultWidgetClasses =
     'rounded-lg border-1 border-navy200 bg-white shadow-md'
 
+  //  todo listen for PN messages here to show a notification, and call this function when triggered.
+  function showNotification (heading, message, imageUrl) {
+    setNotificationHeading(heading)
+    setNotification(message)
+    setNotificationImageUrl(imageUrl)
+
+    // Clear the existing timer if it exists
+    if (notificationTimer.current) {
+      clearTimeout(notificationTimer.current)
+    }
+
+    // Set a new timer to clear the notification after 5 seconds
+    notificationTimer.current = setTimeout(() => {
+      setNotificationHeading(null)
+      setNotification(null)
+      setNotificationImageUrl(null)
+      notificationTimer.current = null // Reset the timer reference
+    }, 3000)
+  }
+
   return (
     <div className='w-full rounded-2xl bg-navy50 text-neutral-900 h-full overflow-y-auto overscroll-none'>
+      {notification && (
+        <Notification
+          heading={notificationHeading}
+          message={notification}
+          imageUrl={notificationImageUrl}
+          onClose={() => {
+            setNotification(null)
+            if (notificationTimer.current) {
+              clearTimeout(notificationTimer.current)
+              notificationTimer.current = null
+            }
+          }}
+        />
+      )}
       <TabletHeader />
       <div
         className={`flex flex-row px-6 gap-3 w-full h-full ${

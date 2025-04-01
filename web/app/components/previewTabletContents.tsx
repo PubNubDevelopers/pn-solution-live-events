@@ -70,7 +70,7 @@ export default function TabletContents ({
           heightConstrained && 'min-h-[680px] max-h-[680px]'
         } rounded-b-2xl`}
       >
-        <div className='w-3/5 flex flex-col gap-4'>
+        <div className={`w-[700px] flex flex-col gap-4`}>
           <StreamWidget
             className={`${defaultWidgetClasses}`}
             isMobilePreview={false}
@@ -97,7 +97,7 @@ export default function TabletContents ({
           />
           <div className='min-h-3'></div>
         </div>
-        <div className='w-2/5 flex flex-col gap-4'>
+        <div className='w-full flex flex-col gap-4'>
           {showDynamicAd && (
             <AdvertsOfferWidget
               className={`${defaultWidgetClasses}`}

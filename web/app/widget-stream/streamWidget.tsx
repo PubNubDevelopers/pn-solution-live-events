@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
 import { streamReactionsChannelId } from '../data/testData'
 import { PlayCircle } from '../side-menu/sideMenuIcons'
+import ReactPlayer from 'react-player'
 
 export default function StreamWidget ({
   className,
@@ -13,6 +14,12 @@ export default function StreamWidget ({
 }) {
   //  ToDo: Currently this is only the occupancy from the Data Controls - need to add any other real presence count (including ourselves)
   const [occupancy, setOccupancy] = useState(0)
+  const [videoUrl, setVideoUrl] = useState(
+    'https://v.ftcdn.net/05/31/66/96/700_F_531669685_zuA1YSiPFLmRrPPzBG2iryBnmDkfYqzS_ST.mp4'
+  )
+  const [isVideoPlaying, setIsVideoPlaying] = useState(false)
+  const [videoProgress, setVideoProgress] = useState(0)
+  const playerRef = useRef<ReactPlayer>(null)
 
   useEffect(() => {
     if (!chat) return
@@ -55,6 +62,26 @@ export default function StreamWidget ({
     }
   }
 
+  function onVideoReady (ev) {
+    console.log('Video ready')
+    console.log(ev)
+  }
+
+  function onVideoStart() {
+    console.log('Video starting')
+  }
+
+  function onVideoPlay() {
+    console.log('Video playing')
+    playerRef.current?.seekTo(videoProgress, 'seconds')
+  }
+
+  function onVideoProgress (ev) {
+    console.log(ev)
+    console.log(`Played (seconds): ${ev.playedSeconds}`)
+    setVideoProgress(ev.playedSeconds)
+  }
+
   async function emojiClicked (emoji) {
     if (!chat) return
     await chat.sdk.publish({
@@ -67,10 +94,48 @@ export default function StreamWidget ({
     <div className={`${className}`}>
       <div className='relative'>
         <div
-          id={`live-stream-${isMobilePreview}`}
-          className='text-5xl bg-neutral200 min-h-96'
+          className='absolute left-0 top-0 text-sm text-cherry bg-white/70 cursor-pointer font-semibold'
+          onClick={() => {
+            setIsVideoPlaying(!isVideoPlaying)
+          }}
         >
-          I am the Streaming Widget
+          {`TEST: ${isVideoPlaying ? 'PAUSE' : 'START'} VIDEO STREAM`}
+        </div>
+
+        <div
+          id={`live-stream-${isMobilePreview}`}
+          className={`bg-neutral200 ${
+            isMobilePreview ? '' : ''
+          } pointer-events-none`}
+        >
+          {isVideoPlaying == true ? (
+            <ReactPlayer
+              ref={playerRef}
+              url={videoUrl}
+              playing={isVideoPlaying}
+              controls={false}
+              width={isMobilePreview ? 418 : 698}
+              height={isMobilePreview ? 235 : 393}
+              loop={true}
+              muted={true}
+              pip={false}
+              onReady={ev => onVideoReady(ev)}
+              onStart={() => onVideoStart()}
+              onPlay={() => onVideoPlay()}
+              onProgress={ev => onVideoProgress(ev)}
+            />
+          ) : (
+            <div
+              className={`flex flex-row items-center justify-center ${
+                isMobilePreview ? 'w-[418px]' : 'w-[698px]'
+              } ${isMobilePreview ? 'h-[235px]' : 'h-[393px]'}`}
+            >
+              <div className='flex flex-col items-center'>
+                <LiveStreamIcon />{' '}
+                <div className='font-medium text-lg'>Waiting for stream...</div>
+              </div>
+            </div>
+          )}
         </div>
         <div className='absolute top-0 right-0'>
           <LiveOccupancyCount />
@@ -117,13 +182,12 @@ export default function StreamWidget ({
           LIVE
         </div>
         <div className='flex flex-row px-2 py-1 gap-1 items-center border-l-2 border-white/20'>
-          <RemoveRedEye />{occupancy.toLocaleString(undefined, {maximumFractionDigits:2})}
+          <RemoveRedEye />
+          {occupancy.toLocaleString(undefined, { maximumFractionDigits: 2 })}
         </div>
       </div>
     )
   }
-
-
 }
 
 const RemoveRedEye = props => {
@@ -144,6 +208,44 @@ const RemoveRedEye = props => {
           fill='currentColor'
         />
       </g>
+    </svg>
+  )
+}
+
+const LiveStreamIcon = props => {
+  return (
+    <svg
+      id='Icons'
+      xmlns='http://www.w3.org/2000/svg'
+      viewBox='0 0 100 100'
+      width='100'
+      height='100'
+      {...props}
+    >
+      <defs>
+        <style>
+          {
+            '.cls-1,.cls-2{stroke:#161c2d;fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:2px}.cls-2{stroke:#cd2026}'
+          }
+        </style>
+      </defs>
+      <ellipse className='cls-2' cx={50.63} cy={47.63} rx={19.24} ry={19.48} />
+      <path
+        className='cls-1'
+        d='M45.96 40.8L45.96 55.27 58.83 48.03 45.96 40.8z'
+      />
+      <path className='cls-2' d='M34.91 79.81L34.91 88.39 39.97 88.39' />
+      <path
+        className='cls-2'
+        d='M67.55 79.81L62.49 79.81 62.49 88.39 67.55 88.39'
+      />
+      <path className='cls-2' d='M45.03 79.81L45.03 88.39' />
+      <path className='cls-2' d='M63.02 83.55L66.24 83.55' />
+      <path className='cls-2' d='M49.95 79.88L53.41 88.39 56.87 79.81' />
+      <path
+        className='cls-1'
+        d='M73.44 82.67c7.04-2.96 12-9.97 12-18.15V31.26c0-10.85-8.71-19.65-19.46-19.65H34.02c-10.75 0-19.46 8.8-19.46 19.65v33.26c0 8.19 4.97 15.21 12.03 18.16'
+      />
     </svg>
   )
 }

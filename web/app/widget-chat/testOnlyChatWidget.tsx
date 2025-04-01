@@ -16,6 +16,7 @@ export default function TestChatWidget ({
   const messageListRef = useRef<HTMLDivElement>(null)
   const [testChatInstances, setTestChatInstances] = useState<Chat[]>([])
   const [testUsers, setTestUsers] = useState<User[]>([])
+  const [readyToTest, setReadyToTest] = useState(false)
 
   function uniqueById (items) {
     const set = new Set()
@@ -92,6 +93,8 @@ export default function TestChatWidget ({
       if (channel) {
         setActiveChannel(channel)
         await createTestChatObjects()
+        setReadyToTest(true)
+        console.log('test objects created')
       } else {
         console.error('Failed to get active channel')
       }
@@ -120,14 +123,14 @@ export default function TestChatWidget ({
 
   return (
     <div className={`${className}`}>
-      <div
+      {readyToTest && <div
         className='text-sm text-cherry cursor-pointer font-semibold'
-        onClick={e => {
-          sendTestChatMessage(e)
+        onClick={async e => {
+          await sendTestChatMessage(e)
         }}
       >
         TEST - SEND TEST MESSAGE
-      </div>
+      </div>}
       <div
         className='flex flex-col py-4 px-4 gap-4 min-h-[200px] max-h-[200px] overflow-y-auto overscroll-none'
         ref={messageListRef}

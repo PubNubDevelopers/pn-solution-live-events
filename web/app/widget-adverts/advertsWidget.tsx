@@ -39,10 +39,9 @@ export default function AdvertsWidget ({
                 key={index}
                 src={adUrl}
                 alt='Advert'
-                className='h-auto max-h-[147px] w-auto rounded-lg shadow-sm cursor-pointer'
-                width={0}
-                sizes={'33vw'}
-                height={0}
+                className='rounded-lg shadow-sm cursor-pointer'
+                width={219}
+                height={124}
                 onClick={(e) => {adClicked(e, index, adUrls[index])}}
                 priority
               />

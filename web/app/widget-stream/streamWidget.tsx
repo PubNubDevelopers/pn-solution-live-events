@@ -123,6 +123,7 @@ export default function StreamWidget ({
               onStart={() => onVideoStart()}
               onPlay={() => onVideoPlay()}
               onProgress={ev => onVideoProgress(ev)}
+              progressInterval={1000}
             />
           ) : (
             <div

@@ -82,8 +82,10 @@ function SideMenuContents ({ chat, isGuidedDemo, currentUser }) {
 
         <div className='flex flex-col gap-2.5 text-white font-normal text-base px-6'>
           <div className='font-semibold'>Demo features</div>
-          <div className=''>This demo only uses a subset of PubNub features. Select 'How it works'
-          to see more information</div>
+          <div className=''>
+            This demo only uses a subset of PubNub features. Select 'How it
+            works' to see more information
+          </div>
         </div>
 
         <Accordion
@@ -202,6 +204,23 @@ function TextWithLinkButton ({ label, buttonText, url }) {
   )
 }
 
+function SalesInstructionsToSwitchAccount ({ isGuidedDemo, instructionType }) {
+  return (
+    <>
+      {isGuidedDemo && (
+        <div className='flex flex-col gap-2.5 pb-2 text-white font-normal text-base'>
+          <div className='font-semibold'>Sales Only</div>
+          <div className=''>
+            {instructionType == 'illuminate'
+              ? `Switch organizations to '${urls.instructions.account}', then select the appropriate Illuminate dashboards and actions`
+              : `Switch organizations to '${urls.instructions.account}', select the '${urls.instructions.appName}' app, then the '${urls.instructions.keysetName}' keyset`}
+          </div>
+        </div>
+      )}
+    </>
+  )
+}
+
 function SideMenuBizopsWorkspace ({ isGuidedDemo, currentUser }) {
   const [userManagementUrl, setUserManagementUrl] =
     useState('https://pubnub.com')
@@ -210,18 +229,29 @@ function SideMenuBizopsWorkspace ({ isGuidedDemo, currentUser }) {
 
   useEffect(() => {
     if (!currentUser) return
-    const userManagementBase = isGuidedDemo
-      ? urls.bizOpsWorkspace.userManagement.salesLed
-      : urls.bizOpsWorkspace.userManagement.selfLed
-    setUserManagementUrl(`${userManagementBase}${currentUser.id}`)
-    const channelManagementBase = isGuidedDemo
-      ? urls.bizOpsWorkspace.channelManagement.salesLed
-      : urls.bizOpsWorkspace.channelManagement.selfLed
-    setChannelManagementUrl(`${channelManagementBase}${chatChannelId}`)
+    if (isGuidedDemo)
+      setUserManagementUrl(`${urls.bizOpsWorkspace.userManagement.salesLed}`)
+    else
+      setUserManagementUrl(
+        `${urls.bizOpsWorkspace.userManagement.selfLed}${currentUser.id}`
+      )
+
+    if (isGuidedDemo)
+      setChannelManagementUrl(
+        `${urls.bizOpsWorkspace.channelManagement.salesLed}`
+      )
+    else
+      setChannelManagementUrl(
+        `${urls.bizOpsWorkspace.channelManagement.selfLed}${currentUser?.id}`
+      )
   }, [isGuidedDemo, currentUser])
 
   return (
     <div className='flex flex-col gap-3 text-base font-semibold'>
+      <SalesInstructionsToSwitchAccount
+        isGuidedDemo={isGuidedDemo}
+        instructionType={'bizops'}
+      />
       <TextWithLinkButton
         label={'User Management'}
         buttonText={'View user'}
@@ -244,10 +274,10 @@ function SideMenuChatModeration ({ isGuidedDemo }) {
     useState('https://pubnub.com')
 
   useEffect(() => {
-    const moderationBase = isGuidedDemo
-      ? urls.chatAndModeration.moderation.salesLed
-      : urls.chatAndModeration.moderation.selfLed
-    setChannelModerationUrl(`${moderationBase}${chatChannelId}`)
+    if (isGuidedDemo)
+      setChannelModerationUrl(`${urls.chatAndModeration.moderation.salesLed}`)
+    else setChannelModerationUrl(`${urls.chatAndModeration.moderation.selfLed}`)
+
     setTranslateFunctionUrl(
       isGuidedDemo
         ? urls.chatAndModeration.translation.salesLed
@@ -257,6 +287,10 @@ function SideMenuChatModeration ({ isGuidedDemo }) {
 
   return (
     <div className='flex flex-col gap-3 text-base font-semibold'>
+      <SalesInstructionsToSwitchAccount
+        isGuidedDemo={isGuidedDemo}
+        instructionType={'bizops'}
+      />
       <TextWithLinkButton
         label={'Language translation'}
         buttonText={'View Function'}
@@ -273,6 +307,10 @@ function SideMenuChatModeration ({ isGuidedDemo }) {
 function SideMenuIlluminate ({ isGuidedDemo }) {
   return (
     <div className='flex flex-col gap-3 text-base font-semibold'>
+      <SalesInstructionsToSwitchAccount
+        isGuidedDemo={isGuidedDemo}
+        instructionType={'illuminate'}
+      />
       <TextWithLinkButton
         label={'Determine points'}
         buttonText={'View'}
@@ -306,7 +344,11 @@ function SideMenuIlluminate ({ isGuidedDemo }) {
 function SideMenuFunctions ({ isGuidedDemo }) {
   return (
     <div className='flex flex-col gap-3 text-base font-semibold'>
-      {/* TODO: URL Needs to be set here */}
+      {/* ToDo: Are there specific instructions for Functions?  Right now it's generic with BizOps (select app and keyset) */}
+      <SalesInstructionsToSwitchAccount
+        isGuidedDemo={isGuidedDemo}
+        instructionType={'functions'}
+      />
       <TextWithLinkButton
         label={'Score Summary'}
         buttonText={'View Function'}

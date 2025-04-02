@@ -20,36 +20,21 @@ export default function PreviewMobile ({
   logout,
   showDynamicAd //  Testing only
 }) {
-  const [notificationHeading, setNotificationHeading] = useState(null)
-  const [notification, setNotification] = useState(null)
-  const [notificationImageUrl, setNotificationImageUrl] = useState(null)
-  const notificationTimer = useRef<any | null>(null)
+  const [notification, setNotification] = useState<{
+    heading: string
+    message: string
+    imageUrl: string
+  } | null>(null)
   const [alert, setAlert] = useState<string | null>(null)
   const defaultWidgetClasses =
     'rounded-lg border-1 border-navy200 bg-white shadow-sm'
 
   //  todo listen for PN messages here to show a notification, and call this function when triggered.
   function showNotification (heading, message, imageUrl) {
-    setNotificationHeading(heading)
-    setNotification(message)
-    setNotificationImageUrl(imageUrl)
-
-    // Clear the existing timer if it exists
-    if (notificationTimer.current) {
-      clearTimeout(notificationTimer.current)
-    }
-
-    // Set a new timer to clear the notification after 5 seconds
-    notificationTimer.current = setTimeout(() => {
-      setNotificationHeading(null)
-      setNotification(null)
-      setNotificationImageUrl(null)
-      notificationTimer.current = null // Reset the timer reference
-    }, 3000)
+    setNotification({ heading: heading, message: message, imageUrl: imageUrl })
   }
 
   function showAlert () {
-    console.log('alert')
     setAlert('Alert Text')
   }
 
@@ -69,15 +54,11 @@ export default function PreviewMobile ({
           )}
           {notification && (
             <Notification
-              heading={notificationHeading}
-              message={notification}
-              imageUrl={notificationImageUrl}
+              heading={notification.heading}
+              message={notification.message}
+              imageUrl={notification.imageUrl}
               onClose={() => {
                 setNotification(null)
-                if (notificationTimer.current) {
-                  clearTimeout(notificationTimer.current)
-                  notificationTimer.current = null
-                }
               }}
             />
           )}
@@ -90,6 +71,18 @@ export default function PreviewMobile ({
               }}
             >
               TEST: SHOW ALERT
+            </div>
+            <div
+              className='absolute left-10 top-5 text-sm z-50 font-semibold text-cherry cursor-pointer'
+              onClick={() => {
+                showNotification(
+                  'Heading',
+                  'Text',
+                  '/notification/image-cup.png'
+                )
+              }}
+            >
+              TEST: SHOW NOTIFICATION
             </div>
           </div>
 

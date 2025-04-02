@@ -1,70 +1,65 @@
 export const urls = {
+  instructions: {
+    account: "demo@pubnub.com",
+    appName: "Guided Demos",
+    keysetName: "Live Events",
+  },
   bizOpsWorkspace: {
     userManagement: {
-      //  todo does this change for the read-only portal
       selfLed:
-        "https://admin.pubnub.com/user/590466/account/632313/app/35517029/key/1268872/bizops-dashboard/users/",
-      salesLed:
-        "https://admin.pubnub.com/user/590466/account/618626/app/35498368/key/1269143/bizops-dashboard/users/",
+        "https://demo-admin.pubnub.com/user/627747/account/632313/app/35517029/key/1268872/bizops-dashboard/users/",
+      salesLed: "https://admin.pubnub.com/bizops/",
     },
     channelManagement: {
       //  todo does this change for the read-only portal
       selfLed:
-        "https://admin.pubnub.com/user/590466/account/632313/app/35517029/key/1268872/bizops-dashboard/channels/",
-      salesLed:
-        "https://admin.pubnub.com/user/590466/account/618626/app/35498368/key/1269143/bizops-dashboard/channels/",
+        "https://demo-admin.pubnub.com/user/627747/account/632313/app/35517029/key/1268872/bizops-dashboard/channels/",
+      salesLed: "https://admin.pubnub.com/bizops/",
     },
   },
   chatAndModeration: {
     translation: {
-      //  todo does this change for the read-only portal
-      //  todo update this after the function has been created (currently pointing at test account)
+      //  todo update this after the function has been created (currently points to top level, but should point to actual function)
       selfLed:
-        "https://admin.pubnub.com/user/590466/account/487898/app/35517145/key/1269058/function-modules/69583/editor/135491",
+        "https://demo-admin.pubnub.com/user/627747/account/632313/functions-v2",
       //  todo update this after the function has been created (currently pointing at test account)
       salesLed:
-        "https://admin.pubnub.com/user/590466/account/487898/app/35517145/key/1269058/function-modules/69583/editor/135491",
+        "https://admin.pubnub.com/functions/",
     },
     moderation: {
-      //  todo does this change for the read-only portal
+      //  ToDo: Navigating directly to the specific channel to be moderated was unreliable
       selfLed:
-        "https://admin.pubnub.com/user/590466/account/632313/app/35517029/key/1268872/moderation/chat?channels=",
-      salesLed:
-        "https://admin.pubnub.com/user/590466/account/618626/app/35498368/key/1269143/moderation/chat?channels=",
+        "https://demo-admin.pubnub.com/user/627747/account/632313/app/35517029/key/1268872/moderation/",
+      salesLed: "https://admin.pubnub.com/bizops/",
     },
   },
   illuminate: {
     determinePoints: {
-      //  todo does this change for the read-only portal
       //  todo update this after the function has been created)
       selfLed: "https://pubnub.com",
-      //  todo update this after the function has been created)
-      salesLed: "https://pubnub.com",
+      salesLed:
+        "https://admin.pubnub.com/illuminate/",
     },
     customAds: {
-      //  todo does this change for the read-only portal
       //  todo update this after the function has been created
       selfLed: "https://pubnub.com",
       //  todo update this after the function has been created
       salesLed: "https://pubnub.com",
     },
     createNew: {
-      //  todo does this change for the read-only portal
       //  todo update this after the function has been created
       selfLed: "https://pubnub.com",
-      //  todo update this after the function has been created
-      salesLed: "https://pubnub.com",
+      salesLed:
+        "https://admin.pubnub.com/illuminate/",
     },
   },
   functions: {
     scoreSummary: {
-      //  todo does this change for the read-only portal
       //  todo update this after the function has been created
       selfLed: "https://pubnub.com",
-      //  todo update this after the function has been created
-      salesLed: "https://pubnub.com",
+      salesLed:
+        "https://admin.pubnub.com/functions/",
     },
   },
   popoutView: "./popout/",
 };
-

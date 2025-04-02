@@ -43,7 +43,10 @@ export default function StreamWidget ({
   //  ToDo handle points awards when user wins a poll
   //  todo currently the poll is answered locally, so if you switch from mobile to tablet, answers are lost.  When integrate with back end changes should persist automatically (test this)
   const [currentPoll, setCurrentPoll] = useState(testPoll)
-  const [currentPollAnswer, setCurrentPollAnswer] = useState<{ id: number; text: string } | null>(null)
+  const [currentPollAnswer, setCurrentPollAnswer] = useState<{
+    id: number
+    text: string
+  } | null>(null)
 
   useEffect(() => {
     if (!chat) return
@@ -97,7 +100,11 @@ export default function StreamWidget ({
 
   function onVideoPlay () {
     console.log('Video playing')
-    playerRef.current?.seekTo(videoProgress, 'seconds')
+    //  todo: This doesn't work for YouTube videos FYI as you get a videoPlay callback
+    //  every time you seek (it seems).  I wouldn't trust this logic if the video is slow to load, but I need to rework the video sync logic anyway.
+    //if (videoProgress != 0) {
+    //  playerRef.current?.seekTo(videoProgress, 'seconds')
+    //}
   }
 
   function onVideoProgress (ev) {

@@ -367,7 +367,7 @@ function SideMenuFunctions ({ isGuidedDemo }) {
 }
 function SideMenuPushNotifications ({}) {
   //  todo set this to the correct emulator Url
-  const emulatorUrl = 'https://www.google.com'
+  const emulatorUrl = './emulator/'
   return (
     <div className='flex flex-col gap-4 text-base font-semibold'>
       <div className='text-neutral50 font-normal'>

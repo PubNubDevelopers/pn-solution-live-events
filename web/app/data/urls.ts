@@ -22,7 +22,6 @@ export const urls = {
       //  todo update this after the function has been created (currently points to top level, but should point to actual function)
       selfLed:
         "https://demo-admin.pubnub.com/user/627747/account/632313/functions-v2",
-      //  todo update this after the function has been created (currently pointing at test account)
       salesLed:
         "https://admin.pubnub.com/functions/",
     },

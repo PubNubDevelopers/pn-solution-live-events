@@ -137,7 +137,7 @@ export default function MatchStatsWidget ({
           isMobilePreview
             ? 'grid grid-cols-2 place-items-stretch'
             : 'grid grid-flow-col grid-rows-3 place-items-stretch'
-        } gap-3 bg-brandAccent5 p-4`}
+        } gap-3 bg-brandAccent5 p-4 rounded-lg`}
       >
         <div className={`${commonStatsBoxClasses}`}>
           {giveStatsBox(matchStats?.statBox1)}

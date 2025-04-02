@@ -51,3 +51,33 @@ body {
 .animate-slide-down {
   animation: slide-down 0.5s ease-out forwards;
 }
+
+@keyframes alert-in {
+  0% {
+    transform: translateX(40%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(50%);
+    opacity: 1;
+  }
+}
+
+@keyframes alert-out {
+  0% {
+    transform: translateX(50%);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(70%);
+    opacity: 0;
+  }
+}
+
+.animate-alert-in {
+  animation: alert-in 1s ease-in-out forwards;
+}
+
+.animate-alert-out {
+  animation: alert-out 1s ease-in-out forwards;
+}

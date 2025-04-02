@@ -129,7 +129,7 @@ export default function TestChatWidget ({
           await sendTestChatMessage(e)
         }}
       >
-        TEST - SEND TEST MESSAGE
+        TEST - SEND TEST CHAT MESSAGE
       </div>}
       <div
         className='flex flex-col py-4 px-4 gap-4 min-h-[200px] max-h-[200px] overflow-y-auto overscroll-none'

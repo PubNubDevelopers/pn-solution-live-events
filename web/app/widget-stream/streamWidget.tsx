@@ -2,6 +2,12 @@ import { useState, useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
 import { streamReactionsChannelId } from '../data/testData'
 import { PlayCircle } from '../side-menu/sideMenuIcons'
+import {
+  ActivitiesIcon,
+  ThumbsDownIcon,
+  AwardIcon,
+  CelebrateSuccessIcon
+} from './streamWidgetIcons'
 import ReactPlayer from 'react-player'
 
 export default function StreamWidget ({
@@ -20,6 +26,24 @@ export default function StreamWidget ({
   const [isVideoPlaying, setIsVideoPlaying] = useState(false)
   const [videoProgress, setVideoProgress] = useState(0)
   const playerRef = useRef<ReactPlayer>(null)
+  //  ToDo - Remove test poll when integrate with back end
+  const testPoll = {
+    id: 1,
+    title: 'Win 10 points for a correct prediction',
+    victoryPoints: 10,
+    isPollOpen: true,
+    answered: false,
+    correctOption: 2, //  In production this would be part of the results message
+    options: [
+      { id: 1, text: 'Real Madrid' },
+      { id: 2, text: 'Man City' },
+      { id: 3, text: 'Draw' }
+    ]
+  }
+  //  ToDo handle points awards when user wins a poll
+  //  todo currently the poll is answered locally, so if you switch from mobile to tablet, answers are lost.  When integrate with back end changes should persist automatically (test this)
+  const [currentPoll, setCurrentPoll] = useState(testPoll)
+  const [currentPollAnswer, setCurrentPollAnswer] = useState<{ id: number; text: string } | null>(null)
 
   useEffect(() => {
     if (!chat) return
@@ -67,11 +91,11 @@ export default function StreamWidget ({
     console.log(ev)
   }
 
-  function onVideoStart() {
+  function onVideoStart () {
     console.log('Video starting')
   }
 
-  function onVideoPlay() {
+  function onVideoPlay () {
     console.log('Video playing')
     playerRef.current?.seekTo(videoProgress, 'seconds')
   }
@@ -143,6 +167,23 @@ export default function StreamWidget ({
         </div>
       </div>
       <ReactionsBar />
+      {/* ToDo: Remove test code */}
+      <div className='relative'>
+        <div
+          className='absolute left-0 top-0 text-sm text-cherry bg-white/70 cursor-pointer font-semibold'
+          onClick={() => {
+            setCurrentPoll({
+              ...currentPoll,
+              isPollOpen: !currentPoll.isPollOpen,
+              answered: !currentPoll.isPollOpen ? false : currentPoll.answered
+            })
+          }}
+        >
+          {`TEST: ${currentPoll.isPollOpen ? 'CLOSE POLL' : 'OPEN POLL'}`}
+        </div>
+      </div>
+
+      {currentPoll && <LiveStreamPoll poll={currentPoll} />}
     </div>
   )
 
@@ -171,6 +212,121 @@ export default function StreamWidget ({
         }}
       >
         {emoji}
+      </div>
+    )
+  }
+
+  function LiveStreamPoll ({ poll }) {
+    return (
+      <>
+        {poll.answered && poll.isPollOpen && (
+          <LiveStreamPollAnswered poll={poll} />
+        )}
+        {!poll.answered && poll.isPollOpen && (
+          <LiveStreamPollQuestion poll={poll} />
+        )}
+        {poll.answered && !poll.isPollOpen && (
+          <LivePollResults
+            poll={poll}
+            victorious={poll.correctOption == currentPollAnswer?.id}
+          />
+        )}
+        {!poll.answered && !poll.isPollOpen && <LivePollNotAvailable />}
+      </>
+    )
+  }
+
+  function LiveStreamPollQuestion ({ poll }) {
+    return (
+      <>
+        {' '}
+        <div
+          className={`flex ${
+            isMobilePreview ? 'flex-col' : 'flex-row'
+          } items-center justify-between px-6 py-3 gap-6`}
+        >
+          <div className='text-neutral700 text-sm font-normal'>
+            {poll.title ?? 'Unspecified Poll'}
+          </div>
+          <div className='flex flex-row gap-3'>
+            {poll?.options?.map((option, index) => (
+              <LiveStreamPollButton
+                key={index}
+                id={option.id}
+                buttonText={option.text}
+                onClick={(id, option) => {
+                  console.log(`Selected choice: ${option}`)
+                  setCurrentPollAnswer({ id: id, text: option })
+                  setCurrentPoll({ ...currentPoll, answered: true })
+                }}
+              />
+            ))}
+          </div>
+        </div>
+      </>
+    )
+  }
+
+  function LiveStreamPollAnswered ({ poll }) {
+    return (
+      <div className='flex flex-row w-full items-center justify-center px-6 py-3 gap-1'>
+        <div className='text-base font-semibold'>
+          Your predication for {poll.victoryPoints} points:{' '}
+        </div>
+        <div className='text-base font-normal'></div>
+        {currentPollAnswer?.text}
+      </div>
+    )
+  }
+
+  function LivePollResults ({ poll, victorious }) {
+    return (
+      <div className='flex flex-row w-full items-center justify-between px-6 py-2'>
+        {victorious ? (
+          <CelebrateSuccessIcon width={48} height={48} />
+        ) : (
+          <ThumbsDownIcon width={48} height={48} />
+        )}
+        <div
+          className={`flex ${
+            isMobilePreview ? 'flex-col' : 'flex-row'
+          } items-center gap-1`}
+        >
+          <div className='text-base font-semibold'>
+            {victorious ? 'Correct prediction!' : 'Bad luck.'}
+          </div>
+          <div className='text-base font-normal'>
+            {victorious
+              ? `You've won ${poll.victoryPoints} points`
+              : `${
+                  poll.options.find(option => option.id === poll.correctOption)
+                    ?.text
+                } took the win`}
+          </div>
+        </div>
+        {victorious ? (
+          <AwardIcon width={48} height={48} />
+        ) : (
+          <ActivitiesIcon width={48} height={48} />
+        )}
+      </div>
+    )
+  }
+
+  function LivePollNotAvailable ({}) {
+    return <div className=''></div>
+  }
+
+  function LiveStreamPollButton ({ id, buttonText, onClick }) {
+    return (
+      <div
+        className={`flex py-2 px-4 justify-center w-full min-w-28 grow max-h-11 text-nowrap text-navy900 bg-navy50 border-1 border-navy300 rounded-md shadow-sm cursor-pointer`}
+        onClick={e => {
+          e.stopPropagation()
+          onClick(id, buttonText)
+        }}
+      >
+        {buttonText}
       </div>
     )
   }

@@ -9,6 +9,7 @@ import PollsWidget from '../widget-polls/pollsWidget'
 import BotWidget from '../widget-bot/botWidget'
 import LiveCommentaryWidget from '../widget-liveCommentary/liveCommentaryWidget'
 import Notification from './notification'
+import Alert from './alert'
 
 export default function PreviewMobile ({
   className,
@@ -23,6 +24,7 @@ export default function PreviewMobile ({
   const [notification, setNotification] = useState(null)
   const [notificationImageUrl, setNotificationImageUrl] = useState(null)
   const notificationTimer = useRef<any | null>(null)
+  const [alert, setAlert] = useState<string | null>(null)
   const defaultWidgetClasses =
     'rounded-lg border-1 border-navy200 bg-white shadow-sm'
 
@@ -46,12 +48,25 @@ export default function PreviewMobile ({
     }, 3000)
   }
 
+  function showAlert () {
+    console.log('alert')
+    setAlert('Alert Text')
+  }
+
   return (
     <div
       className={`${className} w-[460px] border-4 border-navy100 rounded-3xl bg-black px-2 py-[14px] h-full max-h-[954px]`}
     >
       <div className='w-full rounded-2xl bg-navy50 text-neutral-900 h-full pb-2'>
         <div className='w-full h-full overflow-y-auto overscroll-none'>
+          {alert && (
+            <Alert
+              message={alert}
+              onClose={() => {
+                setAlert(null)
+              }}
+            />
+          )}
           {notification && (
             <Notification
               heading={notificationHeading}
@@ -66,6 +81,18 @@ export default function PreviewMobile ({
               }}
             />
           )}
+          {/* todo : Remove this test div.  Alerts should show at the correct time, as a result of actions (PN messages)*/}
+          <div className='relative'>
+            <div
+              className='absolute left-10 top-0 text-sm z-50 font-semibold text-cherry cursor-pointer'
+              onClick={() => {
+                showAlert()
+              }}
+            >
+              TEST: SHOW ALERT
+            </div>
+          </div>
+
           <MobileHeader />
           <div className='flex flex-col px-2 gap-6 rounded-b-2xl'>
             <StreamWidget

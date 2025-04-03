@@ -19,7 +19,7 @@ export default function Page () {
     JSON.stringify({
       subscribeKey: process.env.NEXT_PUBLIC_PUBNUB_SUBSCRIBE_KEY as string,
       pushChannel: pushChannel,
-      showDebug: true
+      showDebug: false
     })
   )
   const iFrameSrc = `https://appetize.io/embed/${buildId}?device=${device}&${simulatorParams}&params=${launchData}`

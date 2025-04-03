@@ -38,12 +38,16 @@ export default function SideMenuDataControls ({ chat }) {
   ]
   const [occupancy, setOccupancy] = useState<number | number[]>(0)
   async function triggerSimulation(simulate) {
-    const res = await fetch('https://ps.pndsn.com/v1/blocks/sub-key/sub-c-12de08da-d5db-4255-8c4f-d9059385670a/simulate', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ simulate: simulate, channel: streamReactionsChannelId, count: 120 })
-    });
-    console.log(await res.json());
+    try {
+      const res = await fetch('https://ps.pndsn.com/v1/blocks/sub-key/sub-c-12de08da-d5db-4255-8c4f-d9059385670a/simulate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ simulate: simulate, channel: streamReactionsChannelId, count: 120 })
+      });
+      console.log(await res.json());
+    } catch (error) {
+      console.error('Failed to trigger simulation:', error);
+    }
   }
 
   useEffect(() => {

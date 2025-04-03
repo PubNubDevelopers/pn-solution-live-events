@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Live Events</string>
+    <string name="default_notification_channel_id">pn-push-demo-general</string>
+    <string name="default_notification_channel_name">PubNub Live Events Demo</string>
+    <string name="default_notification_channel_description">Default channel used for PubNub push messages</string>
+
 </resources>

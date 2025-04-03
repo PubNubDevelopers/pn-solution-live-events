@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import UserStatus from './userStatus'
 import ChatWidget from '../widget-chat/chatWidget'
 //  todo delete the test chat widget
@@ -12,9 +12,11 @@ import BotWidget from '../widget-bot/botWidget'
 import LiveCommentaryWidget from '../widget-liveCommentary/liveCommentaryWidget'
 import Notification from './notification'
 import Alert from './alert'
+import { pushChannelSelfId, pushChannelSalesId } from '../data/testData'
 
 export default function TabletContents ({
   chat,
+  isGuidedDemo,
   guidesShown,
   visibleGuide,
   setVisibleGuide,
@@ -28,21 +30,70 @@ export default function TabletContents ({
     imageUrl: string
   } | null>(null)
   const [alert, setAlert] = useState<string | null>(null)
+  const pushChannelId = isGuidedDemo ? pushChannelSalesId : pushChannelSelfId
   const defaultWidgetClasses =
     'rounded-lg border-1 border-navy200 bg-white shadow-md'
 
-  //  todo listen for PN messages here to show a notification, and call this function when triggered.
-  function showNotification (heading, message, imageUrl) {
-    setNotification({heading: heading, message: message, imageUrl: imageUrl})
+  useEffect(() => {
+    if (!chat) return
+    const channel = chat.sdk.channel(pushChannelId)
+    const subscription = channel.subscription({ receivePresenceEvents: false })
+    subscription.onMessage = messageEvent => {
+      console.log(messageEvent)
+      if (messageEvent.channel === pushChannelId) {
+        console.log(messageEvent.message.pn_fcm.data)
+        showNotification(messageEvent.message.pn_fcm.data)
+      } else {
+        console.error('Unrecognized message channel')
+      }
+    }
+    subscription.subscribe()
+    return () => {
+      subscription.unsubscribe()
+    }
+  }, [chat])
+
+  //  ToDo this code is for testing purposes only
+  async function testNotification (heading, message) {
+    console.log('publishing notification on channel: ' + pushChannelId)
+    await chat.sdk.publish({
+      message: {
+        text: 'PubNub Push Notification',
+        pn_fcm: {
+          data: { title: heading, body: message }
+        }
+      },
+      channel: pushChannelId
+    })
+  }
+
+  function showNotification (pushData) {
+    console.log(pushData)
+    const title = pushData.title ?? 'Missing title'
+    const body = pushData.body ?? 'Missing body'
+    let imageUrl = '/notification/image-cup.png'
+    if (body.indexOf('mentioned') > -1) {
+      //  Bit lazy but match the logic of the Android app when selecting notification image
+      imageUrl = '/notification/image-messages.png'
+    }
+    console.log(body)
+    setNotification({ heading: title, message: body, imageUrl: imageUrl })
   }
 
   function showAlert () {
-    setAlert("Alert Text")
+    setAlert('Alert Text')
   }
 
   return (
     <div className='w-full rounded-2xl bg-navy50 text-neutral-900 h-full overflow-y-auto overscroll-none'>
-      {alert && <Alert message={alert} onClose={() => {setAlert(null)}}/>}
+      {alert && (
+        <Alert
+          message={alert}
+          onClose={() => {
+            setAlert(null)
+          }}
+        />
+      )}
       {notification && (
         <Notification
           heading={notification.heading}
@@ -66,12 +117,15 @@ export default function TabletContents ({
         <div
           className='absolute left-10 top-5 text-sm z-50 font-semibold text-cherry cursor-pointer'
           onClick={() => {
-            showNotification('Heading', 'Text', '/notification/image-cup.png')
+            //testNotification('Last 5 minutes', 'Double points for predications')
+            testNotification(
+              'Sombody tagged you',
+              'You were mentioned in the group chat'
+            )
           }}
         >
           TEST: SHOW NOTIFICATION
         </div>
-
       </div>
       <TabletHeader />
       <div

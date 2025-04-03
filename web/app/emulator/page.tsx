@@ -7,19 +7,19 @@ import { pushChannelSelfId, pushChannelSalesId } from '../data/testData'
 export default function Page () {
   const device = 'pixel8' // or pixel8pro
   const buildId = 'b_i37cn2fq5nqrupyscjyybscwzm'
+  //  Seems to be some bug with the online emulator hosting using Android 15.0, but Android 14.0 works fine.
   const simulatorParams =
-    'scale=auto&screenOnly=false&osVersion=15.0&centered=both&grantPermissions=true'
-  const isGuidedDemo = process.env.NEXT_PUBLIC_GUIDED_DEMO
+    'scale=auto&screenOnly=false&osVersion=14.0&centered=both&grantPermissions=true&resetGms=true'
+  const isGuidedDemo = process.env.NEXT_PUBLIC_GUIDED_DEMO === 'true'
     ? process.env.NEXT_PUBLIC_GUIDED_DEMO
     : null
   const pushChannel =
     isGuidedDemo == 'true' ? pushChannelSalesId : pushChannelSelfId
-    //  todo figure out why launch data isn't getting passed through
   const launchData = encodeURIComponent(
     JSON.stringify({
-      publishKey: process.env.NEXT_PUBLIC_PUBNUB_PUBLISH_KEY as string,
       subscribeKey: process.env.NEXT_PUBLIC_PUBNUB_SUBSCRIBE_KEY as string,
-      pushChannel: pushChannel
+      pushChannel: pushChannel,
+      showDebug: true
     })
   )
   const iFrameSrc = `https://appetize.io/embed/${buildId}?device=${device}&${simulatorParams}&params=${launchData}`

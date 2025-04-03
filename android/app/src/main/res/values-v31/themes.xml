@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.VerticalFeatureDemos" parent="android:Theme.Material.Light.NoActionBar" >
+    <style name="Theme.VerticalFeatureDemos" parent="android:Theme.Material.Light.NoActionBar">
         <item name="android:background">@color/navy900</item>
         <item name="android:windowBackground">@color/navy900</item>
         <item name="android:colorBackground">@color/navy900</item>
+        <item name="android:windowSplashScreenIconBackgroundColor">@color/navy900</item>
     </style>
-
 </resources>

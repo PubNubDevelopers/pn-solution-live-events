@@ -107,6 +107,7 @@ export default function SportsEventPage ({
             <PreviewTablet
               className={`${!tabletPreview && 'hidden'}`}
               chat={chat}
+              isGuidedDemo={isGuidedDemo}
               guidesShown={guidesShown}
               visibleGuide={visibleGuide}
               setVisibleGuide={setVisibleGuide}
@@ -117,6 +118,7 @@ export default function SportsEventPage ({
           <PreviewMobile
             className={`${tabletPreview && 'hidden'}`}
             chat={chat}
+            isGuidedDemo={isGuidedDemo}
             guidesShown={guidesShown}
             visibleGuide={visibleGuide}
             setVisibleGuide={setVisibleGuide}

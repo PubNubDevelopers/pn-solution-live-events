@@ -11,6 +11,9 @@ export default function Page () {
   const [userId, setUserId] = useState<string | null>(null)
   const [chat, setChat] = useState<Chat | null>(null)
   const [loadMessage, setLoadMessage] = useState('Demo is initializing...')
+  const isGuidedDemo = process.env.NEXT_PUBLIC_GUIDED_DEMO === 'true'
+    ? process.env.NEXT_PUBLIC_GUIDED_DEMO
+    : null
 
   function logout () {
     setLoginPageShown(true)
@@ -25,7 +28,7 @@ export default function Page () {
         setLoginPageShown={setLoginPageShown}
         setSalesIntroPageShown={() => {}}
         setUserId={setUserId}
-        isGuidedDemo={false}
+        isGuidedDemo={isGuidedDemo}
         setLoadMessage={setLoadMessage}
       />
     )
@@ -36,6 +39,7 @@ export default function Page () {
       <div className='p-4 select-none'>
         <TabletContents
           chat={chat}
+          isGuidedDemo={isGuidedDemo}
           guidesShown={false}
           visibleGuide={''}
           setVisibleGuide={() => {}}

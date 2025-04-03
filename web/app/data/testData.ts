@@ -68,7 +68,7 @@ export const pollVotes = channelData[4].id;
 export const pollResults = channelData[5].id;
 export const matchStatsChannelId = channelData[6].id;
 export const pushChannelSelfId = 'euro2024.push-self';
-export const pushChannelSalesId = 'euro2024.push_sales'
+export const pushChannelSalesId = 'euro2024.push-sales'
 
 export const testUsers = [
   {

@@ -148,7 +148,9 @@ export default function PreviewMobile ({
                 guidesShown={guidesShown}
                 visibleGuide={visibleGuide}
                 setVisibleGuide={setVisibleGuide}
-                adUrl={'/ads/ad-offer2.png'}
+                adId={3}
+                clickPoints={15}
+                onAdClick={(points, adId) => {console.log(`ToDo: Ad clicked for ${points} points`)}}                  
               />
             )}
             <ChatWidget

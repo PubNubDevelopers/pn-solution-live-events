@@ -76,19 +76,23 @@ export default function SalesIntroPage ({
 
         <div className='flex flex-row gap-6 pt-[112px] pr-6 pb-6 overflow-auto'>
           <HomePageTemplateTile
-            title={'Start New Demo'}
-            subtitle={'This will reset all associated Illuminate Objects in the shared account back to their default state'}
-            iconUrl={'/icons/auto_awesome.svg'}
-            tileClick={() => {
-              proceed(true)
-            }}
-          />
-          <HomePageTemplateTile
             title={'Continue'}
-            subtitle={'Retain any changes made to the Illuminate Objects associated with this demo'}
+            subtitle={
+              'Retain any changes made to the Illuminate Objects associated with this demo'
+            }
             iconUrl={'/icons/start.svg'}
             tileClick={() => {
               proceed(false)
+            }}
+          />
+          <HomePageTemplateTile
+            title={'Reset Demo'}
+            subtitle={
+              'This will reset all associated Illuminate Objects in the shared account back to their default state'
+            }
+            iconUrl={'/icons/auto_awesome.svg'}
+            tileClick={() => {
+              proceed(true)
             }}
           />
         </div>
@@ -114,10 +118,8 @@ function HomePageTemplateTile ({ title, subtitle, iconUrl, tileClick }) {
         />
       </div>
       <div className='flex flex-col'>
-        <div className='font-semibold text-white text-2xl'>{title}</div>
-        <div className='font-light text-neutral-200 text-base'>
-          {subtitle}
-        </div>
+        <div className='font-semibold text-white text-2xl uppercase'>{title}</div>
+        <div className='font-light text-neutral-200 text-base'>{subtitle}</div>
       </div>
     </div>
   )

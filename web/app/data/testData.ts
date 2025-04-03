@@ -1104,3 +1104,30 @@ export const testUsers = [
     timezone: "America/Chicago",
   },
 ];
+
+export const ads = [
+  {
+    id: 1,
+    src: '/ads/ad-offer1.png'
+  },
+  {
+    id: 2,
+    src: '/ads/ad-offer2.png'
+  },
+  {
+    id: 3,
+    src: '/ads/ad-offer3.png'
+  },
+  {
+    id: 4,
+    src: '/ads/ad-offer4.png'
+  },
+  {
+    id: 5,
+    src: '/ads/ad-offer5.png'
+  },
+  {
+    id: 6,
+    src: '/ads/ad-offer6.png'
+  }
+]

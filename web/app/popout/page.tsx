@@ -45,7 +45,6 @@ export default function Page () {
           setVisibleGuide={() => {}}
           logout={logout}
           heightConstrained={false}
-          showDynamicAd={false}
         />
       </div>
     )

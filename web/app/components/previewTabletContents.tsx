@@ -12,7 +12,12 @@ import BotWidget from '../widget-bot/botWidget'
 import LiveCommentaryWidget from '../widget-liveCommentary/liveCommentaryWidget'
 import Notification from './notification'
 import Alert from './alert'
-import { pushChannelSelfId, pushChannelSalesId } from '../data/testData'
+import { CommonMessageHandler } from '../commonLogic'
+import {
+  pushChannelSelfId,
+  pushChannelSalesId,
+  dynamicAdChannelId
+} from '../data/testData'
 
 export default function TabletContents ({
   chat,
@@ -21,7 +26,6 @@ export default function TabletContents ({
   visibleGuide,
   setVisibleGuide,
   logout,
-  showDynamicAd, //  todo testing only... this should come from PubNub, not from app state
   heightConstrained = true
 }) {
   const [notification, setNotification] = useState<{
@@ -30,26 +34,34 @@ export default function TabletContents ({
     imageUrl: string
   } | null>(null)
   const [alert, setAlert] = useState<string | null>(null)
+  const [dynamicAd, setDynamicAd] = useState<{
+    adId: string
+    clickPoints: number
+  } | null>(null)
   const pushChannelId = isGuidedDemo ? pushChannelSalesId : pushChannelSelfId
   const defaultWidgetClasses =
     'rounded-lg border-1 border-navy200 bg-white shadow-md'
 
   useEffect(() => {
     if (!chat) return
-    const channel = chat.sdk.channel(pushChannelId)
-    const subscription = channel.subscription({ receivePresenceEvents: false })
-    subscription.onMessage = messageEvent => {
-      console.log(messageEvent)
-      if (messageEvent.channel === pushChannelId) {
-        console.log(messageEvent.message.pn_fcm.data)
-        showNotification(messageEvent.message.pn_fcm.data)
-      } else {
-        console.error('Unrecognized message channel')
-      }
+    //const channel = chat.sdk.channel(pushChannelId)
+    //const subscription = channel.subscription({ receivePresenceEvents: false })
+    const subscriptionSet = chat.sdk.subscriptionSet({
+      channels: [pushChannelId, dynamicAdChannelId]
+    })
+    subscriptionSet.onMessage = messageEvent => {
+      CommonMessageHandler(
+        isGuidedDemo,
+        messageEvent,
+        data => {
+          setNotification(data)
+        },
+        data => setDynamicAd(data)
+      )
     }
-    subscription.subscribe()
+    subscriptionSet.subscribe()
     return () => {
-      subscription.unsubscribe()
+      subscriptionSet.unsubscribe()
     }
   }, [chat])
 
@@ -65,19 +77,6 @@ export default function TabletContents ({
       },
       channel: pushChannelId
     })
-  }
-
-  function showNotification (pushData) {
-    console.log(pushData)
-    const title = pushData.title ?? 'Missing title'
-    const body = pushData.body ?? 'Missing body'
-    let imageUrl = '/notification/image-cup.png'
-    if (body.indexOf('mentioned') > -1) {
-      //  Bit lazy but match the logic of the Android app when selecting notification image
-      imageUrl = '/notification/image-messages.png'
-    }
-    console.log(body)
-    setNotification({ heading: title, message: body, imageUrl: imageUrl })
   }
 
   function showAlert () {
@@ -161,7 +160,7 @@ export default function TabletContents ({
           <div className='min-h-3'></div>
         </div>
         <div className='w-full flex flex-col gap-4'>
-          {showDynamicAd && (
+          {dynamicAd && (
             <AdvertsOfferWidget
               className={`${defaultWidgetClasses}`}
               isMobilePreview={false}
@@ -169,9 +168,11 @@ export default function TabletContents ({
               guidesShown={guidesShown}
               visibleGuide={visibleGuide}
               setVisibleGuide={setVisibleGuide}
-              adId={3}
-              clickPoints={15}
-              onAdClick={(points, adId) => {console.log(`ToDo: Ad clicked for ${points} points`)}}
+              adId={dynamicAd.adId}
+              clickPoints={dynamicAd.clickPoints}
+              onAdClick={(points, adId) => {
+                console.log(`ToDo: Ad clicked for ${points} points`)
+              }}
             />
           )}
           <TestChatWidget

@@ -8,6 +8,7 @@ import PreviewTablet from '../components/previewTablet'
 import PreviewMobile from '../components/previewMobile'
 import { OpenInNewWindowIcon } from '../side-menu/sideMenuIcons'
 import { urls } from '../data/urls'
+import { dynamicAdChannelId } from "../data/testData";
 
 export default function SportsEventPage ({
   chat,
@@ -20,7 +21,6 @@ export default function SportsEventPage ({
   const [sideMenuOpen, setSideMenuOpen] = useState(true)
   const [guidesShown, setGuidesShown] = useState(false)
   const [visibleGuide, setVisibleGuide] = useState('')
-  const [showDynamicAd, setShowDynamicAd] = useState(false)
 
   function backgroundClicked () {
     console.log('background clicked')
@@ -82,12 +82,17 @@ export default function SportsEventPage ({
           {/*ToDo: Remove this test line */}
           <div
             className='text-cherry text-sm font-semibold text-right cursor-pointer'
-            onClick={() => {
-              setShowDynamicAd(!showDynamicAd)
+            onClick={async () => {
+              await chat.sdk.publish({
+                message: {
+                  adId: 2,
+                  clickPoints: 12
+                },
+                channel: dynamicAdChannelId
+              })
             }}
           >
-            Show or hide dynamic ad manually, instead of via Illuminate. ToDo:
-            remove this text
+            TEST: SHOW DYNAMIC AD
           </div>
           <div className='flex flex-col gap-0'>
             {isGuidedDemo && tabletPreview && (
@@ -112,7 +117,6 @@ export default function SportsEventPage ({
               visibleGuide={visibleGuide}
               setVisibleGuide={setVisibleGuide}
               logout={logout}
-              showDynamicAd={showDynamicAd}
             ></PreviewTablet>
           </div>
           <PreviewMobile
@@ -123,7 +127,6 @@ export default function SportsEventPage ({
             visibleGuide={visibleGuide}
             setVisibleGuide={setVisibleGuide}
             logout={logout}
-            showDynamicAd={showDynamicAd}
           ></PreviewMobile>
         </div>
       </div>

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Slider } from '@heroui/react'
-import { streamReactionsChannelId } from '../data/testData'
+import { chatChannelId, streamReactionsChannelId } from '../data/testData'
 import { PlayCircle } from './sideMenuIcons'
 
 const Expand = props => {
@@ -37,17 +37,17 @@ export default function SideMenuDataControls ({ chat }) {
     'Tag user in message'
   ]
   const [occupancy, setOccupancy] = useState<number | number[]>(0)
-
+  async function triggerSimulation(simulate) {
+    const res = await fetch('https://ps.pndsn.com/v1/blocks/sub-key/sub-c-12de08da-d5db-4255-8c4f-d9059385670a/simulate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ simulate: simulate, channel: streamReactionsChannelId, count: 120 })
+    });
+    console.log(await res.json());
+  }
 
   useEffect(() => {
-    async function triggerSimulation(selectedSimulation) {
-      const res = await fetch('https://ps.pndsn.com/v1/blocks/sub-key/sub-c-12de08da-d5db-4255-8c4f-d9059385670a/simulate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ simulate: selectedSimulation, channel: streamReactionsChannelId, count: 120 })
-      });
-      console.log(await res.json());
-    }
+
     async function sendControlMessage(occupancy)
     {
       if (chat)

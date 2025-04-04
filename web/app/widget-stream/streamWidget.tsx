@@ -2,7 +2,8 @@ import { useState, useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
 import {
   streamReactionsChannelId,
-  clientVideoControlChannelId
+  clientVideoControlChannelId,
+  illuminateTestChannelId,
 } from '../data/testData'
 import { PlayCircle } from '../side-menu/sideMenuIcons'
 import {
@@ -70,9 +71,19 @@ export default function StreamWidget ({
       handleVideoControl(messageEvent, isVideoPlaying)
     }
     videoControlSubscription.subscribe()
+    //  Illuminate test
+    const illuminateTestChannel = chat.sdk.channel(illuminateTestChannelId)
+    const illuminateTestSubscription = illuminateTestChannel.subscription({
+      receivePresenceEvents: false
+    })
+    illuminateTestSubscription.onMessage = messageEvent => {
+      console.log(messageEvent)
+    }
+    illuminateTestSubscription.subscribe()
     return () => {
       subscription.unsubscribe()
       videoControlSubscription.unsubscribe()
+      illuminateTestSubscription.unsubscribe()
     }
   }, [chat, isVideoPlaying])
 

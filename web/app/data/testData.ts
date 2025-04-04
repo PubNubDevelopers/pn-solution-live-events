@@ -17,7 +17,7 @@ export const channelData = [
   },
   {
     id: "euro2024.livestream",
-    name: "Euro 2024 Stream Reactions and Control Events",
+    name: "Euro 2024 Stream Reactions",
     description: "Audience reactions to the Euro 2024 stream",
     avatar:
       "https://pn-solution-live-events.netlify.app/avatars/group/euro2024.png",
@@ -71,6 +71,7 @@ export const pushChannelSelfId = 'euro2024.push-self';
 export const pushChannelSalesId = 'euro2024.push-sales'
 export const dynamicAdChannelId = 'euro2024.dynamic-ad'
 export const clientVideoControlChannelId = 'euro2024.client-video-control'
+export const illuminateTestChannelId = 'illuminate-trigger-test'
 
 export const testUsers = [
   {

@@ -16,7 +16,6 @@ export default function AdvertsWidget ({
   useEffect(() => {
     if (!isMobilePreview) return
     const mobileAdInterval = setInterval(() => {
-      console.log(nonPremiumAds)
       if (currentAdId == nonPremiumAds.length - 1) {
         setCurrentAdId(0)
       } else {

@@ -67,28 +67,28 @@ body {
 
 @keyframes alert-in {
   0% {
-    transform: translateX(40%);
+    transform: translateX(20%);
     opacity: 0;
   }
   100% {
-    transform: translateX(50%);
+    transform: translateX(25%);
     opacity: 1;
   }
 }
 
 @keyframes alert-out {
   0% {
-    transform: translateX(50%);
+    transform: translateX(25%);
     opacity: 1;
   }
   100% {
-    transform: translateX(70%);
+    transform: translateX(45%);
     opacity: 0;
   }
 }
 
 .animate-alert-in {
-  animation: alert-in 1s ease-in-out forwards;
+  animation: alert-in 0.3s ease-in-out forwards;
 }
 
 .animate-alert-out {

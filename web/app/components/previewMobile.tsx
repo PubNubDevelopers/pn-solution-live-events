@@ -31,7 +31,7 @@ export default function PreviewMobile ({
     message: string
     imageUrl: string
   } | null>(null)
-  const [alert, setAlert] = useState<string | null>(null)
+  const [alert, setAlert] = useState<{points: number, body: string} | null>(null)
   const [dynamicAd, setDynamicAd] = useState<{
     adId: string
     clickPoints: number
@@ -77,7 +77,7 @@ export default function PreviewMobile ({
   }
 
   function showAlert () {
-    setAlert('Alert Text')
+    setAlert({points: -5, body: 'Good Prediction'})
   }
 
   return (

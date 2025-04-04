@@ -33,7 +33,7 @@ export default function TabletContents ({
     message: string
     imageUrl: string
   } | null>(null)
-  const [alert, setAlert] = useState<string | null>(null)
+  const [alert, setAlert] = useState<{points: number, body: string} | null>(null)
   const [dynamicAd, setDynamicAd] = useState<{
     adId: string
     clickPoints: number
@@ -80,11 +80,13 @@ export default function TabletContents ({
   }
 
   function showAlert () {
-    setAlert('Alert Text')
+    setAlert({points: 10, body: 'Good Prediction'})
   }
 
   return (
-    <div className='w-full rounded-2xl bg-navy50 text-neutral-900 h-full overflow-y-auto overscroll-none'>
+    <div className='w-full rounded-2xl bg-navy50 text-neutral-900 h-full overflow-y-auto overscroll-none '>
+      <div className='relative'>
+        <div className='absolute w-1/2 right-0'>
       {alert && (
         <Alert
           message={alert}
@@ -92,7 +94,7 @@ export default function TabletContents ({
             setAlert(null)
           }}
         />
-      )}
+      )}</div></div>
       {notification && (
         <Notification
           heading={notification.heading}

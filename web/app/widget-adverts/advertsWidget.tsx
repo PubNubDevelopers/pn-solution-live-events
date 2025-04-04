@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import { useState, useEffect } from 'react'
+import { ads } from '../data/testData'
 
 export default function AdvertsWidget ({
   className,
@@ -9,13 +10,14 @@ export default function AdvertsWidget ({
   visibleGuide,
   setVisibleGuide
 }) {
-  const adUrls = ['/ads/ad1.png', '/ads/ad3.png', '/ads/ad2.png']
+  const nonPremiumAds = ads.filter(ad => ad.isPremium === false)
   const [currentAdId, setCurrentAdId] = useState(0)
 
   useEffect(() => {
     if (!isMobilePreview) return
     const mobileAdInterval = setInterval(() => {
-      if (currentAdId == adUrls.length - 1) {
+      console.log(nonPremiumAds)
+      if (currentAdId == nonPremiumAds.length - 1) {
         setCurrentAdId(0)
       } else {
         setCurrentAdId(currentAdId + 1)
@@ -25,24 +27,27 @@ export default function AdvertsWidget ({
     return () => clearInterval(mobileAdInterval)
   })
 
-  function adClicked (e, adId, adUrl) {
-    console.log('ToDo: ad clicked: ' + adId);e.stopPropagation()
+  function adClicked (e, ad) {
+    console.log('ToDo: ad clicked: ' + ad.id)
+    e.stopPropagation()
   }
 
   if (!isMobilePreview) {
     return (
       <div className={`${className} p-2`}>
         <div className='flex flex-row gap-3 w-full justify-between overflow-x-scroll overscroll-none'>
-          {adUrls.slice(0, 3).map((adUrl, index) => {
+          {nonPremiumAds.slice(0, 3).map((ad, index) => {
             return (
               <Image
                 key={index}
-                src={adUrl}
+                src={ad.src}
                 alt='Advert'
                 className='rounded-lg shadow-sm cursor-pointer'
                 width={219}
                 height={124}
-                onClick={(e) => {adClicked(e, index, adUrls[index])}}
+                onClick={e => {
+                  adClicked(e, nonPremiumAds[index])
+                }}
                 priority
               />
             )
@@ -57,12 +62,14 @@ export default function AdvertsWidget ({
       <div className={`${className} p-2`}>
         <div className='flex justify-center'>
           <Image
-            src={adUrls[currentAdId]}
+            src={nonPremiumAds[currentAdId] ? nonPremiumAds[currentAdId].src : '/avatars/placeholder.png'}
             alt='Advert'
             className='rounded-lg shadow-sm cursor-pointer'
             width={402}
             height={226}
-            onClick={(e) => {adClicked(e, currentAdId, adUrls[currentAdId])}}
+            onClick={e => {
+              adClicked(e, nonPremiumAds[currentAdId])
+            }}
             priority
           />
         </div>

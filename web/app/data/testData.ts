@@ -1110,26 +1110,47 @@ export const testUsers = [
 export const ads = [
   {
     id: 1,
-    src: '/ads/ad-offer1.png'
+    src: '/ads/ad-offer1.png',
+    isPremium: true
   },
   {
     id: 2,
-    src: '/ads/ad-offer2.png'
+    src: '/ads/ad-offer2.png',
+    isPremium: true
   },
   {
     id: 3,
-    src: '/ads/ad-offer3.png'
+    src: '/ads/ad-offer3.png',
+    isPremium: true
   },
   {
     id: 4,
-    src: '/ads/ad-offer4.png'
+    src: '/ads/ad-offer4.png',
+    isPremium: true
   },
   {
     id: 5,
-    src: '/ads/ad-offer5.png'
+    src: '/ads/ad-offer5.png',
+    isPremium: true
   },
   {
     id: 6,
-    src: '/ads/ad-offer6.png'
-  }
+    src: '/ads/ad-offer6.png',
+    isPremium: true
+  },
+  {
+    id: 7,
+    src: '/ads/ad1.png',
+    isPremium: false
+  },
+  {
+    id: 8,
+    src: '/ads/ad3.png',
+    isPremium: false
+  },
+  {
+    id: 9,
+    src: '/ads/ad2.png',
+    isPremium: false
+  },
 ]

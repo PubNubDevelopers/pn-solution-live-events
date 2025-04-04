@@ -172,6 +172,7 @@ export default function TabletContents ({
               clickPoints={dynamicAd.clickPoints}
               onAdClick={(points, adId) => {
                 console.log(`ToDo: Ad clicked for ${points} points`)
+                setDynamicAd(null)
               }}
             />
           )}

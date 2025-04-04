@@ -70,6 +70,7 @@ export const matchStatsChannelId = channelData[6].id;
 export const pushChannelSelfId = 'euro2024.push-self';
 export const pushChannelSalesId = 'euro2024.push-sales'
 export const dynamicAdChannelId = 'euro2024.dynamic-ad'
+export const clientVideoControlChannelId = 'euro2024.client-video-control'
 
 export const testUsers = [
   {

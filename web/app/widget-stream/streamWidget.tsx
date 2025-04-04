@@ -1,6 +1,9 @@
 import { useState, useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
-import { streamReactionsChannelId } from '../data/testData'
+import {
+  streamReactionsChannelId,
+  clientVideoControlChannelId
+} from '../data/testData'
 import { PlayCircle } from '../side-menu/sideMenuIcons'
 import {
   ActivitiesIcon,
@@ -24,7 +27,8 @@ export default function StreamWidget ({
     'https://v.ftcdn.net/05/31/66/96/700_F_531669685_zuA1YSiPFLmRrPPzBG2iryBnmDkfYqzS_ST.mp4'
   )
   const [isVideoPlaying, setIsVideoPlaying] = useState(false)
-  const [videoProgress, setVideoProgress] = useState(0)
+  const [actualVideoProgress, setActualVideoProgress] = useState(0)
+  const [requestedVideoProgress, setRequestedVideoProgress] = useState(0)
   const playerRef = useRef<ReactPlayer>(null)
   //  ToDo - Remove test poll when integrate with back end
   const testPoll = {
@@ -50,18 +54,29 @@ export default function StreamWidget ({
 
   useEffect(() => {
     if (!chat) return
+    //  Reactions
     const channel = chat.sdk.channel(streamReactionsChannelId)
     const subscription = channel.subscription({ receivePresenceEvents: false })
     subscription.onMessage = messageEvent => {
-      messageReceived(messageEvent)
+      handleReaction(messageEvent)
     }
     subscription.subscribe()
+    //  Video control
+    const videoControlChannel = chat.sdk.channel(clientVideoControlChannelId)
+    const videoControlSubscription = videoControlChannel.subscription({
+      receivePresenceEvents: false
+    })
+    videoControlSubscription.onMessage = messageEvent => {
+      handleVideoControl(messageEvent, isVideoPlaying)
+    }
+    videoControlSubscription.subscribe()
     return () => {
       subscription.unsubscribe()
+      videoControlSubscription.unsubscribe()
     }
-  }, [chat])
+  }, [chat, isVideoPlaying])
 
-  function messageReceived (messageEvent) {
+  function handleReaction (messageEvent) {
     if (messageEvent.message.type == 'reaction') {
       //  Somebody has sent a reaction (including myself)
       const emojiElement = document.createElement('div')
@@ -89,6 +104,44 @@ export default function StreamWidget ({
     }
   }
 
+  function handleVideoControl (messageEvent, isVideoPlaying) {
+    if (messageEvent.message.type == 'START_STREAM') {
+      setActualVideoProgress(0)
+      setIsVideoPlaying(true)
+    } else if (messageEvent.message.type == 'STATUS') {
+      if (messageEvent.message.params.videoStarted) {
+        //  todo handle video looping
+        setIsVideoPlaying(true)
+        setRequestedVideoProgress(0)
+        playerRef.current?.seekTo(0, 'seconds')
+      }
+      if (messageEvent.message.params.videoEnded) {
+        //  FYI video is about to loop
+        setIsVideoPlaying(false)
+      }
+      const actualVideoProgress =
+        messageEvent.message.params.playbackTime / 1000
+      setActualVideoProgress(actualVideoProgress)
+      if (!isVideoPlaying) {
+        //  The video is not playing locally, but the stream is running on the back end.  Join game in progress
+        setRequestedVideoProgress(actualVideoProgress)
+        setIsVideoPlaying(true)
+      }
+    } else if (messageEvent.message.type == 'END_STREAM') {
+      setIsVideoPlaying(false)
+      setActualVideoProgress(0)
+      setRequestedVideoProgress(0)
+    } else if (messageEvent.message.type == 'SEEK') {
+      const requestedTime = messageEvent.message.params.playbackTime / 1000
+      if (requestedTime) {
+        setRequestedVideoProgress(requestedTime)
+        if (isVideoPlaying) {
+          playerRef.current?.seekTo(requestedTime, 'seconds')
+        }
+      }
+    }
+  }
+
   function onVideoReady (ev) {
     console.log('Video ready')
     console.log(ev)
@@ -96,6 +149,11 @@ export default function StreamWidget ({
 
   function onVideoStart () {
     console.log('Video starting')
+    //  todo does this logic of skipping to the requested time work for a large video we are host ourselves?
+    if (requestedVideoProgress > 0) {
+      console.log('seeking to ' + requestedVideoProgress)
+      playerRef.current?.seekTo(requestedVideoProgress, 'seconds')
+    }
   }
 
   function onVideoPlay () {
@@ -108,9 +166,9 @@ export default function StreamWidget ({
   }
 
   function onVideoProgress (ev) {
-    console.log(ev)
-    console.log(`Played (seconds): ${ev.playedSeconds}`)
-    setVideoProgress(ev.playedSeconds)
+    //console.log(ev)
+    //console.log(`Played (seconds): ${ev.playedSeconds}`)
+    setActualVideoProgress(ev.playedSeconds)
   }
 
   async function emojiClicked (emoji) {
@@ -121,16 +179,87 @@ export default function StreamWidget ({
     })
   }
 
+  async function todoRemoveThisSendTestMessage (e, messageType, params) {
+    e.stopPropagation()
+    if (!chat) return
+    await chat.sdk.publish({
+      message: {
+        type: messageType,
+        params: params
+      },
+      channel: clientVideoControlChannelId
+    })
+  }
+
   return (
     <div className={`${className}`}>
       <div className='relative'>
         <div
           className='absolute left-0 top-0 text-sm text-cherry bg-white/70 cursor-pointer font-semibold'
-          onClick={() => {
-            setIsVideoPlaying(!isVideoPlaying)
-          }}
+          //onClick={() => {
+          //  setIsVideoPlaying(!isVideoPlaying)
+          //}}
         >
-          {`TEST: ${isVideoPlaying ? 'PAUSE' : 'START'} VIDEO STREAM`}
+          {/*`TEST: ${isVideoPlaying ? 'PAUSE' : 'START'} VIDEO STREAM`*/}
+          <div
+            className=''
+            onClick={e => {
+              todoRemoveThisSendTestMessage(e, 'START_STREAM', {})
+            }}
+          >
+            START STREAM
+          </div>
+          <div
+            className=''
+            onClick={e => {
+              todoRemoveThisSendTestMessage(e, 'END_STREAM', {})
+            }}
+          >
+            STOP STREAM
+          </div>
+          <div
+            className=''
+            onClick={e => {
+              todoRemoveThisSendTestMessage(e, 'SEEK', {
+                playbackTime: 5000
+              })
+            }}
+          >
+            SEEK STREAM (5s)
+          </div>
+          <div
+            className=''
+            onClick={e => {
+              todoRemoveThisSendTestMessage(e, 'STATUS', {
+                playbackTime: 10000
+              })
+            }}
+          >
+            JOIN LATE (video at 10s)
+          </div>
+          <div
+            className=''
+            onClick={e => {
+              todoRemoveThisSendTestMessage(e, 'STATUS', {
+                playbackTime: 0,
+                videoStarted: true
+              })
+            }}
+          >
+            Video has LOOPED
+          </div>
+          <div
+            className=''
+            onClick={e => {
+              todoRemoveThisSendTestMessage(e, 'STATUS', {
+                playbackTime: 100000,
+                videoEnded: true
+              })
+            }}
+          >
+            Video has ENDED
+          </div>
+
         </div>
 
         <div
@@ -147,7 +276,7 @@ export default function StreamWidget ({
               controls={false}
               width={isMobilePreview ? 418 : 698}
               height={isMobilePreview ? 235 : 393}
-              loop={true}
+              loop={false}
               muted={true}
               pip={false}
               onReady={ev => onVideoReady(ev)}

@@ -11,8 +11,11 @@ import LiveCommentaryWidget from '../widget-liveCommentary/liveCommentaryWidget'
 import Notification from './notification'
 import Alert from './alert'
 import { CommonMessageHandler } from '../commonLogic'
-import { pushChannelSelfId, pushChannelSalesId, dynamicAdChannelId } from '../data/testData'
-
+import {
+  pushChannelSelfId,
+  pushChannelSalesId,
+  dynamicAdChannelId
+} from '../data/testData'
 
 export default function PreviewMobile ({
   className,
@@ -21,7 +24,7 @@ export default function PreviewMobile ({
   guidesShown,
   visibleGuide,
   setVisibleGuide,
-  logout,
+  logout
 }) {
   const [notification, setNotification] = useState<{
     heading: string
@@ -145,7 +148,10 @@ export default function PreviewMobile ({
                 setVisibleGuide={setVisibleGuide}
                 adId={dynamicAd.adId}
                 clickPoints={dynamicAd.clickPoints}
-                  onAdClick={(points, adId) => {console.log(`ToDo: Ad clicked for ${points} points`)}}                  
+                onAdClick={(points, adId) => {
+                  console.log(`ToDo: Ad clicked for ${points} points`)
+                  setDynamicAd(null)
+                }}
               />
             )}
             <ChatWidget

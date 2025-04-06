@@ -4,7 +4,8 @@ import {
   streamReactionsChannelId,
   clientVideoControlChannelId,
   illuminateTestChannelId,
-  AlertType
+  AlertType,
+  streamUrl
 } from '../data/constants'
 import { PlayCircle } from '../side-menu/sideMenuIcons'
 import Alert from '../components/alert'
@@ -30,9 +31,27 @@ export default function StreamWidget ({
     points: number | null
     body: string
   } | null>(null)
-  const [videoUrl, setVideoUrl] = useState(
-    'https://v.ftcdn.net/05/31/66/96/700_F_531669685_zuA1YSiPFLmRrPPzBG2iryBnmDkfYqzS_ST.mp4'
-  )
+  const emojiMap = {
+    '👏': '🙌',
+    '😢': '😭',
+    '😡': '🤬',
+    '😮': '🤯',
+    '🔥': '😎',
+    '🎉': '🥳'
+  }
+
+  const [reactions, setReactions] = useState<
+    { emoji: string; upgraded: boolean }[]
+  >([
+    { emoji: '👏', upgraded: false },
+    { emoji: '😢', upgraded: false },
+    { emoji: '😡', upgraded: false },
+    { emoji: '😮', upgraded: false },
+    { emoji: '🔥', upgraded: false },
+    { emoji: '🎉', upgraded: false }
+  ])
+
+  const [videoUrl, setVideoUrl] = useState(streamUrl)
   const [isVideoPlaying, setIsVideoPlaying] = useState(false)
   const [actualVideoProgress, setActualVideoProgress] = useState(0)
   const [requestedVideoProgress, setRequestedVideoProgress] = useState(0)
@@ -190,6 +209,23 @@ export default function StreamWidget ({
     setActualVideoProgress(ev.playedSeconds)
   }
 
+  function upgradeEmoji (emoji: string, overrideDefaultEmoji: string | null = null) {
+    setReactions(
+      reactions.map(reaction =>
+        reaction.emoji === emoji
+          ? {
+              ...reaction,
+              emoji:
+                overrideDefaultEmoji ||
+                emojiMap[reaction.emoji] ||
+                reaction.emoji,
+              upgraded: true
+            }
+          : reaction
+      )
+    )
+  }
+
   async function emojiClicked (emoji) {
     if (!chat) return
     await chat.sdk.publish({
@@ -288,7 +324,27 @@ export default function StreamWidget ({
               newEmojiAlert()
             }}
           >
-            Emoji Unlocked
+            Emoji Unlocked Animation
+          </div>
+          <div
+            className=''
+            onClick={e => {
+              //upgradeEmoji('👏', '🤩')
+              upgradeEmoji('😮')
+              //upgradeEmoji('👏')
+            }}
+          >
+            Emoji Unlocked shock
+          </div>
+          <div
+            className=''
+            onClick={e => {
+              upgradeEmoji('👏', '🤩')
+              //upgradeEmoji('😮')
+              //upgradeEmoji('👏')
+            }}
+          >
+            Emoji Unlocked Clap with new default
           </div>
         </div>
 
@@ -368,24 +424,25 @@ export default function StreamWidget ({
             }}
           />
         )}
-        <div className='flex flex-row gap-2 items-center justify-center bg-navy900 py-2 px-4  '>
-          <Reaction emoji='🙌' />
-          <Reaction emoji='😭' />
-          <Reaction emoji='😡' />
-          <Reaction emoji='😴' />
-          <Reaction emoji='🔥' />
-          <Reaction emoji='🎉' />
+        <div className='flex flex-row gap-2 items-center justify-center bg-navy900 py-2 px-4 text-'>
+          {reactions.map((reaction, index) => (
+            <Reaction
+              key={index}
+              emoji={reaction.emoji}
+              upgraded={reaction.upgraded}
+            />
+          ))}
         </div>
       </>
     )
   }
 
-  function Reaction ({ emoji }) {
+  function Reaction ({ emoji, upgraded }) {
     return (
       <div
-        className={`bg-white/10 ${
-          isMobilePreview ? 'w-8 h-8 text-xl' : 'w-10 h-10 text-2xl'
-        } rounded-full px-1.5 pt-1 text-center cursor-pointer`}
+        className={`flex flex-row items-center justify-center ${upgraded ? 'bg-brandAccent3/40' : 'bg-white/10'} ${
+          isMobilePreview ? 'w-8 h-8' : 'w-10 h-10 text-2xl'
+        } ${upgraded && (isMobilePreview ? 'text-2xl' : 'text-3xl')} ${!upgraded && isMobilePreview && 'text-xl'} rounded-full px-1.5 pt-1 text-center cursor-pointer`}
         onClick={e => {
           emojiClicked(emoji)
           e.stopPropagation()

@@ -21,6 +21,8 @@ export const dynamicAdChannelId = 'game.dynamic-ad'
 export const clientVideoControlChannelId = 'game.client-video-control'
 export const illuminateTestChannelId = 'illuminate-trigger-test'
 
+export const streamUrl = 'https://v.ftcdn.net/05/31/66/96/700_F_531669685_zuA1YSiPFLmRrPPzBG2iryBnmDkfYqzS_ST.mp4'
+
 export const ads = [
   {
     id: 1,

@@ -10,16 +10,16 @@ export const channelData = [
 ];
 export const chatChannelId = channelData[0].id;
 export const liveCommentaryChannelId = 'game.commentary';
-export const streamReactionsChannelId = 'game.streamreactions';
+export const streamReactionsChannelId = 'game.stream-reactions';
 export const pollDeclarations = 'game.polls';
-export const pollVotes = 'game.pollvotes';
-export const pollResults = 'game.pollresults';
-export const matchStatsChannelId = 'game.matchstats';
+export const pollVotes = 'game.poll-votes';
+export const pollResults = 'game.poll-results';
+export const matchStatsChannelId = 'game.match-stats';
 export const pushChannelSelfId = 'game.push-self';
 export const pushChannelSalesId = 'game.push-sales'
 export const dynamicAdChannelId = 'game.dynamic-ad'
 export const clientVideoControlChannelId = 'game.client-video-control'
-export const illuminateTestChannelId = 'illuminate-trigger-test'
+export const illuminateUpgradeReaction = 'illuminate-upgrade-reaction'
 
 export const streamUrl = 'https://v.ftcdn.net/05/31/66/96/700_F_531669685_zuA1YSiPFLmRrPPzBG2iryBnmDkfYqzS_ST.mp4'
 

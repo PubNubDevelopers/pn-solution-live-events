@@ -10,7 +10,7 @@ export const channelData = [
 ];
 export const chatChannelId = channelData[0].id;
 export const liveCommentaryChannelId = 'game.commentary';
-export const streamReactionsChannelId = 'game.livestream';
+export const streamReactionsChannelId = 'game.streamreactions';
 export const pollDeclarations = 'game.polls';
 export const pollVotes = 'game.votes';
 export const pollResults = 'game.results';

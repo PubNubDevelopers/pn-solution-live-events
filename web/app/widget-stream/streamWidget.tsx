@@ -4,8 +4,8 @@ import {
   streamReactionsChannelId,
   clientVideoControlChannelId,
   illuminateTestChannelId,
-  AlertType,
-} from '../data/testData'
+  AlertType
+} from '../data/constants'
 import { PlayCircle } from '../side-menu/sideMenuIcons'
 import Alert from '../components/alert'
 import {
@@ -26,9 +26,10 @@ export default function StreamWidget ({
 }) {
   //  ToDo: Currently this is only the occupancy from the Data Controls - need to add any other real presence count (including ourselves)
   const [occupancy, setOccupancy] = useState(0)
-  const [alert, setAlert] = useState<{ points: number | null; body: string } | null>(
-    null
-  )
+  const [alert, setAlert] = useState<{
+    points: number | null
+    body: string
+  } | null>(null)
   const [videoUrl, setVideoUrl] = useState(
     'https://v.ftcdn.net/05/31/66/96/700_F_531669685_zuA1YSiPFLmRrPPzBG2iryBnmDkfYqzS_ST.mp4'
   )
@@ -41,6 +42,7 @@ export default function StreamWidget ({
     id: 1,
     title: 'Win 10 points for a correct prediction',
     victoryPoints: 10,
+    pollType: 'match', //  The poll appears below the stream
     isPollOpen: true,
     answered: false,
     correctOption: 2, //  In production this would be part of the results message
@@ -52,6 +54,7 @@ export default function StreamWidget ({
   }
   //  ToDo handle points awards when user wins a poll
   //  todo currently the poll is answered locally, so if you switch from mobile to tablet, answers are lost.  When integrate with back end changes should persist automatically (test this)
+  //  ToDo when receive a new poll, ensure only polls whose pollType == 'match' are considered for the livestream poll
   const [currentPoll, setCurrentPoll] = useState(testPoll)
   const [currentPollAnswer, setCurrentPollAnswer] = useState<{
     id: number
@@ -208,7 +211,7 @@ export default function StreamWidget ({
   }
 
   function newEmojiAlert () {
-      setAlert({ points: null, body: 'New emoji unlocked' })
+    setAlert({ points: null, body: 'New emoji unlocked' })
   }
 
   return (
@@ -282,8 +285,8 @@ export default function StreamWidget ({
           <div
             className=''
             onClick={e => {
-                newEmojiAlert()
-              }}
+              newEmojiAlert()
+            }}
           >
             Emoji Unlocked
           </div>
@@ -335,14 +338,16 @@ export default function StreamWidget ({
         <div
           className='absolute left-0 top-0 text-sm text-cherry bg-white/70 cursor-pointer font-semibold'
           onClick={() => {
-            setCurrentPoll({
-              ...currentPoll,
-              isPollOpen: !currentPoll.isPollOpen,
-              answered: !currentPoll.isPollOpen ? false : currentPoll.answered
-            })
+            if (currentPoll) {
+              setCurrentPoll({
+                ...currentPoll,
+                isPollOpen: !currentPoll.isPollOpen,
+                answered: !currentPoll.isPollOpen ? false : currentPoll.answered
+              })
+            }
           }}
         >
-          {`TEST: ${currentPoll.isPollOpen ? 'CLOSE POLL' : 'OPEN POLL'}`}
+          {`TEST: ${currentPoll?.isPollOpen ? 'CLOSE POLL' : 'OPEN POLL'}`}
         </div>
       </div>
 
@@ -431,6 +436,7 @@ export default function StreamWidget ({
                 buttonText={option.text}
                 onClick={(id, option) => {
                   console.log(`Selected choice: ${option}`)
+                  //  todo ensure that when logic is moved to backend, the code is resilient against receiving answers to polls that are not opened.
                   setCurrentPollAnswer({ id: id, text: option })
                   setCurrentPoll({ ...currentPoll, answered: true })
                 }}

@@ -14,7 +14,7 @@ import {
 } from './sideMenuIcons'
 import SideMenuDataControls from './dataControls'
 import SelfLedHelp from './selfLedHelp'
-import { chatChannelId } from '../data/testData'
+import { chatChannelId } from '../data/constants'
 import { urls } from '../data/urls'
 
 export default function SideMenu ({ sideMenuOpen, isGuidedDemo, chat }) {

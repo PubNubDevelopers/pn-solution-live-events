@@ -1,4 +1,4 @@
-import { pushChannelSelfId, pushChannelSalesId, dynamicAdChannelId } from "./data/testData";
+import { pushChannelSelfId, pushChannelSalesId, dynamicAdChannelId } from "./data/constants";
 
 export async function CommonMessageHandler(
   isGuidedDemo,

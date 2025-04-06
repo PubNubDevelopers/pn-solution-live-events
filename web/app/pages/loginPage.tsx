@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { Chat, User, Channel } from '@pubnub/chat'
-import { testUsers, channelData } from '../data/testData'
+import { testUsers, channelData } from '../data/constants'
 
 export default function LoginPage ({
   setLoginPageShown,

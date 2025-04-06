@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { BoxType, matchStatsConfig } from './matchStatsConfig'
-import { matchStatsChannelId } from '../data/testData'
+import { matchStatsChannelId } from '../data/constants'
 
 export default function MatchStatsWidget ({
   className,

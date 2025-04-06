@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import { useState, useEffect } from 'react'
-import { ads } from '../data/testData'
+import { ads } from '../data/constants'
 
 export default function AdvertsOfferWidget ({
   className,

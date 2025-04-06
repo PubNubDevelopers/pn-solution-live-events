@@ -16,7 +16,7 @@ import {
   pushChannelSalesId,
   dynamicAdChannelId,
   AlertType
-} from '../data/testData'
+} from '../data/constants'
 
 export default function PreviewMobile ({
   className,

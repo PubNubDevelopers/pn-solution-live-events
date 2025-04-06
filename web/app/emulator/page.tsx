@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import Image from 'next/image'
-import { pushChannelSelfId, pushChannelSalesId } from '../data/testData'
+import { pushChannelSelfId, pushChannelSalesId } from '../data/constants'
 
 export default function Page () {
   const device = 'pixel8' // or pixel8pro

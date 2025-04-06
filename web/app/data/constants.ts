@@ -1,77 +1,79 @@
 export const channelData = [
   {
-    id: "euro2024.chat", //  ToDo, this is currently defined in TWO places and is probably NOT the final channel name.
-    name: "Euro 2024 Chat",
-    description: "Public conversation about Euro 2024",
+    id: "game.chat",
+    name: "Game Chat",
+    description: "Public conversation about the game",
     avatar:
       "https://pn-solution-live-events.netlify.app/avatars/group/euro2024.png",
     createInAppContext: true,
   },
-  {
-    id: "euro2024.commentary",
-    name: "Euro 2024 Live Commentary",
-    description: "Live commentary about Euro 2024",
-    avatar:
-      "https://pn-solution-live-events.netlify.app/avatars/group/euro2024.png",
-    createInAppContext: false,
-  },
-  {
-    id: "euro2024.livestream",
-    name: "Euro 2024 Stream Reactions",
-    description: "Audience reactions to the Euro 2024 stream",
-    avatar:
-      "https://pn-solution-live-events.netlify.app/avatars/group/euro2024.png",
-    createInAppContext: false,
-  },
-  {
-    id: "euro2024.polls",
-    name: "Channel used to declare new polls by the poll designer",
-    description:
-      "Polls are published on this channel.  You can also choose to publish each poll on a separate channel, if you only want certain users to see certain polls.",
-    avatar:
-      "https://pn-solution-live-events.netlify.app/avatars/group/euro2024.png",
-    createInAppContext: false,
-  },
-  {
-    id: "euro2024.votes",
-    name: "Channel used for voter clients to declare their poll preference",
-    description:
-      "Voter client apps should not have read access to this channel, only write access.  Payload structure contains pollId, questionId, and choiceId",
-    avatar:
-      "https://pn-solution-live-events.netlify.app/avatars/group/euro2024.png",
-    createInAppContext: false,
-  },
-  {
-    id: "euro2024.results",
-    name: "This channel distributes the final results of polls",
-    description:
-      "If you publish each poll on a separate channel, you should also publish each poll result separately, and clients would subscribe to results.*",
-    avatar:
-      "https://pn-solution-live-events.netlify.app/avatars/group/euro2024.png",
-    createInAppContext: false,
-  },
-  {
-    id: "euro2024.match-stats",
-    name: "This channel distributes statistics associated with the match",
-    description:
-      "Statistics update in real time in sync with the stream",
-    avatar:
-      "https://pn-solution-live-events.netlify.app/avatars/group/euro2024.png",
-    createInAppContext: false,
-  },
 ];
 export const chatChannelId = channelData[0].id;
-export const liveCommentaryChannelId = channelData[1].id;
-export const streamReactionsChannelId = channelData[2].id;
-export const pollDeclarations = channelData[3].id;
-export const pollVotes = channelData[4].id;
-export const pollResults = channelData[5].id;
-export const matchStatsChannelId = channelData[6].id;
-export const pushChannelSelfId = 'euro2024.push-self';
-export const pushChannelSalesId = 'euro2024.push-sales'
-export const dynamicAdChannelId = 'euro2024.dynamic-ad'
-export const clientVideoControlChannelId = 'euro2024.client-video-control'
+export const liveCommentaryChannelId = 'game.commentary';
+export const streamReactionsChannelId = 'game.livestream';
+export const pollDeclarations = 'game.polls';
+export const pollVotes = 'game.votes';
+export const pollResults = 'game.results';
+export const matchStatsChannelId = 'game.match-stats';
+export const pushChannelSelfId = 'game.push-self';
+export const pushChannelSalesId = 'game.push-sales'
+export const dynamicAdChannelId = 'game.dynamic-ad'
+export const clientVideoControlChannelId = 'game.client-video-control'
 export const illuminateTestChannelId = 'illuminate-trigger-test'
+
+export const ads = [
+  {
+    id: 1,
+    src: '/ads/ad-offer1.png',
+    isPremium: true
+  },
+  {
+    id: 2,
+    src: '/ads/ad-offer2.png',
+    isPremium: true
+  },
+  {
+    id: 3,
+    src: '/ads/ad-offer3.png',
+    isPremium: true
+  },
+  {
+    id: 4,
+    src: '/ads/ad-offer4.png',
+    isPremium: true
+  },
+  {
+    id: 5,
+    src: '/ads/ad-offer5.png',
+    isPremium: true
+  },
+  {
+    id: 6,
+    src: '/ads/ad-offer6.png',
+    isPremium: true
+  },
+  {
+    id: 7,
+    src: '/ads/ad1.png',
+    isPremium: false
+  },
+  {
+    id: 8,
+    src: '/ads/ad3.png',
+    isPremium: false
+  },
+  {
+    id: 9,
+    src: '/ads/ad2.png',
+    isPremium: false
+  },
+]
+
+export const enum AlertType {
+  POINTS = 0,
+  NEW_POLL = 1,
+  NEW_EMOJI = 2,
+}
 
 export const testUsers = [
   {
@@ -1108,56 +1110,3 @@ export const testUsers = [
   },
 ];
 
-export const ads = [
-  {
-    id: 1,
-    src: '/ads/ad-offer1.png',
-    isPremium: true
-  },
-  {
-    id: 2,
-    src: '/ads/ad-offer2.png',
-    isPremium: true
-  },
-  {
-    id: 3,
-    src: '/ads/ad-offer3.png',
-    isPremium: true
-  },
-  {
-    id: 4,
-    src: '/ads/ad-offer4.png',
-    isPremium: true
-  },
-  {
-    id: 5,
-    src: '/ads/ad-offer5.png',
-    isPremium: true
-  },
-  {
-    id: 6,
-    src: '/ads/ad-offer6.png',
-    isPremium: true
-  },
-  {
-    id: 7,
-    src: '/ads/ad1.png',
-    isPremium: false
-  },
-  {
-    id: 8,
-    src: '/ads/ad3.png',
-    isPremium: false
-  },
-  {
-    id: 9,
-    src: '/ads/ad2.png',
-    isPremium: false
-  },
-]
-
-export const enum AlertType {
-  POINTS = 0,
-  NEW_POLL = 1,
-  NEW_EMOJI = 2,
-}

@@ -71,7 +71,7 @@ class MainActivity : ComponentActivity() {
         val showDebug = applicationContext.getSharedPreferences("prefs.db", 0).getBoolean("showDebug", true)
         pushChannel =
             applicationContext.getSharedPreferences("prefs.db", 0).getString("pushChannel", null)
-                ?: "euro2024.push-self"
+                ?: "game.push-self"
         Log.d(logTag, "Subscribe Key is $subscribeKey")
         Log.d(logTag, "Push Channel is $pushChannel")
         this.pubnub = PubNub.create(

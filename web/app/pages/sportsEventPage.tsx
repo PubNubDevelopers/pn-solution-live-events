@@ -8,7 +8,7 @@ import PreviewTablet from '../components/previewTablet'
 import PreviewMobile from '../components/previewMobile'
 import { OpenInNewWindowIcon } from '../side-menu/sideMenuIcons'
 import { urls } from '../data/urls'
-import { dynamicAdChannelId } from "../data/testData";
+import { dynamicAdChannelId } from "../data/constants";
 
 export default function SportsEventPage ({
   chat,

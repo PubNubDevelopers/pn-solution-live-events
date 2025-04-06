@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import Image from 'next/image'
-import { AlertType } from '../data/testData'
+import { AlertType } from '../data/constants'
 
 function Alert ({ type, message, onClose }) {
   const [isVisible, setIsVisible] = useState(true)

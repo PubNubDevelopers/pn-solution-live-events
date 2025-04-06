@@ -6,7 +6,7 @@ import {
   pollVotes,
   pollResults,
   AlertType
-} from '../data/testData'
+} from '../data/constants'
 
 export default function PollsWidget ({
   className,
@@ -18,9 +18,10 @@ export default function PollsWidget ({
 }) {
   const [currentlyVisiblePoll, setCurrentlyVisiblePoll] = useState(null)
   const [polls, setPolls] = useState<any[]>([])
-  const [alert, setAlert] = useState<{ points: number | null; body: string } | null>(
-    null
-  )
+  const [alert, setAlert] = useState<{
+    points: number | null
+    body: string
+  } | null>(null)
 
   //  ToDo - Remove test polls when integrate with back end
   const testPolls = [
@@ -28,6 +29,7 @@ export default function PollsWidget ({
       id: 1, //  Assume this increments when we only show the most recent results
       title: 'Who will get more yellow cards?',
       victoryPoints: 2,
+      pollType: 'side', //  The poll shows at the side of the UX
       isPollOpen: true,
       //  answered = true, when I have answered the question locally
       options: [
@@ -41,6 +43,7 @@ export default function PollsWidget ({
       id: 2,
       title: 'Will the match go to extra time?',
       victoryPoints: 4,
+      pollType: 'side',
       isPollOpen: true,
       options: [
         { id: 1, text: 'Yes', score: 0 },
@@ -51,6 +54,7 @@ export default function PollsWidget ({
       id: 3,
       title: 'Who will be man of the match?',
       victoryPoints: 2,
+      pollType: 'side',
       isPollOpen: true,
       options: [
         { id: 1, text: 'Haaland', score: 37 },
@@ -79,20 +83,22 @@ export default function PollsWidget ({
         console.log('setting poll alert: ' + isMobilePreview)
         showPollAlert(messageEvent.message.alertText)
         const newPoll = messageEvent.message.newPoll
-        newPoll.answered = false
-        newPoll.options = newPoll.options.map(option => ({
-          ...option,
-          myAnswer: false // Add the new parameter
-        }))
+        if (newPoll.pollType == 'side') {
+          newPoll.answered = false
+          newPoll.options = newPoll.options.map(option => ({
+            ...option,
+            myAnswer: false // Add the new parameter
+          }))
 
-        // Add the new poll to the polls array if it doesn't already exist
-        setPolls(prevPolls => {
-          const pollExists = prevPolls.some(poll => poll.id === newPoll.id)
-          if (!pollExists) {
-            return [...prevPolls, newPoll]
-          }
-          return prevPolls // Array already exists
-        })
+          // Add the new poll to the polls array if it doesn't already exist
+          setPolls(prevPolls => {
+            const pollExists = prevPolls.some(poll => poll.id === newPoll.id)
+            if (!pollExists) {
+              return [...prevPolls, newPoll]
+            }
+            return prevPolls // Array already exists
+          })
+        }
       } else if (messageEvent.channel == pollResults) {
         //  todo update the polls array with the received result.  This is currently done locally
       }
@@ -142,7 +148,8 @@ export default function PollsWidget ({
           onClick={() => {
             chat.sdk.publish({
               message: {
-                alertText: 'This is very very long text which should get cut off',
+                alertText:
+                  'This is very very long text which should get cut off',
                 newPoll: testPolls[1]
               },
               channel: pollDeclarations
@@ -277,9 +284,10 @@ export default function PollsWidget ({
                   channel: pollVotes
                 })
                 //  ToDo - This logic update the local array, but should be called in response to a PN message.  Right now, all the logic for calculating responses is local
+                //  ToDo = Test that the logic for receiving poll answers is resilient if the poll being voted on isn't recognized (ok to ignore these answers)
                 setPolls(prevPolls =>
                   prevPolls.map(p =>
-                    p.id === poll.id
+                    p.id === poll.id && p.pollType === 'side'
                       ? {
                           ...p,
                           answered: true, // Mark the poll as answered

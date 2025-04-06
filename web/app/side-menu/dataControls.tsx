@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Slider } from '@heroui/react'
-import { chatChannelId, streamReactionsChannelId } from '../data/testData'
+import { chatChannelId, streamReactionsChannelId } from '../data/constants'
 import { PlayCircle } from './sideMenuIcons'
 
 const Expand = props => {

@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import { liveCommentaryChannelId } from '../data/testData'
+import { liveCommentaryChannelId } from '../data/constants'
 import { Channel, Message as pnMessage } from '@pubnub/chat'
 
 export default function LiveCommentaryWidget ({

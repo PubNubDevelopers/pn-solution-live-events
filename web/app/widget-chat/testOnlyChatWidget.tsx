@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { Chat, Channel, Message as pnMessage, User, TimetokenUtils } from '@pubnub/chat'
-import { chatChannelId } from '../data/testData'
+import { chatChannelId } from '../data/constants'
 import Image from 'next/image'
 
 export default function TestChatWidget ({

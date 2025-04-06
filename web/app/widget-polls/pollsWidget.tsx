@@ -87,6 +87,7 @@ export default function PollsWidget ({
           newPoll.answered = false
           newPoll.options = newPoll.options.map(option => ({
             ...option,
+            score: 0, //  Overrides the values in the test data
             myAnswer: false // Add the new parameter
           }))
 

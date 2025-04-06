@@ -18,117 +18,120 @@ export default function MatchStatsWidget ({
   const commonStatsBoxClasses =
     'min-h-36 max-h-36 min-w-44 max-w-56 bg-white border-1 border-navy200 rounded-lg'
 
-    useEffect(() => {
-      if (!chat) return
-      const channel = chat.sdk.channel(matchStatsChannelId)
-      const subscription = channel.subscription({receivePresenceEvents: false})
-      subscription.onMessage = (messageEvent) => {
-        processReceivedMessage(messageEvent.message)
-      }
-      subscription.subscribe()
-      return () => {
-        subscription.unsubscribe()
-      }
-  
-    }, [chat])
-
-    async function todoRemoveThisSendTestMessage(e) {
-      e.stopPropagation()
-      if (!chat) return
-      const randomStat3Digits = () => String(Math.floor(Math.random() * 400) + 1);
-      const randomStat2Digits = () => String(Math.floor(Math.random() * 99) + 1);
-      const randomStat1Digit = () => String(Math.floor(Math.random() * 9) + 1);
-      const randomPercent = Math.floor(Math.random() * 99) + 1;
-      const randomPercentDiff = 100 - randomPercent; 
-
-      await chat.sdk.publish({
-        message: {
-          statBox1: {
-        info: [
-          {
-            stat: `${randomPercent}%`,
-          },
-          {
-            stat: `${randomPercentDiff}%`
-          }
-        ]
-          },
-          statBox2: {
-        info: [
-          {
-            stat: randomStat1Digit()
-          }
-        ]
-          },
-          statBox3: {
-        info: [
-          {
-            dataPrimary: randomStat2Digits()
-          }
-        ]
-          },
-          statBox4: {
-        info: [
-          {
-            stat: `${randomStat3Digits()}km`
-          },
-          {
-            stat: `${randomStat3Digits()}km`
-          }
-        ]
-          },
-          statBox5: {
-        info: [
-          {
-            dataPrimary: `${randomStat2Digits()}kph`
-          }
-        ]
-          },
-          statBox6: {
-        info: [
-          {
-            stat: randomStat1Digit()
-          },
-          {
-            stat: randomStat1Digit()
-          }
-        ]
-          },
-
-        }, 
-        channel: matchStatsChannelId
-      })
+  useEffect(() => {
+    if (!chat) return
+    const channel = chat.sdk.channel(matchStatsChannelId)
+    const subscription = channel.subscription({ receivePresenceEvents: false })
+    subscription.onMessage = messageEvent => {
+      processReceivedMessage(messageEvent.message)
     }
+    subscription.subscribe()
+    return () => {
+      subscription.unsubscribe()
+    }
+  }, [chat])
 
-    function processReceivedMessage(matchStatsMessage)
-    {
-        //  Todo This logic needs to be updated based on the format of the received message
-        setMatchStats(prevStats => {
-          const updatedStats = { ...prevStats };
+  async function todoRemoveThisSendTestMessage (e) {
+    e.stopPropagation()
+    if (!chat) return
+    const randomStat3Digits = () => String(Math.floor(Math.random() * 400) + 1)
+    const randomStat2Digits = () => String(Math.floor(Math.random() * 99) + 1)
+    const randomStat1Digit = () => String(Math.floor(Math.random() * 9) + 1)
+    const randomPercent = Math.floor(Math.random() * 99) + 1
+    const randomPercentDiff = 100 - randomPercent
 
-          Object.keys(matchStatsMessage).forEach(key => {
-            if (updatedStats[key] && updatedStats[key].info) {
-              updatedStats[key] = {
-                ...updatedStats[key],
-                info: updatedStats[key].info.map((infoEntry, index) => ({
-                  ...infoEntry,
-                  stat: matchStatsMessage[key].info[index]?.stat || infoEntry.stat,
-                  dataPrimary: matchStatsMessage[key].info[index]?.dataPrimary || infoEntry.dataPrimary
-                }))
-              };
+    await chat.sdk.publish({
+      message: {
+        statBox1: {
+          info: [
+            {
+              stat: `${randomPercent}%`
+            },
+            {
+              stat: `${randomPercentDiff}%`
             }
-          });
+          ]
+        },
+        statBox2: {
+          info: [
+            {
+              stat: randomStat1Digit()
+            }
+          ]
+        },
+        statBox3: {
+          info: [
+            {
+              dataPrimary: randomStat2Digits()
+            }
+          ]
+        },
+        statBox4: {
+          info: [
+            {
+              stat: `${randomStat3Digits()}km`
+            },
+            {
+              stat: `${randomStat3Digits()}km`
+            }
+          ]
+        },
+        statBox5: {
+          info: [
+            {
+              dataPrimary: `${randomStat2Digits()}kph`
+            }
+          ]
+        },
+        statBox6: {
+          info: [
+            {
+              stat: randomStat1Digit()
+            },
+            {
+              stat: randomStat1Digit()
+            }
+          ]
+        }
+      },
+      channel: matchStatsChannelId
+    })
+  }
 
-          return updatedStats;
-        });
+  function processReceivedMessage (matchStatsMessage) {
+    //  Todo This logic needs to be updated based on the format of the received message
+    setMatchStats(prevStats => {
+      const updatedStats = { ...prevStats }
 
-    }
+      Object.keys(matchStatsMessage).forEach(key => {
+        if (updatedStats[key] && updatedStats[key].info) {
+          updatedStats[key] = {
+            ...updatedStats[key],
+            info: updatedStats[key].info.map((infoEntry, index) => ({
+              ...infoEntry,
+              stat: matchStatsMessage[key].info[index]?.stat || infoEntry.stat,
+              dataPrimary:
+                matchStatsMessage[key].info[index]?.dataPrimary ||
+                infoEntry.dataPrimary
+            }))
+          }
+        }
+      })
+
+      return updatedStats
+    })
+  }
 
   return (
     <div className={`${className}`}>
       {/*  ToDo: Remove this text method and text */}
       <div className='relative'>
-        <div className='absolute top-0 left-0 font-bold text-cherry cursor-pointer' onClick={(e) => {todoRemoveThisSendTestMessage(e)}}>
+        <div
+          className='absolute top-0 left-0 font-bold text-cherry cursor-pointer'
+          onClick={e => {
+            todoRemoveThisSendTestMessage(e)
+          }}
+        >
           SEND TEST STATS MESSAGE
         </div>
       </div>

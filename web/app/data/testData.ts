@@ -1155,3 +1155,9 @@ export const ads = [
     isPremium: false
   },
 ]
+
+export const enum AlertType {
+  POINTS = 0,
+  NEW_POLL = 1,
+  NEW_EMOJI = 2,
+}

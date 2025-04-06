@@ -14,7 +14,8 @@ import { CommonMessageHandler } from '../commonLogic'
 import {
   pushChannelSelfId,
   pushChannelSalesId,
-  dynamicAdChannelId
+  dynamicAdChannelId,
+  AlertType
 } from '../data/testData'
 
 export default function PreviewMobile ({
@@ -86,14 +87,18 @@ export default function PreviewMobile ({
     >
       <div className='w-full rounded-2xl bg-navy50 text-neutral-900 h-full pb-2'>
         <div className='w-full h-full overflow-y-auto overscroll-none'>
+        <div className='relative'>
+        <div className='absolute w-1/2 right-0'>
+
           {alert && (
             <Alert
+              type={AlertType.POINTS}
               message={alert}
               onClose={() => {
                 setAlert(null)
               }}
             />
-          )}
+          )}</div></div>
           {notification && (
             <Notification
               heading={notification.heading}

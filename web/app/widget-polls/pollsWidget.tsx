@@ -1,6 +1,12 @@
 import { useState, useEffect } from 'react'
 import GuideOverlay from '../components/guideOverlay'
-import { pollDeclarations, pollVotes, pollResults } from '../data/testData'
+import Alert from '../components/alert'
+import {
+  pollDeclarations,
+  pollVotes,
+  pollResults,
+  AlertType
+} from '../data/testData'
 
 export default function PollsWidget ({
   className,
@@ -12,6 +18,9 @@ export default function PollsWidget ({
 }) {
   const [currentlyVisiblePoll, setCurrentlyVisiblePoll] = useState(null)
   const [polls, setPolls] = useState<any[]>([])
+  const [alert, setAlert] = useState<{ points: number | null; body: string } | null>(
+    null
+  )
 
   //  ToDo - Remove test polls when integrate with back end
   const testPolls = [
@@ -67,6 +76,8 @@ export default function PollsWidget ({
       console.log(messageEvent)
       if (messageEvent.channel == pollDeclarations) {
         //  We are being told about a new poll
+        console.log('setting poll alert: ' + isMobilePreview)
+        showPollAlert(messageEvent.message.alertText)
         const newPoll = messageEvent.message.newPoll
         newPoll.answered = false
         newPoll.options = newPoll.options.map(option => ({
@@ -92,16 +103,33 @@ export default function PollsWidget ({
     }
   }, [chat])
 
+  function showPollAlert (pollText) {
+    setAlert({ points: null, body: `${pollText ?? 'New poll available'}` })
+  }
+
   return (
     <div className={`${className} px-6 pt-3 pb-4`}>
+      {alert && (
+        <Alert
+          type={AlertType.NEW_POLL}
+          message={alert}
+          onClose={() => {
+            console.log('setting alert to null')
+            setAlert(null)
+          }}
+        />
+      )}
       {/* ToDo: Remove this testing div */}
       <div className='flex flex-row text-cherry font-semibold'>
-        LOCAL Testing:...{' '}
+        Testing:...{' '}
         <div
           className='cursor-pointer'
           onClick={() => {
             chat.sdk.publish({
-              message: { newPoll: testPolls[0] },
+              message: {
+                alertText: 'You unlocked a poll',
+                newPoll: testPolls[0]
+              },
               channel: pollDeclarations
             })
           }}
@@ -113,7 +141,10 @@ export default function PollsWidget ({
           className='cursor-pointer'
           onClick={() => {
             chat.sdk.publish({
-              message: { newPoll: testPolls[1] },
+              message: {
+                alertText: 'This is very very long text which should get cut off',
+                newPoll: testPolls[1]
+              },
               channel: pollDeclarations
             })
           }}

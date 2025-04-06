@@ -16,7 +16,8 @@ import { CommonMessageHandler } from '../commonLogic'
 import {
   pushChannelSelfId,
   pushChannelSalesId,
-  dynamicAdChannelId
+  dynamicAdChannelId,
+  AlertType,
 } from '../data/testData'
 
 export default function TabletContents ({
@@ -80,21 +81,24 @@ export default function TabletContents ({
   }
 
   function showAlert () {
-    setAlert({points: 10, body: 'Good Prediction'})
+    setAlert({ points: 10, body: 'Good Prediction' })
   }
 
   return (
     <div className='w-full rounded-2xl bg-navy50 text-neutral-900 h-full overflow-y-auto overscroll-none '>
       <div className='relative'>
         <div className='absolute w-1/2 right-0'>
-      {alert && (
-        <Alert
-          message={alert}
-          onClose={() => {
-            setAlert(null)
-          }}
-        />
-      )}</div></div>
+          {alert && (
+            <Alert
+              type={AlertType.POINTS}
+              message={alert}
+              onClose={() => {
+                setAlert(null)
+              }}
+            />
+          )}
+        </div>
+      </div>
       {notification && (
         <Notification
           heading={notification.heading}

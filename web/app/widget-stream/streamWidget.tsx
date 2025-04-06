@@ -4,8 +4,10 @@ import {
   streamReactionsChannelId,
   clientVideoControlChannelId,
   illuminateTestChannelId,
+  AlertType,
 } from '../data/testData'
 import { PlayCircle } from '../side-menu/sideMenuIcons'
+import Alert from '../components/alert'
 import {
   ActivitiesIcon,
   ThumbsDownIcon,
@@ -24,6 +26,9 @@ export default function StreamWidget ({
 }) {
   //  ToDo: Currently this is only the occupancy from the Data Controls - need to add any other real presence count (including ourselves)
   const [occupancy, setOccupancy] = useState(0)
+  const [alert, setAlert] = useState<{ points: number | null; body: string } | null>(
+    null
+  )
   const [videoUrl, setVideoUrl] = useState(
     'https://v.ftcdn.net/05/31/66/96/700_F_531669685_zuA1YSiPFLmRrPPzBG2iryBnmDkfYqzS_ST.mp4'
   )
@@ -202,6 +207,10 @@ export default function StreamWidget ({
     })
   }
 
+  function newEmojiAlert () {
+      setAlert({ points: null, body: 'New emoji unlocked' })
+  }
+
   return (
     <div className={`${className}`}>
       <div className='relative'>
@@ -270,7 +279,14 @@ export default function StreamWidget ({
           >
             Video has ENDED
           </div>
-
+          <div
+            className=''
+            onClick={e => {
+                newEmojiAlert()
+              }}
+          >
+            Emoji Unlocked
+          </div>
         </div>
 
         <div
@@ -336,14 +352,26 @@ export default function StreamWidget ({
 
   function ReactionsBar () {
     return (
-      <div className='flex flex-row gap-2 items-center justify-center bg-navy900 py-2 px-4  '>
-        <Reaction emoji='🙌' />
-        <Reaction emoji='😭' />
-        <Reaction emoji='😡' />
-        <Reaction emoji='😴' />
-        <Reaction emoji='🔥' />
-        <Reaction emoji='🎉' />
-      </div>
+      <>
+        {alert && (
+          <Alert
+            type={AlertType.NEW_EMOJI}
+            message={alert}
+            onClose={() => {
+              console.log('setting alert to null')
+              setAlert(null)
+            }}
+          />
+        )}
+        <div className='flex flex-row gap-2 items-center justify-center bg-navy900 py-2 px-4  '>
+          <Reaction emoji='🙌' />
+          <Reaction emoji='😭' />
+          <Reaction emoji='😡' />
+          <Reaction emoji='😴' />
+          <Reaction emoji='🔥' />
+          <Reaction emoji='🎉' />
+        </div>
+      </>
     )
   }
 

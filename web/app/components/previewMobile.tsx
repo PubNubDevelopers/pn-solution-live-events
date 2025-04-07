@@ -32,7 +32,9 @@ export default function PreviewMobile ({
     message: string
     imageUrl: string
   } | null>(null)
-  const [alert, setAlert] = useState<{points: number, body: string} | null>(null)
+  const [alert, setAlert] = useState<{ points: number; body: string } | null>(
+    null
+  )
   const [dynamicAd, setDynamicAd] = useState<{
     adId: string
     clickPoints: number
@@ -64,21 +66,8 @@ export default function PreviewMobile ({
     }
   }, [chat])
 
-  //  ToDo this code is for testing purposes only
-  async function testNotification (heading, message) {
-    await chat.sdk.publish({
-      message: {
-        text: 'PubNub Push Notification',
-        pn_fcm: {
-          data: { title: heading, body: message }
-        }
-      },
-      channel: pushChannelId
-    })
-  }
-
   function showAlert () {
-    setAlert({points: -5, body: 'Good Prediction'})
+    setAlert({ points: -5, body: 'Good Prediction' })
   }
 
   return (
@@ -87,18 +76,19 @@ export default function PreviewMobile ({
     >
       <div className='w-full rounded-2xl bg-navy50 text-neutral-900 h-full pb-2'>
         <div className='w-full h-full overflow-y-auto overscroll-none'>
-        <div className='relative'>
-        <div className='absolute w-1/2 right-0'>
-
-          {alert && (
-            <Alert
-              type={AlertType.POINTS}
-              message={alert}
-              onClose={() => {
-                setAlert(null)
-              }}
-            />
-          )}</div></div>
+          <div className='relative'>
+            <div className='absolute w-1/2 right-0'>
+              {alert && (
+                <Alert
+                  type={AlertType.POINTS}
+                  message={alert}
+                  onClose={() => {
+                    setAlert(null)
+                  }}
+                />
+              )}
+            </div>
+          </div>
           {notification && (
             <Notification
               heading={notification.heading}
@@ -118,18 +108,6 @@ export default function PreviewMobile ({
               }}
             >
               TEST: SHOW ALERT
-            </div>
-            <div
-              className='absolute left-10 top-5 text-sm z-50 font-semibold text-cherry cursor-pointer'
-              onClick={() => {
-                //testNotification('Last 5 minutes', 'Double points for predications')
-                testNotification(
-                  'Sombody tagged you',
-                  'You were mentioned in the group chat'
-                )
-              }}
-            >
-              TEST: SHOW NOTIFICATION
             </div>
           </div>
 

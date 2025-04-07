@@ -79,21 +79,6 @@ export default function SportsEventPage ({
         ></SideMenu>
 
         <div className='overflow-y-auto w-full p-6 overscroll-none flex flex-col items-center justify-center'>
-          {/*ToDo: Remove this test line */}
-          <div
-            className='text-cherry text-sm font-semibold text-right cursor-pointer'
-            onClick={async () => {
-              await chat.sdk.publish({
-                message: {
-                  adId: 2,
-                  clickPoints: 12
-                },
-                channel: dynamicAdChannelId
-              })
-            }}
-          >
-            TEST: SHOW DYNAMIC AD
-          </div>
           <div className='flex flex-col gap-0'>
             {isGuidedDemo && tabletPreview && (
               <a

@@ -17,8 +17,8 @@ export default function LiveCommentaryWidget ({
   useEffect(() => {
     if (!chat) return
     const channel = chat.sdk.channel(liveCommentaryChannelId)
-    const subscription = channel.subscription({receivePresenceEvents: false})
-    subscription.onMessage = (messageEvent) => {
+    const subscription = channel.subscription({ receivePresenceEvents: false })
+    subscription.onMessage = messageEvent => {
       setMessages(messages => {
         return uniqueById([...messages, messageEvent])
       })
@@ -27,7 +27,6 @@ export default function LiveCommentaryWidget ({
     return () => {
       subscription.unsubscribe()
     }
-
   }, [chat])
 
   useEffect(() => {
@@ -63,35 +62,9 @@ export default function LiveCommentaryWidget ({
     })
   }
 
-  async function todoRemoveThisSendTestMessage (e) {
-    e.stopPropagation()
-    if (!chat) return
-    await chat.sdk.publish({
-      message: {
-        text: `Test Message ${Math.floor(Math.random() * 1000)}`,
-        timeCode: `${Math.floor(Math.random() * 90)
-          .toString()
-          .padStart(2, '0')}:${Math.floor(Math.random() * 60)
-          .toString()
-          .padStart(2, '0')}`
-      },
-      channel: liveCommentaryChannelId
-    })
-  }
-
   return (
     <div className={`${className} px-6 pt-3 pb-4`}>
-      <div className='font-semibold text-base pb-3'>
-        Live Commentary{' '}
-        <span
-          className='text-cherry cursor-pointer'
-          onClick={e => {
-            todoRemoveThisSendTestMessage(e)
-          }}
-        >
-          SEND TEST MESSAGE
-        </span>
-      </div>
+      <div className='font-semibold text-base pb-3'>Live Commentary</div>
       {!scrolledToBottom && (
         <SkipToLatestButton liveCommentaryScrollRef={liveCommentaryScrollRef} />
       )}

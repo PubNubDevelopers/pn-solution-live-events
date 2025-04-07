@@ -66,20 +66,6 @@ export default function TabletContents ({
     }
   }, [chat])
 
-  //  ToDo this code is for testing purposes only
-  async function testNotification (heading, message) {
-    console.log('publishing notification on channel: ' + pushChannelId)
-    await chat.sdk.publish({
-      message: {
-        text: 'PubNub Push Notification',
-        pn_fcm: {
-          data: { title: heading, body: message }
-        }
-      },
-      channel: pushChannelId
-    })
-  }
-
   function showAlert () {
     setAlert({ points: 10, body: 'Good Prediction' })
   }
@@ -118,18 +104,6 @@ export default function TabletContents ({
           }}
         >
           TEST: SHOW ALERT
-        </div>
-        <div
-          className='absolute left-10 top-5 text-sm z-50 font-semibold text-cherry cursor-pointer'
-          onClick={() => {
-            //testNotification('Last 5 minutes', 'Double points for predications')
-            testNotification(
-              'Sombody tagged you',
-              'You were mentioned in the group chat'
-            )
-          }}
-        >
-          TEST: SHOW NOTIFICATION
         </div>
       </div>
       <TabletHeader />

@@ -31,73 +31,6 @@ export default function MatchStatsWidget ({
     }
   }, [chat])
 
-  async function todoRemoveThisSendTestMessage (e) {
-    e.stopPropagation()
-    if (!chat) return
-    const randomStat3Digits = () => String(Math.floor(Math.random() * 400) + 1)
-    const randomStat2Digits = () => String(Math.floor(Math.random() * 99) + 1)
-    const randomStat1Digit = () => String(Math.floor(Math.random() * 9) + 1)
-    const randomPercent = Math.floor(Math.random() * 99) + 1
-    const randomPercentDiff = 100 - randomPercent
-
-    await chat.sdk.publish({
-      message: {
-        statBox1: {
-          info: [
-            {
-              stat: `${randomPercent}%`
-            },
-            {
-              stat: `${randomPercentDiff}%`
-            }
-          ]
-        },
-        statBox2: {
-          info: [
-            {
-              stat: randomStat1Digit()
-            }
-          ]
-        },
-        statBox3: {
-          info: [
-            {
-              dataPrimary: randomStat2Digits()
-            }
-          ]
-        },
-        statBox4: {
-          info: [
-            {
-              stat: `${randomStat3Digits()}km`
-            },
-            {
-              stat: `${randomStat3Digits()}km`
-            }
-          ]
-        },
-        statBox5: {
-          info: [
-            {
-              dataPrimary: `${randomStat2Digits()}kph`
-            }
-          ]
-        },
-        statBox6: {
-          info: [
-            {
-              stat: randomStat1Digit()
-            },
-            {
-              stat: randomStat1Digit()
-            }
-          ]
-        }
-      },
-      channel: matchStatsChannelId
-    })
-  }
-
   function processReceivedMessage (matchStatsMessage) {
     //  Todo This logic needs to be updated based on the format of the received message
     setMatchStats(prevStats => {
@@ -124,17 +57,6 @@ export default function MatchStatsWidget ({
 
   return (
     <div className={`${className}`}>
-      {/*  ToDo: Remove this text method and text */}
-      <div className='relative'>
-        <div
-          className='absolute top-0 left-0 font-bold text-cherry cursor-pointer'
-          onClick={e => {
-            todoRemoveThisSendTestMessage(e)
-          }}
-        >
-          SEND TEST STATS MESSAGE
-        </div>
-      </div>
       <div
         className={`${
           isMobilePreview

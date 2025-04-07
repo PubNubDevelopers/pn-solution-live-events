@@ -23,54 +23,6 @@ export default function PollsWidget ({
     body: string
   } | null>(null)
 
-  //  ToDo - Remove test polls when integrate with back end
-  const testPolls = [
-    {
-      id: 1, //  Assume this increments when we only show the most recent results
-      title: 'Who will get more yellow cards?',
-      victoryPoints: 2,
-      pollType: 'side', //  The poll shows at the side of the UX
-      isPollOpen: true,
-      //  answered = true, when I have answered the question locally
-      options: [
-        { id: 1, text: 'Real Madrid', score: 0 },
-        ///  Also, each option is appended with the bool 'myAnswer' locally, to indicate which option was chosen. (Could replace this logic if the server returns the list of user IDs associated with each option)
-        { id: 2, text: 'Manchester City', score: 1 },
-        { id: 3, text: 'Equal', score: 0 }
-      ]
-    },
-    {
-      id: 2,
-      title: 'Will the match go to extra time?',
-      victoryPoints: 4,
-      pollType: 'side',
-      isPollOpen: true,
-      options: [
-        { id: 1, text: 'Yes', score: 0 },
-        { id: 2, text: 'No', score: 2 }
-      ]
-    },
-    {
-      id: 3,
-      title: 'Who will be man of the match?',
-      victoryPoints: 2,
-      pollType: 'side',
-      isPollOpen: true,
-      options: [
-        { id: 1, text: 'Haaland', score: 37 },
-        {
-          id: 2,
-          text: 'Vinicius Jr. I have a very long name',
-          score: 10
-        },
-        { id: 3, text: 'De Bruyne', score: 21 },
-        { id: 4, text: 'Modric', score: 25 },
-        { id: 5, text: 'Other', score: 7 }
-      ]
-    }
-  ]
-
-  //  todo also need to read the last 3 polls from history, and populte the UI
   useEffect(() => {
     if (!chat) return
     const subscriptionSet = chat.sdk.subscriptionSet({
@@ -81,9 +33,9 @@ export default function PollsWidget ({
       if (messageEvent.channel == pollDeclarations) {
         //  We are being told about a new poll
         console.log('setting poll alert: ' + isMobilePreview)
-        showPollAlert(messageEvent.message.alertText)
-        const newPoll = messageEvent.message.newPoll
+        const newPoll = messageEvent.message
         if (newPoll.pollType == 'side') {
+          showPollAlert(messageEvent.message.alertText)
           newPoll.answered = false
           newPoll.options = newPoll.options.map(option => ({
             ...option,
@@ -126,51 +78,6 @@ export default function PollsWidget ({
           }}
         />
       )}
-      {/* ToDo: Remove this testing div */}
-      <div className='flex flex-row text-cherry font-semibold'>
-        Testing:...{' '}
-        <div
-          className='cursor-pointer'
-          onClick={() => {
-            chat.sdk.publish({
-              message: {
-                alertText: 'You unlocked a poll',
-                newPoll: testPolls[0]
-              },
-              channel: pollDeclarations
-            })
-          }}
-        >
-          {' '}
-          START POLL 1 ...
-        </div>
-        <div
-          className='cursor-pointer'
-          onClick={() => {
-            chat.sdk.publish({
-              message: {
-                alertText:
-                  'This is very very long text which should get cut off',
-                newPoll: testPolls[1]
-              },
-              channel: pollDeclarations
-            })
-          }}
-        >
-          START POLL 2 ...
-        </div>
-        <div
-          className='cursor-pointer'
-          onClick={() => {
-            chat.sdk.publish({
-              message: { newPoll: testPolls[2] },
-              channel: pollDeclarations
-            })
-          }}
-        >
-          ... START POLL 3
-        </div>
-      </div>
       <GuideOverlay
         id={'pollsGuide'}
         guidesShown={guidesShown}

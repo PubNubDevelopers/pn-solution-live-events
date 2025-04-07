@@ -73,6 +73,7 @@ export default {
         warning800: "#92400E",
         warning700: "#B45309",
         warning500: "#F59E0B",
+        warningUnknown: "#FFCF40",
         warning100: "#FEF3C7",
         warning50: "#FFFBEB",
       },

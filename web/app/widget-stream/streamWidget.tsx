@@ -329,7 +329,7 @@ export default function StreamWidget ({
     return (
       <div
         className={`flex flex-row items-center justify-center ${
-          upgraded ? 'bg-warningUnknown1/40' : 'bg-white/10'
+          upgraded ? 'bg-appYellow1/40' : 'bg-white/10'
         } ${isMobilePreview ? 'w-8 h-8 text-2xl' : 'w-10 h-10 text-3xl'} rounded-full px-1.5 pt-1 text-center cursor-pointer`}
         onClick={e => {
           emojiClicked(emoji)

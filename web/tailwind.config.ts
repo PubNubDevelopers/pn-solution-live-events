@@ -73,10 +73,12 @@ export default {
         warning800: "#92400E",
         warning700: "#B45309",
         warning500: "#F59E0B",
-        warningUnknown1: "#FFCF40",
-        warningUnknown2: "#B59410",
         warning100: "#FEF3C7",
         warning50: "#FFFBEB",
+
+        appYellow1: "#FFCF40",
+        appYellow2: "#B59410",
+
       },
     },
   },

@@ -52,7 +52,7 @@ export default function AdvertsOfferWidget ({
 
 function PointsOverlay ({ clickPoints }) {
   return (
-    <div className='flex flex-row gap-1 py-0.5 px-3 rounded-xl items-center bg-[#FFCF40] border-1 border-[#B59410] cursor-pointer'>
+    <div className='flex flex-row gap-1 py-0.5 px-3 rounded-xl items-center bg-warningUnknown1 border-1 border-warningUnknown2 cursor-pointer'>
       <WorkspacePremiumIcon />
       <div className=''>Earn {clickPoints} points for clicking</div>
     </div>

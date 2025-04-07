@@ -51,7 +51,7 @@ export default function AdvertsWidget ({
           {nonPremiumAds.slice(0, 3).map((ad, index) => {
             return (
               <div key={index} className=''>
-                {ad.clickPoints && ad.clickPoints > 0 && (
+                {ad.clickPoints != null && ad.clickPoints > 0 && (
                   <div className='relative pointer-events-none'>
                     <div className='absolute top-0 right-0'>
                       <PointsOverlay
@@ -85,7 +85,7 @@ export default function AdvertsWidget ({
   if (isMobilePreview) {
     return (
       <div className={`${className} p-2`}>
-        {nonPremiumAds[currentAdId].clickPoints &&
+        {nonPremiumAds[currentAdId].clickPoints != null &&
           nonPremiumAds[currentAdId].clickPoints > 0 && (
             <div className='relative pointer-events-none'>
               <div className='absolute top-0 right-0'>

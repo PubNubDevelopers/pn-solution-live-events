@@ -6,6 +6,7 @@ import {
   matchStatsChannelId,
   liveCommentaryChannelId,
   pollDeclarations,
+  pollVotes,
   pollResults,
   clientVideoControlChannelId,
   pushChannelSelfId,
@@ -23,6 +24,8 @@ export default function Page () {
   const pushChannelId = isGuidedDemo ? pushChannelSalesId : pushChannelSelfId
   const testStyle = 'text-cherry cursor-pointer'
 
+  //  Test polls all have the final score, but that is ignored in the initial declaration
+  //  The correctOption is not used for side polls, so is not included here
   const testPolls = [
     {
       id: 1, //  Assume this increments when we only show the most recent results
@@ -30,12 +33,9 @@ export default function Page () {
       victoryPoints: 2,
       alertText: 'You unlocked a poll',
       pollType: 'side', //  The poll shows at the side of the UX
-      isPollOpen: true,
-      //  answered = true, when I have answered the question locally
       options: [
-        { id: 1, text: 'Real Madrid', score: 0 },
-        ///  Also, each option is appended with the bool 'myAnswer' locally, to indicate which option was chosen. (Could replace this logic if the server returns the list of user IDs associated with each option)
-        { id: 2, text: 'Manchester City', score: 1 },
+        { id: 1, text: 'Real Madrid', score: 1 },
+        { id: 2, text: 'Manchester City', score: 2 },
         { id: 3, text: 'Equal', score: 0 }
       ]
     },
@@ -45,7 +45,6 @@ export default function Page () {
       victoryPoints: 4,
       alertText: 'This is very very long text which should get cut off',
       pollType: 'side',
-      isPollOpen: true,
       options: [
         { id: 1, text: 'Yes', score: 0 },
         { id: 2, text: 'No', score: 2 }
@@ -56,7 +55,6 @@ export default function Page () {
       title: 'Who will be man of the match?',
       victoryPoints: 2,
       pollType: 'side',
-      isPollOpen: true,
       options: [
         { id: 1, text: 'Haaland', score: 37 },
         {
@@ -76,7 +74,6 @@ export default function Page () {
     title: 'Win 10 points for a correct prediction',
     victoryPoints: 10,
     pollType: 'match', //  The poll appears below the stream
-    isPollOpen: true,
     options: [
       { id: 1, text: 'Real Madrid' },
       { id: 2, text: 'Man City' },
@@ -86,9 +83,9 @@ export default function Page () {
 
   const testPollLiveMatchResults = {
     id: 1,
-    correctOption: 2, //  In production this would be part of the results message
+    pollType: 'match',
+    correctOption: 2 //  In production this would be part of the results message
   }
-
 
   //  App initialization
   useEffect(() => {
@@ -100,9 +97,7 @@ export default function Page () {
           userId: 'testing-only'
         })
         setChat(localChat)
-      } catch {
-
-      }
+      } catch {}
     }
 
     init()
@@ -111,6 +106,18 @@ export default function Page () {
   async function sendPubNubMessage (channel, messageBody) {
     await chat?.sdk.publish({
       message: messageBody,
+      channel: channel
+    })
+  }
+
+  async function voteInPoll (channel, pollId, optionId) {
+    await chat?.sdk.publish({
+      message: {
+        pollId: pollId,
+        questionId: '1', //  All polls only have one question
+        choiceId: optionId,
+        pollType: 'side'
+      },
       channel: channel
     })
   }
@@ -356,7 +363,9 @@ export default function Page () {
 
         <div
           className={`${testStyle}`}
-          onClick={() => sendPubNubMessage(pollResults, testPollLiveMatchResults)}
+          onClick={() =>
+            sendPubNubMessage(pollResults, testPollLiveMatchResults)
+          }
         >
           End Match Poll
         </div>
@@ -370,6 +379,21 @@ export default function Page () {
           Start Poll 1
         </div>
 
+        <div className={`${testStyle}`}>
+          <span className='cursor-default'>Vote in Poll 1:</span>{' '}
+          <span onClick={() => voteInPoll(pollVotes, 1, 1)}>Option 1</span>{' | '}
+          <span onClick={() => voteInPoll(pollVotes, 1, 2)}>Option 2</span>{' | '}
+          <span onClick={() => voteInPoll(pollVotes, 1, 3)}>Option 3</span>
+        </div>
+
+        <div
+          className={`${testStyle}`}
+          onClick={() => sendPubNubMessage(pollResults, testPolls[0])}
+        >
+          End Poll 1 (send results)
+        </div>
+
+
         <div
           className={`${testStyle}`}
           onClick={() => sendPubNubMessage(pollDeclarations, testPolls[1])}
@@ -377,12 +401,46 @@ export default function Page () {
           Start Poll 2
         </div>
 
+        <div className={`${testStyle}`}>
+          <span className='cursor-default'>Vote in Poll 2:</span>{' '}
+          <span onClick={() => voteInPoll(pollVotes, 2, 1)}>Option 1</span>{' | '}
+          <span onClick={() => voteInPoll(pollVotes, 2, 2)}>Option 2</span>
+        </div>
+
+        <div
+          className={`${testStyle}`}
+          onClick={() => sendPubNubMessage(pollResults, testPolls[1])}
+        >
+          End Poll 2 (send results)
+        </div>
+
+
+
         <div
           className={`${testStyle}`}
           onClick={() => sendPubNubMessage(pollDeclarations, testPolls[2])}
         >
           Start Poll 3
         </div>
+
+        <div className={`${testStyle}`}>
+          <span className='cursor-default'>Vote in Poll 3:</span>{' '}
+          <span onClick={() => voteInPoll(pollVotes, 3, 1)}>Option 1</span>{' | '}
+          <span onClick={() => voteInPoll(pollVotes, 3, 2)}>Option 2</span>{' | '}
+          <span onClick={() => voteInPoll(pollVotes, 3, 3)}>Option 3</span>{' | '}
+          <span onClick={() => voteInPoll(pollVotes, 3, 4)}>Option 4</span>{' | '}
+          <span onClick={() => voteInPoll(pollVotes, 3, 5)}>Option 5</span>
+        </div>
+
+        <div
+          className={`${testStyle}`}
+          onClick={() => sendPubNubMessage(pollResults, testPolls[2])}
+        >
+          End Poll 3 (send results)
+        </div>
+
+
+
 
         <div className='text-xl'>Match Statistics</div>
 

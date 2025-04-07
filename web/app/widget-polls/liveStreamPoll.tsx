@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import GuideOverlay from '../components/guideOverlay'
-import { pollDeclarations, pollVotes, pollResults } from '../data/constants'
+import { pollDeclarations, pollResults } from '../data/constants'
 import {
   ActivitiesIcon,
   ThumbsDownIcon,
@@ -15,7 +15,6 @@ export default function LiveStreamPoll ({
   visibleGuide,
   setVisibleGuide
 }) {
-  //  todo currently the poll is answered locally, so if you switch from mobile to tablet, answers are lost.  When integrate with back end changes should persist automatically (test this)
   const [currentPoll, setCurrentPoll] = useState<any | null>(null)
   const [currentPollAnswer, setCurrentPollAnswer] = useState<{
     id: number
@@ -34,6 +33,7 @@ export default function LiveStreamPoll ({
         const newPoll = messageEvent.message
         if (newPoll.pollType == 'match') {
           newPoll.answered = false
+          newPoll.isPollOpen = true
           newPoll.options = newPoll.options.map(option => ({
             ...option,
             score: 0, //  Overrides the values in the test data
@@ -45,18 +45,23 @@ export default function LiveStreamPoll ({
         }
       } else if (messageEvent.channel == pollResults) {
         //  Safe to assume we will only ever have one poll, so just overwrite the current poll
-        const correctOption = messageEvent.message.correctOption
-        setCurrentPoll(prevPoll => {
-          if (!prevPoll || typeof prevPoll !== 'object') return null
-          return {
-            ...prevPoll,
-            correctOption: correctOption,
-            isPollOpen: false
+        const pollType = messageEvent.message.pollType
+        if (pollType && pollType == 'match') {
+          const correctOption = messageEvent.message.correctOption
+          setCurrentPoll(prevPoll => {
+            if (!prevPoll || typeof prevPoll !== 'object') return null
+            return {
+              ...prevPoll,
+              correctOption: correctOption,
+              isPollOpen: false
+            }
+          })
+          if (correctOption == currentPollAnswer?.id) {
+            //  ToDo handle points awards when user wins a poll
+            console.log(
+              `ToDo: Award ${currentPoll.victoryPoints} victory points`
+            )
           }
-        })
-        if (correctOption == currentPollAnswer?.id) {
-          //  ToDo handle points awards when user wins a poll
-          console.log(`todo: Award ${currentPoll.victoryPoints} victory points`)
         }
       }
     }
@@ -110,7 +115,6 @@ export default function LiveStreamPoll ({
                 buttonText={option.text}
                 onClick={(id, option) => {
                   console.log(`Selected choice: ${option}`)
-                  //  todo ensure that when logic is moved to backend, the code is resilient against receiving answers to polls that are not opened.
                   setCurrentPollAnswer({ id: id, text: option })
                   setCurrentPoll({ ...currentPoll, answered: true })
                 }}

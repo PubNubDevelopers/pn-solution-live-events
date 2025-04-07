@@ -26,7 +26,7 @@ export default function PollsWidget ({
   useEffect(() => {
     if (!chat) return
     const subscriptionSet = chat.sdk.subscriptionSet({
-      channels: [pollDeclarations, pollResults]
+      channels: [pollDeclarations, pollVotes, pollResults]
     })
     subscriptionSet.onMessage = messageEvent => {
       console.log(messageEvent)
@@ -37,6 +37,7 @@ export default function PollsWidget ({
         if (newPoll.pollType == 'side') {
           showPollAlert(messageEvent.message.alertText)
           newPoll.answered = false
+          newPoll.isPollOpen = true
           newPoll.options = newPoll.options.map(option => ({
             ...option,
             score: 0, //  Overrides the values in the test data
@@ -49,11 +50,68 @@ export default function PollsWidget ({
             if (!pollExists) {
               return [...prevPolls, newPoll]
             }
-            return prevPolls // Array already exists
+            return prevPolls.map(poll => 
+              poll.id === newPoll.id ? newPoll : poll
+            )
           })
         }
+      } else if (messageEvent.channel == pollVotes) {
+        console.log(messageEvent)
+        const pollId = messageEvent.message.pollId
+        console.log(pollId)
+        const choiceId = messageEvent.message.choiceId
+        const pollType = messageEvent.message.pollType
+        console.log(pollType)
+        if (pollId && choiceId && pollType && pollType == 'side') {
+          const isMyAnswer = messageEvent.publisher == chat?.currentUser.id
+          console.log('is my answer? ' + isMyAnswer)
+          setPolls(prevPolls =>
+            prevPolls.map(p =>
+              p.id === pollId && p.pollType === 'side'
+                ? {
+                    ...p,
+                    ...(isMyAnswer && { answered: true }), // Only set answered to true if isMyAnswer is true
+                    options: p.options.map(
+                      o =>
+                        o.id === choiceId
+                          ? {
+                              ...o,
+                              score: o.score + 1,
+                              ...(isMyAnswer && { myAnswer: true }) // Only set myAnswer if isMyAnswer is true
+                            }
+                          : { ...o } // Ensure other options have myAnswer set to false
+                    )
+                  }
+                : p
+            )
+          )
+        }
       } else if (messageEvent.channel == pollResults) {
-        //  todo update the polls array with the received result.  This is currently done locally
+        console.log('poll results')
+        const pollId = messageEvent.message.id
+        const pollType = messageEvent.message.pollType
+        console.log(pollId)
+        console.log(pollType)
+        if (pollId && pollType && pollType == 'side') {
+          const resultsOfPoll = messageEvent.message
+          console.log(resultsOfPoll)
+            setPolls(prevPolls =>
+              prevPolls.map(p =>
+              p.id === pollId
+                ? {
+                  ...p,
+                  ...resultsOfPoll,
+                  isPollOpen: false,
+                  options: p.options.map(option => ({
+                  ...option,
+                  ...(resultsOfPoll.options.find(o => o.id === option.id) || {}),
+                  myAnswer: p.options.find(o => o.id === option.id)?.myAnswer || false // Preserve the existing myAnswer property or default to false
+                  }))
+                }
+                : p
+              )
+            )
+        }
       }
     }
     subscriptionSet.subscribe()
@@ -93,8 +151,11 @@ export default function PollsWidget ({
       {!currentlyVisiblePoll && polls?.length == 0 && <NoOpenPollsToDisplay />}
 
       {currentlyVisiblePoll &&
-        polls.find(poll => poll.id == currentlyVisiblePoll)?.answered ==
-          false && (
+        polls.find(
+          poll =>
+          poll.id == currentlyVisiblePoll &&
+          poll.isPollOpen == true
+        )?.answered == false && (
           <OpenPollQuestion
             poll={polls.find(poll => poll.id == currentlyVisiblePoll)}
           />
@@ -114,7 +175,8 @@ export default function PollsWidget ({
   function NoOpenPollsToDisplay ({}) {
     return (
       <div className='text-base font-normal py-3'>
-        There are no available open polls here, try under the live stream
+        There are no unanswered, open polls, did you answer the poll under the
+        live stream?
       </div>
     )
   }
@@ -122,7 +184,7 @@ export default function PollsWidget ({
   function PollsToDisplay ({}) {
     return (
       <div className='flex flex-col'>
-        <PollCardTitle text='Open polls' />
+        <PollCardTitle text='Open, unanswered polls' />
         {polls?.filter(
           poll => poll.isPollOpen == true && poll.answered == false
         ).length == 0 ? (
@@ -139,6 +201,7 @@ export default function PollsWidget ({
                     poll.victoryPoints
                   } points`}
                   onButtonClick={() => {
+                    //  todo award points for entering poll
                     setCurrentlyVisiblePoll(poll.id)
                   }}
                 />
@@ -179,36 +242,16 @@ export default function PollsWidget ({
               key={index}
               text={option.text}
               onClick={() => {
-                console.log(
-                  `ToDo: Vote cast for ${option.text} (needs to move to a PubNub message)`
-                )
                 //  This app is set up to only have one question per poll
                 chat.sdk.publish({
                   message: {
                     pollId: poll.id,
                     questionId: '1',
-                    choiceId: option.id
+                    choiceId: option.id,
+                    pollType: 'side'
                   },
                   channel: pollVotes
                 })
-                //  ToDo - This logic update the local array, but should be called in response to a PN message.  Right now, all the logic for calculating responses is local
-                //  ToDo = Test that the logic for receiving poll answers is resilient if the poll being voted on isn't recognized (ok to ignore these answers)
-                setPolls(prevPolls =>
-                  prevPolls.map(p =>
-                    p.id === poll.id && p.pollType === 'side'
-                      ? {
-                          ...p,
-                          answered: true, // Mark the poll as answered
-                          options: p.options.map(
-                            (o, i) =>
-                              i === index
-                                ? { ...o, score: o.score + 1, myAnswer: true } // Increment score and set myAnswer
-                                : { ...o, myAnswer: false } // Ensure other options have myAnswer set to false
-                          )
-                        }
-                      : p
-                  )
-                )
               }}
             />
           )
@@ -275,7 +318,6 @@ export default function PollsWidget ({
               buttonText={'Next poll'}
               isOpaque={true}
               onClick={() => {
-                console.log('ToDo: Next poll')
                 setCurrentlyVisiblePoll(nextPoll.id)
               }}
             />

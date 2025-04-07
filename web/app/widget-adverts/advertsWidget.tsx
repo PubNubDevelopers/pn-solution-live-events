@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import { useState, useEffect } from 'react'
 import { ads } from '../data/constants'
+import PointsOverlay from './pointsOverlay'
 
 export default function AdvertsWidget ({
   className,
@@ -8,10 +9,13 @@ export default function AdvertsWidget ({
   chat,
   guidesShown,
   visibleGuide,
-  setVisibleGuide
+  setVisibleGuide,
+  onAdClick,
 }) {
-  const nonPremiumAds = ads.filter(ad => ad.isPremium === false)
   const [currentAdId, setCurrentAdId] = useState(0)
+  const [nonPremiumAds, setNonPremiumAds] = useState(
+    ads.filter(ad => ad.isPremium === false)
+  )
 
   useEffect(() => {
     if (!isMobilePreview) return
@@ -27,8 +31,17 @@ export default function AdvertsWidget ({
   })
 
   function adClicked (e, ad) {
-    console.log('ToDo: ad clicked: ' + ad.id)
     e.stopPropagation()
+    //  The 'clicked ads' array is only stored locally, so you can click on both
+    //  the tablet and mobile preview to get 'double points'... but I'll leave it working
+    //  that way since it makes it easier to demo
+    const clickPoints = ad.clickPoints ?? 0
+    if (clickPoints > 0) {
+      setNonPremiumAds(prevAds =>
+        prevAds.map(a => (a.id === ad.id ? { ...a, clickPoints: 0 } : a))
+      )
+      onAdClick(clickPoints)
+    }
   }
 
   if (!isMobilePreview) {
@@ -37,18 +50,31 @@ export default function AdvertsWidget ({
         <div className='flex flex-row gap-3 w-full justify-between overflow-x-scroll overscroll-none'>
           {nonPremiumAds.slice(0, 3).map((ad, index) => {
             return (
-              <Image
-                key={index}
-                src={ad.src}
-                alt='Advert'
-                className='rounded-lg shadow-sm cursor-pointer'
-                width={219}
-                height={124}
-                onClick={e => {
-                  adClicked(e, nonPremiumAds[index])
-                }}
-                priority
-              />
+              <div key={index} className=''>
+                {ad.clickPoints > 0 && (
+                  <div className='relative pointer-events-none'>
+                    <div className='absolute top-0 right-0'>
+                      <PointsOverlay
+                        clickPoints={ad.clickPoints}
+                        isPremium={false}
+                      />
+                    </div>
+                  </div>
+                )}
+
+                <Image
+                  key={index}
+                  src={ad.src}
+                  alt='Advert'
+                  className='rounded-lg shadow-sm cursor-pointer'
+                  width={219}
+                  height={124}
+                  onClick={e => {
+                    adClicked(e, nonPremiumAds[index])
+                  }}
+                  priority
+                />
+              </div>
             )
           })}
         </div>
@@ -59,9 +85,23 @@ export default function AdvertsWidget ({
   if (isMobilePreview) {
     return (
       <div className={`${className} p-2`}>
+        {nonPremiumAds[currentAdId].clickPoints > 0 && (
+          <div className='relative pointer-events-none'>
+            <div className='absolute top-0 right-0'>
+              <PointsOverlay
+                clickPoints={nonPremiumAds[currentAdId].clickPoints}
+                isPremium={false}
+              />
+            </div>
+          </div>
+        )}
         <div className='flex justify-center'>
           <Image
-            src={nonPremiumAds[currentAdId] ? nonPremiumAds[currentAdId].src : '/avatars/placeholder.png'}
+            src={
+              nonPremiumAds[currentAdId]
+                ? nonPremiumAds[currentAdId].src
+                : '/avatars/placeholder.png'
+            }
             alt='Advert'
             className='rounded-lg shadow-sm cursor-pointer'
             width={402}

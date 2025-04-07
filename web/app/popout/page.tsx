@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { Chat, User } from '@pubnub/chat'
 import LoginPage from '../pages/loginPage'
@@ -11,14 +11,33 @@ export default function Page () {
   const [userId, setUserId] = useState<string | null>(null)
   const [chat, setChat] = useState<Chat | null>(null)
   const [loadMessage, setLoadMessage] = useState('Demo is initializing...')
-  const isGuidedDemo = process.env.NEXT_PUBLIC_GUIDED_DEMO === 'true'
-    ? process.env.NEXT_PUBLIC_GUIDED_DEMO
-    : null
+  const isGuidedDemo =
+    process.env.NEXT_PUBLIC_GUIDED_DEMO === 'true'
+      ? process.env.NEXT_PUBLIC_GUIDED_DEMO
+      : null
+  const [currentScore, setCurrentScore] = useState(0)
 
   function logout () {
     setLoginPageShown(true)
     setUserId(null)
   }
+
+  useEffect(() => {
+    //  Get updates on the current user
+    //  Requires 'User Metadata Events' enabled on the keyset
+    //  test logging out and in again as another user
+    if (!chat) return
+    if (!chat.currentUser) return
+    setCurrentScore(chat.currentUser.custom?.score ?? 0)
+    return chat.currentUser.streamUpdates(updatedUser => {
+      if (updatedUser.custom?.score) {
+        console.log(
+          'user has updated - setting score to ' + updatedUser.custom.score
+        )
+        setCurrentScore(updatedUser.custom.score)
+      }
+    })
+  }, [chat])
 
   if (loginPageShown && !userId) {
     return (
@@ -44,6 +63,7 @@ export default function Page () {
           visibleGuide={''}
           setVisibleGuide={() => {}}
           logout={logout}
+          currentScore={currentScore}
           heightConstrained={false}
         />
       </div>

@@ -12,12 +12,12 @@ import BotWidget from '../widget-bot/botWidget'
 import LiveCommentaryWidget from '../widget-liveCommentary/liveCommentaryWidget'
 import Notification from './notification'
 import Alert from './alert'
-import { CommonMessageHandler } from '../commonLogic'
+import { CommonMessageHandler, AwardPoints } from '../commonLogic'
 import {
   pushChannelSelfId,
   pushChannelSalesId,
   dynamicAdChannelId,
-  AlertType,
+  AlertType
 } from '../data/constants'
 
 export default function TabletContents ({
@@ -27,6 +27,7 @@ export default function TabletContents ({
   visibleGuide,
   setVisibleGuide,
   logout,
+  currentScore,
   heightConstrained = true
 }) {
   const [notification, setNotification] = useState<{
@@ -34,7 +35,9 @@ export default function TabletContents ({
     message: string
     imageUrl: string
   } | null>(null)
-  const [alert, setAlert] = useState<{points: number, body: string} | null>(null)
+  const [alert, setAlert] = useState<{ points: number; body: string } | null>(
+    null
+  )
   const [dynamicAd, setDynamicAd] = useState<{
     adId: string
     clickPoints: number
@@ -66,8 +69,8 @@ export default function TabletContents ({
     }
   }, [chat])
 
-  function showAlert () {
-    setAlert({ points: 10, body: 'Good Prediction' })
+  function showNewPointsAlert (points, message) {
+    setAlert({ points: points, body: message })
   }
 
   return (
@@ -95,18 +98,7 @@ export default function TabletContents ({
           }}
         />
       )}
-      {/* todo : Remove this test div.  Alerts should show at the correct time, as a result of actions (PN messages)*/}
-      <div className='relative'>
-        <div
-          className='absolute left-10 top-0 text-sm z-50 font-semibold text-cherry cursor-pointer'
-          onClick={() => {
-            showAlert()
-          }}
-        >
-          TEST: SHOW ALERT
-        </div>
-      </div>
-      <TabletHeader />
+      <TabletHeader currentScore={currentScore} />
       <div
         className={`flex flex-row px-6 gap-3 w-full h-full ${
           heightConstrained && 'min-h-[680px] max-h-[680px]'
@@ -136,6 +128,9 @@ export default function TabletContents ({
             guidesShown={guidesShown}
             visibleGuide={visibleGuide}
             setVisibleGuide={setVisibleGuide}
+            onAdClick={points => {
+              AwardPoints(chat, points, currentScore, showNewPointsAlert)
+            }}
           />
           <div className='min-h-3'></div>
         </div>
@@ -151,8 +146,12 @@ export default function TabletContents ({
               adId={dynamicAd.adId}
               clickPoints={dynamicAd.clickPoints}
               onAdClick={(points, adId) => {
-                console.log(`ToDo: Ad clicked for ${points} points`)
-                setDynamicAd(null)
+                AwardPoints(chat, points, currentScore, showNewPointsAlert)
+                //  Prevent clicking on both Mobile and tablet previews
+                chat?.sdk.publish({
+                  message: {},
+                  channel: dynamicAdChannelId
+                })
               }}
             />
           )}
@@ -202,11 +201,11 @@ export default function TabletContents ({
     </div>
   )
 
-  function TabletHeader ({}) {
+  function TabletHeader ({ currentScore }) {
     return (
       <div className='flex flex-row items-center justify-between w-full px-6 py-[11.5px]'>
         <div className='text-3xl font-bold'>Live Stream</div>
-        <UserStatus chat={chat} logout={logout} />
+        <UserStatus chat={chat} logout={logout} currentScore={currentScore} />
       </div>
     )
   }

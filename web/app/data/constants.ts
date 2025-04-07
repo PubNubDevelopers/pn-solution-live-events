@@ -9,68 +9,71 @@ export const channelData = [
   },
 ];
 export const chatChannelId = channelData[0].id;
-export const liveCommentaryChannelId = 'game.commentary';
-export const streamReactionsChannelId = 'game.stream-reactions';
-export const pollDeclarations = 'game.new-poll';
-export const pollVotes = 'game.poll-votes';
-export const pollResults = 'game.poll-results';
-export const matchStatsChannelId = 'game.match-stats';
-export const pushChannelSelfId = 'game.push-self';
-export const pushChannelSalesId = 'game.push-sales'
-export const dynamicAdChannelId = 'game.dynamic-ad'
-export const clientVideoControlChannelId = 'game.client-video-control'
-export const illuminateUpgradeReaction = 'illuminate-upgrade-reaction'
+export const liveCommentaryChannelId = "game.commentary";
+export const streamReactionsChannelId = "game.stream-reactions";
+export const pollDeclarations = "game.new-poll";
+export const pollVotes = "game.poll-votes";
+export const pollResults = "game.poll-results";
+export const matchStatsChannelId = "game.match-stats";
+export const pushChannelSelfId = "game.push-self";
+export const pushChannelSalesId = "game.push-sales";
+export const dynamicAdChannelId = "game.dynamic-ad";
+export const clientVideoControlChannelId = "game.client-video-control";
+export const illuminateUpgradeReaction = "illuminate-upgrade-reaction";
 
 //export const streamUrl = 'https://v.ftcdn.net/05/31/66/96/700_F_531669685_zuA1YSiPFLmRrPPzBG2iryBnmDkfYqzS_ST.mp4'
-export const streamUrl = 'https://youtu.be/IprCMEH8Vt4'
+export const streamUrl = "https://youtu.be/IprCMEH8Vt4";
 
 export const ads = [
   {
     id: 1,
-    src: '/ads/ad-offer1.png',
-    isPremium: true
+    src: "/ads/ad-offer1.png",
+    isPremium: true,
   },
   {
     id: 2,
-    src: '/ads/ad-offer2.png',
-    isPremium: true
+    src: "/ads/ad-offer2.png",
+    isPremium: true,
   },
   {
     id: 3,
-    src: '/ads/ad-offer3.png',
-    isPremium: true
+    src: "/ads/ad-offer3.png",
+    isPremium: true,
   },
   {
     id: 4,
-    src: '/ads/ad-offer4.png',
-    isPremium: true
+    src: "/ads/ad-offer4.png",
+    isPremium: true,
   },
   {
     id: 5,
-    src: '/ads/ad-offer5.png',
-    isPremium: true
+    src: "/ads/ad-offer5.png",
+    isPremium: true,
   },
   {
     id: 6,
-    src: '/ads/ad-offer6.png',
-    isPremium: true
+    src: "/ads/ad-offer6.png",
+    isPremium: true,
   },
   {
     id: 7,
-    src: '/ads/ad1.png',
-    isPremium: false
+    src: "/ads/ad1.png",
+    isPremium: false,
+    clickPoints: 2, //  Hard coded for non-dynamic ads
   },
   {
     id: 8,
-    src: '/ads/ad3.png',
-    isPremium: false
+    src: "/ads/ad3.png",
+    isPremium: false,
+    clickPoints: 0,
   },
   {
     id: 9,
-    src: '/ads/ad2.png',
-    isPremium: false
+    src: "/ads/ad2.png",
+    isPremium: false,
+    clickPoints: 1,
   },
-]
+];
 
 export const enum AlertType {
   POINTS = 0,
@@ -1112,4 +1115,3 @@ export const testUsers = [
     timezone: "America/Chicago",
   },
 ];
-

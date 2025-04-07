@@ -1,10 +1,14 @@
-import { pushChannelSelfId, pushChannelSalesId, dynamicAdChannelId } from "./data/constants";
+import {
+  pushChannelSelfId,
+  pushChannelSalesId,
+  dynamicAdChannelId,
+} from "./data/constants";
 
 export async function CommonMessageHandler(
   isGuidedDemo,
   messageEvent,
   onSetNotification,
-  onSetDynamicAd,
+  onSetDynamicAd
 ) {
   const pushChannelId = isGuidedDemo ? pushChannelSalesId : pushChannelSelfId;
   if (messageEvent.channel === pushChannelId) {
@@ -19,15 +23,38 @@ export async function CommonMessageHandler(
       imageUrl = "/notification/image-messages.png";
     }
     onSetNotification({ heading: title, message: body, imageUrl: imageUrl });
-  } 
-  else if (messageEvent.channel === dynamicAdChannelId) {
-    console.log('Dynamic Ad')
-    const adId = messageEvent.message.adId
-    const clickPoints = messageEvent.message.clickPoints
-    onSetDynamicAd({adId: adId, clickPoints: clickPoints})
-  }
-  else {
+  } else if (messageEvent.channel === dynamicAdChannelId) {
+    const adId = messageEvent.message.adId;
+    const clickPoints = messageEvent.message.clickPoints;
+    if (adId && clickPoints) {
+      onSetDynamicAd({ adId: adId, clickPoints: clickPoints });
+    }
+    else {
+      onSetDynamicAd(null)
+    }
+  } else {
     //  Unrecognized message
     console.error("Unrecognized message channel");
+  }
+}
+
+export async function AwardPoints(
+  chat,
+  pointsToAward,
+  currentScore,
+  awardPointsAnimation
+) {
+  if (!chat) return;
+  {
+    const newScore = currentScore + pointsToAward;
+    awardPointsAnimation(
+      pointsToAward,
+      `Point${Math.abs(pointsToAward) > 1 ? "s" : ""} Awarded`
+    );
+    await chat.currentUser.update({
+      custom: {
+        score: newScore,
+      },
+    });
   }
 }

@@ -10,7 +10,7 @@ import BotWidget from '../widget-bot/botWidget'
 import LiveCommentaryWidget from '../widget-liveCommentary/liveCommentaryWidget'
 import Notification from './notification'
 import Alert from './alert'
-import { CommonMessageHandler } from '../commonLogic'
+import { CommonMessageHandler, AwardPoints } from '../commonLogic'
 import {
   pushChannelSelfId,
   pushChannelSalesId,
@@ -25,7 +25,8 @@ export default function PreviewMobile ({
   guidesShown,
   visibleGuide,
   setVisibleGuide,
-  logout
+  logout,
+  currentScore
 }) {
   const [notification, setNotification] = useState<{
     heading: string
@@ -57,7 +58,8 @@ export default function PreviewMobile ({
         data => {
           setNotification(data)
         },
-        data => setDynamicAd(data)
+        data => setDynamicAd(data),
+        data => adIsClicked(data)
       )
     }
     subscriptionSet.subscribe()
@@ -66,8 +68,8 @@ export default function PreviewMobile ({
     }
   }, [chat])
 
-  function showAlert () {
-    setAlert({ points: -5, body: 'Good Prediction' })
+  function showNewPointsAlert (points, message) {
+    setAlert({ points: points, body: message })
   }
 
   return (
@@ -99,19 +101,8 @@ export default function PreviewMobile ({
               }}
             />
           )}
-          {/* todo : Remove this test div.  Alerts should show at the correct time, as a result of actions (PN messages)*/}
-          <div className='relative'>
-            <div
-              className='absolute left-10 top-0 text-sm z-50 font-semibold text-cherry cursor-pointer'
-              onClick={() => {
-                showAlert()
-              }}
-            >
-              TEST: SHOW ALERT
-            </div>
-          </div>
 
-          <MobileHeader />
+          <MobileHeader currentScore={currentScore} />
           <div className='flex flex-col px-2 gap-6 rounded-b-2xl'>
             <StreamWidget
               className={`${defaultWidgetClasses}`}
@@ -132,8 +123,12 @@ export default function PreviewMobile ({
                 adId={dynamicAd.adId}
                 clickPoints={dynamicAd.clickPoints}
                 onAdClick={(points, adId) => {
-                  console.log(`ToDo: Ad clicked for ${points} points`)
-                  setDynamicAd(null)
+                  AwardPoints(chat, points, currentScore, showNewPointsAlert)
+                  //  Prevent clicking on both Mobile and tablet previews
+                  chat?.sdk.publish({
+                    message: {},
+                    channel: dynamicAdChannelId
+                  })
                 }}
               />
             )}
@@ -184,6 +179,9 @@ export default function PreviewMobile ({
               guidesShown={guidesShown}
               visibleGuide={visibleGuide}
               setVisibleGuide={setVisibleGuide}
+              onAdClick={(points) => {
+                AwardPoints(chat, points, currentScore, showNewPointsAlert)
+              }}  
             />
           </div>
         </div>
@@ -191,10 +189,10 @@ export default function PreviewMobile ({
     </div>
   )
 
-  function MobileHeader ({}) {
+  function MobileHeader ({currentScore}) {
     return (
       <div className='flex flex-col w-full px-4 py-[11.5px]'>
-        <UserStatus chat={chat} logout={logout} />
+        <UserStatus chat={chat} logout={logout} currentScore={currentScore}/>
         <div className='text-2xl font-bold'>Live Stream</div>
       </div>
     )

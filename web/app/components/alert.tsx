@@ -44,7 +44,7 @@ function Alert ({ type, message, onClose }) {
           height={36}
         />
         <div className='absolute top-1/2 left-[40px] transform -translate-y-1/2'>
-          <div className='flex flex-row gap-1 items-center'>
+          <div className='flex flex-row gap-2 items-center'>
             {message.points && (
               <div className='text-base font-bold text-white italic'>{`${
                 message.points < 0 ? '' : '+'

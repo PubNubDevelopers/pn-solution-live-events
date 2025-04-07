@@ -28,13 +28,13 @@ export default function Page () {
     //  test logging out and in again as another user
     if (!chat) return
     if (!chat.currentUser) return
-    setCurrentScore(chat.currentUser.custom?.score ?? 0)
+    setCurrentScore(Number(chat.currentUser.custom?.score) || 0)
     return chat.currentUser.streamUpdates(updatedUser => {
       if (updatedUser.custom?.score) {
         console.log(
           'user has updated - setting score to ' + updatedUser.custom.score
         )
-        setCurrentScore(updatedUser.custom.score)
+        setCurrentScore(Number(updatedUser.custom.score) || 0)
       }
     })
   }, [chat])

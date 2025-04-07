@@ -10,7 +10,7 @@ export default function AdvertsWidget ({
   guidesShown,
   visibleGuide,
   setVisibleGuide,
-  onAdClick,
+  onAdClick
 }) {
   const [currentAdId, setCurrentAdId] = useState(0)
   const [nonPremiumAds, setNonPremiumAds] = useState(
@@ -51,7 +51,7 @@ export default function AdvertsWidget ({
           {nonPremiumAds.slice(0, 3).map((ad, index) => {
             return (
               <div key={index} className=''>
-                {ad.clickPoints > 0 && (
+                {ad.clickPoints && ad.clickPoints > 0 && (
                   <div className='relative pointer-events-none'>
                     <div className='absolute top-0 right-0'>
                       <PointsOverlay
@@ -85,16 +85,17 @@ export default function AdvertsWidget ({
   if (isMobilePreview) {
     return (
       <div className={`${className} p-2`}>
-        {nonPremiumAds[currentAdId].clickPoints > 0 && (
-          <div className='relative pointer-events-none'>
-            <div className='absolute top-0 right-0'>
-              <PointsOverlay
-                clickPoints={nonPremiumAds[currentAdId].clickPoints}
-                isPremium={false}
-              />
+        {nonPremiumAds[currentAdId].clickPoints &&
+          nonPremiumAds[currentAdId].clickPoints > 0 && (
+            <div className='relative pointer-events-none'>
+              <div className='absolute top-0 right-0'>
+                <PointsOverlay
+                  clickPoints={nonPremiumAds[currentAdId].clickPoints}
+                  isPremium={false}
+                />
+              </div>
             </div>
-          </div>
-        )}
+          )}
         <div className='flex justify-center'>
           <Image
             src={

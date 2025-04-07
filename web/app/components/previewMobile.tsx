@@ -59,7 +59,6 @@ export default function PreviewMobile ({
           setNotification(data)
         },
         data => setDynamicAd(data),
-        data => adIsClicked(data)
       )
     }
     subscriptionSet.subscribe()

@@ -103,10 +103,11 @@ export default function Page () {
     init()
   }, [])
 
-  async function sendPubNubMessage (channel, messageBody) {
+  async function sendPubNubMessage (channel, messageBody, shouldPersist = false) {
     await chat?.sdk.publish({
       message: messageBody,
-      channel: channel
+      channel: channel,
+      storeInHistory: shouldPersist
     })
   }
 
@@ -356,7 +357,7 @@ export default function Page () {
 
         <div
           className={`${testStyle}`}
-          onClick={() => sendPubNubMessage(pollDeclarations, testPollLiveMatch)}
+          onClick={() => sendPubNubMessage(pollDeclarations, testPollLiveMatch, true)}
         >
           Start Match Poll
         </div>

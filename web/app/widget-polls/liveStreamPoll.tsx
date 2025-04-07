@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import GuideOverlay from '../components/guideOverlay'
-import { pollDeclarations, pollResults } from '../data/constants'
+import { pollDeclarations, pollVotes, pollResults } from '../data/constants'
 import {
   ActivitiesIcon,
   ThumbsDownIcon,
@@ -24,24 +24,23 @@ export default function LiveStreamPoll ({
   useEffect(() => {
     if (!chat) return
     const subscriptionSet = chat.sdk.subscriptionSet({
-      channels: [pollDeclarations, pollResults]
+      channels: [pollDeclarations, pollVotes, pollResults]
     })
     subscriptionSet.onMessage = messageEvent => {
       console.log(messageEvent)
       if (messageEvent.channel == pollDeclarations) {
         //  We are being told about a new poll
-        const newPoll = messageEvent.message
-        if (newPoll.pollType == 'match') {
-          newPoll.answered = false
-          newPoll.isPollOpen = true
-          newPoll.options = newPoll.options.map(option => ({
-            ...option,
-            score: 0, //  Overrides the values in the test data
-            myAnswer: false // Add the new parameter
-          }))
-
-          // Add the new poll to the polls array if it doesn't already exist
-          setCurrentPoll(newPoll)
+        handleNewLivePoll(messageEvent)
+      } else if (messageEvent.channel == pollVotes) {
+        console.log('poll vote')
+        const choiceId = messageEvent.message.choiceId
+        const pollType = messageEvent.message.pollType
+        if (choiceId && pollType && pollType == 'match') {
+          const choiceText =
+            currentPoll?.options?.find(option => option.id === choiceId)
+              ?.text || ''
+          setCurrentPollAnswer({ id: choiceId, text: choiceText })
+          setCurrentPoll({ ...currentPoll, answered: true })
         }
       } else if (messageEvent.channel == pollResults) {
         //  Safe to assume we will only ever have one poll, so just overwrite the current poll
@@ -66,10 +65,46 @@ export default function LiveStreamPoll ({
       }
     }
     subscriptionSet.subscribe()
+
     return () => {
       subscriptionSet.unsubscribe()
     }
   }, [chat, currentPollAnswer])
+
+  useEffect(() => {
+    if (!chat) return
+    chat.sdk
+      .fetchMessages({
+        channels: [pollDeclarations],
+        count: 1
+      })
+      .then(result => {
+        console.log(result)
+        if (result) {
+          const previouslyDeclaredPoll = result.channels[pollDeclarations][0]
+          console.log(previouslyDeclaredPoll)
+          if (previouslyDeclaredPoll) {
+            handleNewLivePoll(previouslyDeclaredPoll)
+          }
+        }
+      })
+  }, [chat])
+
+  function handleNewLivePoll (messageEvent) {
+    const newPoll = messageEvent.message
+    if (newPoll.pollType == 'match') {
+      newPoll.answered = false
+      newPoll.isPollOpen = true
+      newPoll.options = newPoll.options.map(option => ({
+        ...option,
+        score: 0, //  Overrides the values in the test data
+        myAnswer: false // Add the new parameter
+      }))
+
+      // Add the new poll to the polls array if it doesn't already exist
+      setCurrentPoll(newPoll)
+    }
+  }
 
   if (!currentPoll) {
     return <LivePollNotAvailable />
@@ -115,8 +150,15 @@ export default function LiveStreamPoll ({
                 buttonText={option.text}
                 onClick={(id, option) => {
                   console.log(`Selected choice: ${option}`)
-                  setCurrentPollAnswer({ id: id, text: option })
-                  setCurrentPoll({ ...currentPoll, answered: true })
+                  chat.sdk.publish({
+                    message: {
+                      pollId: 1,
+                      questionId: '1',
+                      choiceId: id,
+                      pollType: 'match'
+                    },
+                    channel: pollVotes
+                  })
                 }}
               />
             ))}

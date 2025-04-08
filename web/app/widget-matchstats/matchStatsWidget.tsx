@@ -15,7 +15,7 @@ export default function MatchStatsWidget ({
 }) {
   //  todo these stats need to be populated and updated from PubNub.  The PN message (or messages) will probably just contain the information in the 'info' fields - see definition of config
   const [matchStats, setMatchStats] = useState<any | null>(matchStatsConfig)
-  const [featuredPlayer, setFeaturedPlayer] = useState(0)
+  const [featuredPlayer, setFeaturedPlayer] = useState(1)
   const commonStatsBoxClasses =
     'min-h-36 max-h-36 min-w-44 max-w-56 bg-white border-1 border-navy200 rounded-lg'
 
@@ -88,14 +88,14 @@ export default function MatchStatsWidget ({
             isMobilePreview ? 'col-span-2' : 'col-span-2 row-span-3'
           }`}
         >
-          {giveStatsBox(matchStats?.featuredPlayers[featuredPlayer], featuredPlayer, setFeaturedPlayer)}
+          {giveStatsBox(matchStats?.featuredPlayers[featuredPlayer], featuredPlayer, (player) => setFeaturedPlayer(player))}
         </div>
       </div>
     </div>
   )
 }
 
-function giveStatsBox (boxConfig, featuredPlayer, setFeaturedPlayer) {
+function giveStatsBox (boxConfig, featuredPlayer = 0, setFeaturedPlayer = (player) => {}) {
   const imagePlaceholder = '/avatars/placeholder.png'
   if (boxConfig?.type == BoxType.InfoBoxWithImageAndQuantity) {
     return (
@@ -153,7 +153,6 @@ function giveStatsBox (boxConfig, featuredPlayer, setFeaturedPlayer) {
           if (direction === 0) {
             let newPlayer = (featuredPlayer + 1) % NUM_FEATURED_PLAYERS
           } 
-          console.log(newPlayer)
           setFeaturedPlayer(newPlayer)
         }}
       />

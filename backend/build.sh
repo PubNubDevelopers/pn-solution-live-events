@@ -1,18 +1,15 @@
 #!/bin/sh
 
-DEVELOPER=$(sed -e 's/"/\\"/g' build/developer.txt | sed -e "s/['‘’]/\\'/g" | tr -s '\n' ' ' | sed 's/ \+/ /g')
-PROMPT=$(sed -e 's/"/\\"/g' build/prompt.txt | sed -e "s/['‘’]/\\'/g" \ | tr -s '\n' ' ' | sed 's/ \+/ /g')
-GAMEDATA=$(sed -e 's/"/\\"/g' game-data.js | sed -e "s/['‘’]/\\'/g" | tr -s '\n' ' ' | sed 's/ \+/ /g')
+DEVELOPER=$( sed -e 's/"/\\"/g' build/developer.txt | tr -s '\n' ' ' | sed 's/ \+/ /g' | sed -e "s/[‘’']/\\'/g" )
+PROMPT=$(    sed -e 's/"/\\"/g' build/prompt.txt    | tr -s '\n' ' ' | sed 's/ \+/ /g' | sed -e "s/[‘’']/\\'/g" )
+GAMEDATA=$(  sed -e 's/"/\\"/g' game-data.js        | tr -s '\n' ' ' | sed 's/ \+/ /g' | sed -e "s/[‘’']/\\'/g" )
 
 echo 
 echo "Building index.js... "
 echo "it will take 5 minutes... 🚧 🚀 🚧 "
 echo 
 
-curl -Ls https://api.openai.com/v1/responses \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer $OPENAI_API_KEY" \
-  -d '{
+DATA=$(echo '{
   "model": "o1-pro",
   "input": [
     {
@@ -44,7 +41,13 @@ curl -Ls https://api.openai.com/v1/responses \
   },
   "tools": [],
   "store": true
-}' | jq -r '.output[] | select(.type == "message") | .content[] | select(.type == "output_text").text' > index.js
+}')
+
+curl -Ls https://api.openai.com/v1/responses \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $OPENAI_API_KEY" \
+  -d "$DATA" | jq -r '.output[] | select(.type == "message") | .content[] | select(.type == "output_text").text' \
+  > index.js
 
 cat index.js > revisions/index-$(date +%Y%m%d%H%M%S).js
 

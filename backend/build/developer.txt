@@ -7,6 +7,6 @@
 7. API Keys and config via ENV vars with `require("dotenv").config()`.
 8. Use random bot users (bot-01 to bot-09).
 9. Print all actions and events with `console.log()` including video timeline tick events, and user lead actions that trigger other events and when the video seek occurs.
-10. Add random delay between each user's simulated reactions and chat.
+10. Add realistic random delay between each simulated reactions and chat.
 11. Create a lot of simulated user chat messages! At least 50 different chat messages for each event type.
 12. Restart the timeline back to 0 when the timeline ends. This repeats forever.

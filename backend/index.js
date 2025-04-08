@@ -1,502 +1,381 @@
 "use strict";
 
-/*
-  To run this file:
-  1) Create a .env file with your environment variables (PUBNUB_PUBLISH_KEY, PUBNUB_SUBSCRIBE_KEY, etc).
-  2) Run: npm install pubnub dotenv
-  3) Start with: node server.js  (or add a "start" script in your package.json)
-*/
-
 require("dotenv").config();
 const PubNub = require("pubnub");
+const { matchScript } = require("./game-data");
 
+// PubNub setup (API keys via ENV)
 const pubnub = new PubNub({
   publishKey: process.env.PUBNUB_PUBLISH_KEY || "demo",
   subscribeKey: process.env.PUBNUB_SUBSCRIBE_KEY || "demo",
-  uuid: "server-uuid",
+  uuid: process.env.PUBNUB_UUID || "server-simulator",
 });
 
-// Example timeline in seconds:
-const timeline = [
-  { time: 0.0,   event: "Kick off" },
-  { time: 15.0,  event: "Fan excitement" },
-  { time: 30.0,  event: "Goal" },
-  { time: 60.0,  event: "Fan frustration" },
-  { time: 120.0, event: "Fan excitement" },
-  { time: 180.0, event: "Goal" },
-  { time: 200.0, event: "Fan excitement" },
-  { time: 280.0, event: "Five minutes remaining" },
-  { time: 295.0, event: "Fan frustration" },
-  { time: 300.0, event: "End match" },
+// Bot users
+const botUsers = [
+  "bot-01","bot-02","bot-03","bot-04","bot-05",
+  "bot-06","bot-07","bot-08","bot-09"
 ];
 
-// Arrays of possible chat messages (50 each) for demonstration:
-const fanExcitementMessages = [
-  "Woohoo! This is amazing!",
-  "Let's go! So hyped!",
-  "Come on team, keep it up!",
-  "Yes, yes, yes!!!",
-  "I can't believe this! Awesome!",
-  "Incredible performance!",
-  "They are on fire!",
-  "Unbelievable score!",
-  "This match is lit!",
-  "Amazing teamwork!",
-  "Wow, so exciting!",
-  "This is the best day ever!",
-  "Fantastic strike!",
-  "What a moment!",
-  "Sensational!",
-  "This crowd is loving it!",
-  "I can't sit still, let's go!",
-  "Pumped up to the max!",
-  "So good right now!",
-  "Woo! Party time!",
-  "I love this game!",
-  "This is unbelievable!",
-  "Victory seems close!",
-  "Incredible technique!",
-  "Pure brilliance!",
-  "Wow, so much energy!",
-  "Go team, go!",
-  "This is next level!",
-  "Celebration everywhere!",
-  "They are unstoppable!",
-  "Cheering so loud right now!",
-  "I'm losing my voice from cheering!",
-  "This is too good!",
+// Emoji reactions
+const emojiReactions = [
+  "⚽️","🔥","👏","😀","😡","🙌","🤩","👍","🥳","😱"
+];
+
+// 50 chat messages for each type, repeated or varied to fill up
+const commentaryMessages = [
+  "Wow, this match is on fire!",
+  "Spectacular tackle!",
+  "Unbelievable skill from the players!",
+  "They are giving it their all today!",
+  "The crowd is loving this!",
+  "It's still anyone's game out here!",
+  "That was a close call!",
+  "Such a tense moment!",
   "I'm on the edge of my seat!",
-  "Yes, keep going!",
-  "Woohoo, let's do this!",
-  "Absolutely electric atmosphere!",
-  "They must be so proud!",
-  "Fans are roaring here!",
-  "Oh my goodness, yes!",
-  "Beyond epic!",
-  "Chills! This is hype!",
-  "We're unstoppable!",
-  "Haha this is so fun!",
-  "I can't contain my excitement!",
-  "Keep that energy going!",
-  "This is a dream come true!",
-  "Legends in the making!",
-  "No way they can lose now!",
-  "This is raw adrenaline!",
-  "Cheer upon cheer, unstoppable!",
-];
-
-const fanFrustrationMessages = [
-  "Ugh, come on!",
-  "This is so disappointing!",
-  "What are they doing?!",
-  "That's it, I'm losing hope.",
-  "We can't keep missing chances!",
-  "Where's the defense?!",
-  "Totally frustrating game!",
-  "I can't believe this sloppy play!",
-  "Is anyone even trying??",
-  "This is a disaster!",
-  "I expected more from this team!",
-  "Not again, we gave it away!",
-  "They're throwing the match away!",
-  "The ref is blind!",
-  "Stop messing around!",
-  "This is so rough to watch!",
-  "Frustration level is maxed out!",
-  "Argh, we keep messing up!",
-  "We need a miracle now!",
-  "Why can't we score?!",
-  "No energy, no passion!",
-  "Time is slipping away!",
-  "Tense and aggravating!",
-  "I feel the pain here!",
-  "Come on, do something!",
-  "This is unacceptable!",
-  "We can't finish any attack!",
-  "So close, yet so far!",
-  "Stop turning over possession!",
-  "I'm losing my mind here!",
-  "This is heartbreaking!",
-  "Unbelievable mistakes!",
-  "Went from bad to worse!",
-  "Where is the teamwork?",
-  "Fans are so annoyed!",
-  "This is a total meltdown!",
-  "We need to do better, quickly!",
-  "The mood is sour now!",
-  "I can't watch this anymore!",
-  "Ref is missing it all!",
-  "Blowing chance after chance!",
-  "Absolute heartbreak!",
-  "They look asleep out there!",
-  "No wake-up call yet?",
-  "We're going nowhere fast!",
-  "Something has to change!",
-  "Fuming right now!",
-  "This is so unfair!",
-  "It's just not our day!",
-  "I want a refund on these tickets!",
+  "Impressive teamwork so far!",
+  "They have to keep the pressure on!",
+  "What an intense showdown!",
+  "I'm loving the back-and-forth!",
+  "Both teams look strong right now!",
+  "They can't afford any mistakes!",
+  "There's still plenty of time left!",
+  "High energy from both squads!",
+  "The fans are going wild!",
+  "We’re seeing some top-notch play!",
+  "Hard to predict a winner yet!",
+  "That was a dangerous cross!",
+  "Remarkable save by the keeper!",
+  "I can’t believe that pass!",
+  "This is a thrilling match!",
+  "The atmosphere is electric!",
+  "The manager's strategy is spot on!",
+  "What a display of skill!",
+  "They're dominating possession!",
+  "This referee is letting them play!",
+  "Non-stop action here!",
+  "Central midfield battle is fierce!",
+  "Every second counts now!",
+  "This is a masterclass in teamwork!",
+  "These players are unstoppable!",
+  "The chance conversion is critical!",
+  "Incredible speed on the counter!",
+  "They'll need fresh legs soon!",
+  "Keep the momentum going!",
+  "Nobody wants to lose this one!",
+  "I've never seen anything like it!",
+  "They've got to stay focused!",
+  "The defense is rock solid!",
+  "The fans deserve this excitement!",
+  "Pressure is mounting here!",
+  "Who will break the deadlock?",
+  "That was nearly a goal!",
+  "One tiny error can change everything!",
+  "This match is living up to expectations!",
+  "The intensity just won't let up!",
+  "Heart-stopping moments all around!"
 ];
 
 const goalMessages = [
-  "What a GOOOOAL!",
-  "GOOOOOOAAAAAALLLLL!",
-  "I can't believe that strike!",
-  "That shot was unstoppable!",
-  "Goal! Finally!",
-  "They did it! Incredible!",
-  "Yes! It's in!",
-  "Top bins beauty!",
-  "Breathtaking finish!",
-  "That's the way to score!",
-  "Goaaaaaaal!",
-  "The crowd goes wild!",
-  "I'm screaming in joy!",
-  "That was perfect placement!",
-  "Outstanding goal!",
-  "We knew they had it in them!",
-  "This is so hype!",
-  "They deserve that goal!",
-  "A moment of pure class!",
-  "What a moment, unbelievable!",
-  "Finally on the scoresheet!",
-  "Absolutely brilliant finish!",
-  "The stadium ignites!",
-  "They left the goalie helpless!",
-  "I'm losing it, that was epic!",
-  "Yes, yes, yes, get in!",
-  "That strike was surgical!",
-  "A masterclass in finishing!",
-  "The net is shaking!",
-  "Major breakthrough!",
-  "Now that's how you do it!",
-  "Clean and clinical shot!",
-  "Goal machine engaged!",
-  "The fans are in heaven now!",
-  "Never doubted them for a second!",
-  "Eruption of joy in the stands!",
-  "Couldn't have placed it better!",
-  "They can't stop scoring!",
-  "That's one for the highlight reel!",
-  "Truly unstoppable rocket!",
-  "Keeper had no chance!",
-  "I'm speechless... just wow!",
-  "This changes everything!",
-  "They're unstoppable now!",
-  "Boom! Just like that!",
-  "Football at its finest!",
-  "Magnificent strike!",
-  "Skill + power = perfect goal!",
-  "Instant goosebumps!",
-  "Can't wait to see the replay!",
-  "Historic moment right here!",
+  "GOAL! That was a rocket!",
+  "He smashed it into the net!",
+  "What a superb finish!",
+  "Unstoppable shot from that range!",
+  "Absolute screamer of a goal!",
+  "The keeper had no chance!",
+  "Amazing strike into the corner!",
+  "They made that look so easy!",
+  "Clinical finishing at its best!",
+  "He won't score a better goal all season!",
+  "Breathtaking shot—top bins!",
+  "Goal of the season contender!",
+  "The fans are in absolute jubilation!",
+  "He’s on fire today!",
+  "They've broken the deadlock now!",
+  "The stadium has erupted!",
+  "Skillful volley into the net!",
+  "The defense was left in the dust!",
+  "And the floodgates have opened!",
+  "Beautiful piece of finishing!",
+  "He hit that with real venom!",
+  "This could be a major turning point!",
+  "And just like that, they've scored!",
+  "He's celebrating in style!",
+  "That's how you take a shot!",
+  "A fantastic team goal!",
+  "Impossible angle, but he made it count!",
+  "Keeper can't believe it!",
+  "Pure magic on the pitch!",
+  "He’s got a brace now!",
+  "He made it look so effortless!",
+  "Look at the joy in the stands!",
+  "The replay will be shown for days!",
+  "That was unstoppable!",
+  "He’s thrilled with that finish!",
+  "He knew exactly where to place it!",
+  "Total pandemonium among supporters!",
+  "He placed it perfectly away from the keeper!",
+  "He’s going for the hat trick next!",
+  "Nobody saw that coming!",
+  "Picture-perfect strike!",
+  "He’ll remember this for a lifetime!",
+  "Now they’re in control!",
+  "That’s a statement goal!",
+  "Keeper's left helpless!",
+  "Back of the net—no mercy!",
+  "They never gave up on that build-up!",
+  "The fans are chanting his name!",
+  "What a clinical team display!",
+  "He read that opportunity perfectly!"
 ];
 
-const fiveMinutesRemainingMessages = [
-  "Just five minutes left, let's go!",
-  "Time is ticking!",
-  "We're so close to the end!",
-  "Final stretch, hold on!",
-  "Five minutes to make something happen!",
-  "Anything can happen in these last minutes!",
-  "We need that final push!",
-  "This game is going down to the wire!",
-  "It's crunch time!",
-  "It's now or never!",
-  "Let's finish strong!",
-  "These last moments are intense!",
-  "We can't afford any mistakes now!",
-  "One more goal, come on!",
-  "Tensions are rising!",
-  "Every second counts now!",
-  "Stay focused, team!",
-  "We can't let them score!",
-  "Hold onto the lead!",
-  "We need a miracle, do it!",
-  "Moments away from the whistle!",
-  "C'mon, finalize this!",
-  "One last chance for glory!",
-  "Pulse pounding right now!",
-  "This is so nerve wracking!",
-  "Dig deep and push on!",
-  "Flashes of brilliance needed!",
-  "If there's a time, it's now!",
-  "Let's shock them in the final minutes!",
-  "Captain, lead us home!",
-  "The tension is unreal!",
-  "Will we see a last minute goal?!",
-  "Praying for that big finish!",
-  "Crowd is going crazy now!",
-  "They can't let up, not yet!",
-  "Keep going until the final whistle!",
-  "Ref, check your watch carefully!",
-  "These five minutes will be epic!",
-  "We can do this, believe!",
-  "Everybody is on edge!",
-  "Come on, just a bit more effort!",
-  "Never give up, fight to the end!",
-  "These are precious moments!",
-  "Final push is everything!",
-  "We can still turn this around!",
-  "One last push, let's fight!",
-  "No regrets, leave it all on the field!",
-  "Yes, five minutes can change everything!",
-  "This is do-or-die!",
-  "Show your heart, let's go!",
+const penaltyMessages = [
+  "That's a big call from the ref!",
+  "Tense moment—is he going to convert?",
+  "High pressure situation for the taker!",
+  "Keeper trying mind games here!",
+  "Will they keep their nerve from the spot?",
+  "This could change the whole match!",
+  "That's some controversy right there!",
+  "He stepped up confidently... let's see!",
+  "A massive chance to score now!",
+  "Ref has pointed to the spot!",
+  "The crowd can't watch!",
+  "That must be nerve-racking!",
+  "Foul in the box—no doubt!",
+  "This is a golden opportunity!",
+  "The tension is palpable!",
+  "He’s lining it up very carefully!",
+  "All eyes on the penalty taker!",
+  "So much riding on this shot!",
+  "One kick can change everything!",
+  "That’s definitely a pen!",
+  "He’ll be replaying this moment in his head!",
+  "Keeper is reading his eyes!",
+  "Will it be top corner or low drive?",
+  "Time seems to have stood still here!",
+  "Referee had no choice—clear penalty!",
+  "Protest from the defenders is huge!",
+  "VAR might have confirmed that!",
+  "Huge roar from the away fans!",
+  "He’s under some serious pressure now!",
+  "This is their chance to get back in the game!",
+  "If he scores, it’s a lifeline!",
+  "If he misses, it’ll haunt him!",
+  "He better not slip now!",
+  "Keeper looks ready for it!",
+  "It’s time for a calm, composed strike!",
+  "Silence in the stadium. Penalty awaits!",
+  "He’s got the crowd’s hopes pinned on him!",
+  "A hush has fallen over the fans!",
+  "Anything can happen now!",
+  "He could level the score here!",
+  "All the practice comes down to this!",
+  "The drama is off the charts!",
+  "What an opportunity to go ahead!",
+  "He’s aiming to the left, I guess?",
+  "Players on edge at the box line!",
+  "He steps up…",
+  "Is the keeper guessing right?",
+  "Edge-of-your-seat moment!",
+  "He must keep a cool head!"
 ];
 
-const endMatchMessages = [
-  "That's it, match over!",
-  "What a game, it's done!",
-  "The final whistle!",
-  "We've reached the end!",
-  "Match finished, unbelievable moments!",
-  "That's all, folks!",
-  "Time's up, game ended!",
-  "Nothing more to do, final result!",
-  "Full time, thanks for watching!",
-  "End of an epic showdown!",
-  "Ref calls it, the game is complete!",
-  "Final outcomes are locked in!",
-  "All that excitement, now it's over!",
-  "What a finish to the match!",
-  "Closing the chapter on a thrilling game!",
-  "The scoreboard is final now!",
-  "And we are done for the day!",
-  "Time to celebrate or commiserate!",
-  "Absolute rollercoaster of a game!",
-  "This was an intense match!",
-  "Game over, folks!",
-  "We gave it our all, fantastic game!",
-  "Thank you for tuning in!",
-  "Final whistle has blown!",
-  "It's a wrap!",
-  "Phew, I'm out of breath!",
-  "What a journey that was!",
-  "Well played, both sides!",
-  "No more action left!",
-  "It's concluded at last!",
-  "Score sealed and done!",
-  "Let the post-match analysis begin!",
-  "End credits rolling now!",
-  "This game was one for the books!",
-  "A true spectacle from start to finish!",
-  "We hope you enjoyed the show!",
-  "All good things must come to an end!",
-  "Applause to the teams and the fans!",
-  "Time to exit the stadium!",
-  "Thank you, see you next time!",
-  "A perfect example of sports drama!",
-  "Time to rest, players!",
-  "Such an emotional ride!",
-  "Final handshake from the teams!",
-  "That's a wrap from me!",
-  "Signing off now!",
-  "No more comebacks possible!",
-  "The crowd begins to disperse!",
-  "Good night, everyone!",
+const yellowCardMessages = [
+  "That's definitely a booking!",
+  "He’s lost his composure there!",
+  "The ref had to pull out a card!",
+  "That's a late challenge—no surprises!",
+  "A silly tackle to be honest!",
+  "He’ll need to be careful now!",
+  "Ref has no tolerance for that!",
+  "He can't argue with that one!",
+  "That was reckless—yellow card out!",
+  "He’s put his team under pressure!",
+  "One more foul and he's off!",
+  "A harsh but fair call!",
+  "He’s lucky that wasn’t red!",
+  "Refs are cracking down this season!",
+  "He should've gone for the ball!",
+  "Players are protesting the call!",
+  "Tough break for the player!",
+  "He's got to watch himself now!",
+  "The manager won't be happy!",
+  "Poor challenge, definitely a yellow!",
+  "The tension is getting to them!",
+  "He came in way too late!",
+  "A well-deserved booking!",
+  "He's losing the plot out there!",
+  "Could have been worse!",
+  "He knew what he was doing!",
+  "No complaints on that decision!",
+  "That was a high boot!",
+  "He’s living dangerously now!",
+  "That’s going to slow him down!",
+  "He'll need to calm down quickly!",
+  "No excuse for that tackle!",
+  "He’s earned the referee’s wrath!",
+  "That’s not how you want your name mentioned!",
+  "He’ll remember this match for the wrong reasons!",
+  "He can’t keep doing that!",
+  "This ref is keeping control with cards!",
+  "He better avoid any further fouls!",
+  "A big risk to keep him on now!",
+  "He’s walking a tightrope!",
+  "He’s been warned earlier too!",
+  "Could’ve easily turned into a red!",
+  "Players must keep discipline now!",
+  "He’s let frustration get the best of him!",
+  "Hot tempers on the field!",
+  "He took one for the team there!",
+  "That was borderline dangerous!",
+  "Needs to keep his head in the game!",
+  "The bench is furious with that call!"
 ];
 
-function getRandomBotUser() {
-  // bot-01 through bot-09
-  const idx = Math.floor(Math.random() * 9) + 1;
-  return `bot-0${idx}`;
+const halfTimeMessages = [
+  "What a first half that was!",
+  "Time for a breather!",
+  "Players heading to the locker rooms!",
+  "So much action, we need a break!",
+  "The crowd enjoyed that half!",
+  "Analysis will be crucial now!",
+  "Managers will deliver big talk!",
+  "It was a mixed performance so far!",
+  "They'll need to regroup quickly!",
+  "The fans are buzzing during half-time!",
+  "Can they keep up this intensity?",
+  "So far so good, but second half awaits!",
+  "That half flew by!",
+  "They need to come out stronger!",
+  "Stadium atmosphere is electric!",
+  "Time to refresh and refocus!",
+  "Plenty of positives to take away!",
+  "Some tactical changes might be needed!",
+  "What a roller coaster half!",
+  "That half-time whistle came just in time!",
+  "Players look exhausted already!",
+  "Did you expect this scoreline?",
+  "The next half could be even more dramatic!",
+  "No one is leaving their seats!",
+  "A chance to get some fluids, folks!",
+  "Both teams have fight left in them!",
+  "Missed chances might haunt them!",
+  "Goals on display for sure!",
+  "This is far from over!",
+  "Can they maintain the momentum?",
+  "Brace yourselves for the second half!",
+  "Let's see what adjustments are made!",
+  "Half-time stats will be interesting!",
+  "They need to tighten that defense!",
+  "We’ll see if they can keep it up!",
+  "The fans want even more goals!",
+  "We're in for a treat after half-time!",
+  "That whistle will spark debate!",
+  "They're heading off for a pep talk!",
+  "End-to-end action—love it!",
+  "Coach has to rally the troops!",
+  "Expect changes on the restart!",
+  "They might need fresh legs soon!",
+  "An enthralling first half indeed!",
+  "Will the second half live up to this?",
+  "No shortage of talking points here!",
+  "What drama in just 45 minutes!",
+  "Hold tight for an epic second half!",
+  "That was just the appetizer, folks!"
+];
+
+// Helper to get event type from commentary text
+function getEventType(text) {
+  const t = text.toLowerCase();
+  if (t.includes("goal")) return "goal";
+  if (t.includes("penalty")) return "penalty";
+  if (t.includes("yellow card") || t.includes("bad challenge")) return "yellowCard";
+  if (t.includes("half time")) return "halfTime";
+  return "commentary";
 }
 
-function getRandomDelay() {
-  // random delay up to 3 seconds for demonstration
-  return Math.floor(Math.random() * 3000);
+function getRandomArrayItem(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
 }
 
-function sendPubNubMessage(channel, messageObj) {
-  // Publish a message on a specific channel
-  pubnub.publish(
-    {
-      channel,
-      message: messageObj,
-    },
-    (status, response) => {
-      if (status.error) {
-        console.log("PubNub publish error:", status);
-      } else {
-        // console.log("PubNub publish success:", response);
+// Handle random chat messages and emoji after an event triggers
+function simulateUserActivity(eventType) {
+  // Number of random user chat messages to simulate
+  const chatCount = Math.floor(Math.random() * 5) + 1; // 1-5 messages
+
+  // Pick the chat array based on event type
+  let chatArray;
+  switch (eventType) {
+    case "goal": chatArray = goalMessages; break;
+    case "penalty": chatArray = penaltyMessages; break;
+    case "yellowCard": chatArray = yellowCardMessages; break;
+    case "halfTime": chatArray = halfTimeMessages; break;
+    default: chatArray = commentaryMessages; break;
+  }
+
+  for (let i = 0; i < chatCount; i++) {
+    const randomDelay = Math.floor(Math.random() * 3000) + 500; // 500-3500 ms
+    setTimeout(() => {
+      const user = getRandomArrayItem(botUsers);
+      const chatMsg = getRandomArrayItem(chatArray);
+      console.log(`[CHAT] ${user} says: "${chatMsg}"`);
+      // Also random emoji reaction
+      const maybeEmoji = Math.random() > 0.5 ? getRandomArrayItem(emojiReactions) : null;
+      if (maybeEmoji) {
+        console.log(`[EMOJI] ${user} reacts with: ${maybeEmoji}`);
       }
-    }
-  );
+    }, randomDelay);
+  }
 }
 
-function sendVideoStatus(playbackTimeMs, started = false, ended = false) {
-  // This is the "control" message that the front end can use to sync
-  const messageObj = {
-    type: "STATUS",
-    params: {
-      playbackTime: playbackTimeMs,
-      videoStarted: started,
-      videoEnded: ended,
-    },
-  };
-  console.log(`Video status => playbackTime:${playbackTimeMs}ms started:${started} ended:${ended}`);
-  sendPubNubMessage("game.videoStatus", messageObj);
-}
+let currentTimeMs = 0;
 
-// Utility to send multiple chat messages with random delays
-function sendBulkChatMessages(channel, messagesArray) {
-  messagesArray.forEach((msg) => {
-    const user = getRandomBotUser();
-    const text = msg;
-    const delay = getRandomDelay();
-    setTimeout(() => {
-      console.log(`[CHAT] ${user}: ${text}`);
-      sendPubNubMessage(channel, { user, text });
-    }, delay);
+// Sort the script just in case (it looks sorted but let's be sure)
+matchScript.sort((a, b) => a.timeSinceVideoStartedInMs - b.timeSinceVideoStartedInMs);
+
+let eventIndex = 0;
+const totalDuration = matchScript[matchScript.length - 1].timeSinceVideoStartedInMs;
+
+// Main loop runs every second
+setInterval(() => {
+  currentTimeMs += 1000;
+
+  // Publish video time for front-end to sync
+  pubnub.publish({
+    channel: "video-sync",
+    message: { timeSinceVideoMs: currentTimeMs }
+  })
+  .then(() => {
+    console.log(`[VIDEO] Published currentTime: ${currentTimeMs} ms`);
+  })
+  .catch((err) => {
+    console.log("[VIDEO] Publish error:", err);
   });
-}
 
-// Utility to send multiple stream reactions
-function sendBulkReactions(emoji, count) {
-  for (let i = 0; i < count; i++) {
-    const delay = getRandomDelay();
-    setTimeout(() => {
-      console.log(`[REACTION] ${emoji}`);
-      sendPubNubMessage("game.stream-reactions", { text: emoji, type: "reaction" });
-    }, delay);
-  }
-}
+  // Trigger any events that match or are overdue
+  while (eventIndex < matchScript.length &&
+         matchScript[eventIndex].timeSinceVideoStartedInMs <= currentTimeMs) {
 
-function handleTimelineEvent(eventName) {
-  console.log(`>>> Timeline event triggered: ${eventName}`);
+    const evt = matchScript[eventIndex];
+    const { channel, data } = evt.action;
+    console.log(`[EVENT] Time ${evt.timeSinceVideoStartedInMs} ms => channel: ${channel}, data:`, data);
 
-  switch (eventName) {
-    case "Kick off":
-      // Send start stream message
-      console.log("[CONTROL] Start stream");
-      sendPubNubMessage("game.videoStatus", {
-        type: "START_STREAM",
-        params: {},
-      });
-      // Also send some chat messages
-      sendBulkChatMessages("game.chat", [
-        "Match is starting, get ready!",
-        "Here we go, let the fun begin!",
-        "Kick off time, best of luck to both teams!",
-        "Everyone settle in, big match ahead!",
-        "All eyes on the field now!",
-      ]);
-      break;
+    // Determine event type from commentary text if available
+    const commentaryText = data?.text || "";
+    const eventType = getEventType(commentaryText);
+    simulateUserActivity(eventType);
 
-    case "Fan excitement":
-      // This triggers ~20 cheer emoji plus random chat messages (50)
-      console.log("[ACTION] Fan excitement triggered");
-      sendBulkReactions("🎉", 15);
-      sendBulkReactions("🙌", 5);
-      // plus 50 chat messages from fanExcitementMessages
-      sendBulkChatMessages("game.chat", getRandom50(fanExcitementMessages));
-      break;
-
-    case "Fan frustration":
-      // ~25 anger emoji plus random chat messages (50)
-      console.log("[ACTION] Fan frustration triggered");
-      sendBulkReactions("😡", 25);
-      sendBulkChatMessages("game.chat", getRandom50(fanFrustrationMessages));
-      break;
-
-    case "Goal":
-      // Could simulate a mini celebration,
-      // e.g. 10 random "GOAL" messages and 20 confetti, plus 50 chat messages
-      console.log("[ACTION] GOAL triggered");
-      sendBulkReactions("🎉", 20);
-      sendBulkChatMessages("game.chat", getRandom50(goalMessages));
-      break;
-
-    case "Five minutes remaining":
-      // 50 chat messages about "5 minutes left"
-      console.log("[ACTION] 5 minutes left triggered");
-      sendBulkChatMessages("game.chat", getRandom50(fiveMinutesRemainingMessages));
-      break;
-
-    case "End match":
-      // Send end stream
-      console.log("[CONTROL] End stream");
-      sendPubNubMessage("game.videoStatus", {
-        type: "END_STREAM",
-        params: {},
-      });
-      // 50 chat messages about end of match
-      sendBulkChatMessages("game.chat", getRandom50(endMatchMessages));
-      break;
-
-    default:
-      break;
-  }
-}
-
-// Helper function to choose 50 random messages from a larger array (without repetition):
-function getRandom50(sourceArr) {
-  // If the array is exactly 50 or less, just return it
-  if (sourceArr.length <= 50) {
-    return shuffleArray(sourceArr.slice());
-  }
-  // Otherwise, pick 50 unique
-  const shuffled = shuffleArray(sourceArr.slice());
-  return shuffled.slice(0, 50);
-}
-
-// Simple shuffle
-function shuffleArray(arr) {
-  for (let i = arr.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
-  }
-  return arr;
-}
-
-let currentTimelineIndex = 0; // indexes into timeline
-let currentSeconds = 0;       // track our "video" time
-let isFirstLoop = true;
-
-// Sort timeline by time ascending (just in case)
-timeline.sort((a, b) => a.time - b.time);
-
-const totalDuration = timeline[timeline.length - 1].time; // the last event's time, e.g. 300
-
-function mainLoop() {
-  // Every second, increment the "video" time
-  currentSeconds += 1;
-
-  // Publish a status every iteration
-  let started = false;
-  let ended = false;
-
-  // If we just started
-  if (currentSeconds === 1 && isFirstLoop) {
-    started = true;
+    eventIndex++;
   }
 
-  // Check if we've passed any events
-  while (
-    currentTimelineIndex < timeline.length &&
-    timeline[currentTimelineIndex].time <= currentSeconds
-  ) {
-    const { event } = timeline[currentTimelineIndex];
-    handleTimelineEvent(event);
-    currentTimelineIndex += 1;
-
-    if (event === "End match") {
-      // Mark ended
-      ended = true;
-      // Then reset the timeline
-      currentSeconds = 0;
-      currentTimelineIndex = 0;
-      isFirstLoop = false;
-      break; // break so we skip sending a second status after resetting
-    }
+  // If we've reached the end of the timeline, reset
+  if (currentTimeMs > totalDuration) {
+    console.log("[VIDEO] Reached end of timeline, restarting...");
+    // Reset
+    currentTimeMs = 0;
+    eventIndex = 0;
   }
+}, 1000);
 
-  // Send a status message for sync
-  sendVideoStatus(currentSeconds * 1000, started, ended);
-}
-
-// Run main loop once every 1 second
-setInterval(mainLoop, 1000);
-
-console.log("Node server is running with a 1-second interval loop...");
+console.log("Server is running...");

@@ -15,6 +15,7 @@ export default function MatchStatsWidget ({
 }) {
   //  todo these stats need to be populated and updated from PubNub.  The PN message (or messages) will probably just contain the information in the 'info' fields - see definition of config
   const [matchStats, setMatchStats] = useState<any | null>(matchStatsConfig)
+  const [featuredPlayer, setFeaturedPlayer] = useState(1)
   const commonStatsBoxClasses =
     'min-h-36 max-h-36 min-w-44 max-w-56 bg-white border-1 border-navy200 rounded-lg'
 
@@ -87,14 +88,14 @@ export default function MatchStatsWidget ({
             isMobilePreview ? 'col-span-2' : 'col-span-2 row-span-3'
           }`}
         >
-          {giveStatsBox(matchStats?.featuredPlayer)}
+          {giveStatsBox(matchStats?.featuredPlayers[featuredPlayer], featuredPlayer, (player) => setFeaturedPlayer(player))}
         </div>
       </div>
     </div>
   )
 }
 
-function giveStatsBox (boxConfig) {
+function giveStatsBox (boxConfig, featuredPlayer = 0, setFeaturedPlayer = (player) => {}) {
   const imagePlaceholder = '/avatars/placeholder.png'
   if (boxConfig?.type == BoxType.InfoBoxWithImageAndQuantity) {
     return (
@@ -146,6 +147,14 @@ function giveStatsBox (boxConfig) {
         headerBackgroundColor={boxConfig?.headerBackgroundColor ?? '#FFFFFF'}
         infoArray={boxConfig?.info ?? []}
         infoListItems={boxConfig?.infoListItems ?? null}
+        cycleFeaturedPlayer={direction => {
+          const NUM_FEATURED_PLAYERS = 2
+          let newPlayer = (featuredPlayer + 1) % NUM_FEATURED_PLAYERS
+          if (direction === 0) {
+            let newPlayer = (featuredPlayer + 1) % NUM_FEATURED_PLAYERS
+          } 
+          setFeaturedPlayer(newPlayer)
+        }}
       />
     )
   } else {
@@ -282,7 +291,8 @@ function FeatureStats ({
   imageAlt,
   headerBackgroundColor,
   infoArray,
-  infoListItems
+  infoListItems,
+  cycleFeaturedPlayer
 }) {
   function FeatureStatsInfoRow ({ heading, detail }) {
     return (
@@ -294,7 +304,7 @@ function FeatureStats ({
   }
 
   return (
-    <div className='flex flex-col gap-6 bg-white border-1 border-navy200 rounded-lg'>
+    <div className='flex flex-col w-full min-w-72 gap-6 bg-white border-1 border-navy200 rounded-lg'>
       <div
         className={`flex flex-row w-full justify-center rounded-t-lg`}
         style={{ background: `${headerBackgroundColor}` }}
@@ -309,9 +319,21 @@ function FeatureStats ({
         />
       </div>
       <div className='flex flex-row w-full justify-between'>
-        <ChevronLeft />
+        <ChevronLeft
+          className='cursor-pointer'
+          onClick={e => {
+            e.stopPropagation()
+            cycleFeaturedPlayer(0)
+          }}
+        />
         <div className='font-semibold text-base'>{title}</div>
-        <ChevronRight />
+        <ChevronRight
+          className='cursor-pointer'
+          onClick={e => {
+            e.stopPropagation()
+            cycleFeaturedPlayer(1)
+          }}
+        />
       </div>
       <div className='flex flex-col px-4 gap-6'>
         <div className='flex flex-col gap-1'>

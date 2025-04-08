@@ -1,0 +1,12 @@
+1. Build a Node JS server app that runs in a run-loop setInterval once every second. 
+2. Trigger actions based on a timeline of events defined as an array of objects in milliseconds ms as timeSinceVideoStartedInMs found in exports.matchScript from our game-data.js file. The game-data.js file holds all the events and will be shared later.
+3. Single server.js file that can be started with npm run.
+4. Output only code as JavaScript in the server.js file.
+5. The video needs to be synchronized via a periodic pubnub publish call to signal to the front-end app the timecode to seek to.
+6. The events in the timeline need to correspond to simulated user activity triggering emoji reactions, and chat messages.
+7. API Keys and config via ENV vars with `require("dotenv").config()`.
+8. Use random bot users (bot-01 to bot-09).
+9. Print all actions and events with `console.log()` including video timeline tick events, and user lead actions that trigger other events and when the video seek occurs.
+10. Add random delay between each user's simulated reactions and chat.
+11. Create a lot of simulated user chat messages! At least 50 different chat messages for each event type.
+12. Restart the timeline back to 0 when the timeline ends. This repeats forever.

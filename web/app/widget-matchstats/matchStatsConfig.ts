@@ -11,17 +11,17 @@ export const matchStatsConfig = {
     title: "Possession",
     info: [
       {
-        stat: "58%",
-        imageUrl: "/matchstats/badge_manc.png",
+        stat: "0%",
+        imageUrl: "/matchstats/badge_leeds.svg",
         imageAlt: "Team Badge",
         imageWidth: 32,
         imageHeight: 32,
       },
       {
-        stat: "42%",
-        imageUrl: "/matchstats/badge_mcf.png",
+        stat: "0%",
+        imageUrl: "/matchstats/badge_southampton.svg",
         imageAlt: "Team Badge",
-        imageWidth: 24,
+        imageWidth: 32,
         imageHeight: 32,
       },
     ],
@@ -31,7 +31,7 @@ export const matchStatsConfig = {
     title: "Yellow cards",
     info: [
       {
-        stat: "5",
+        stat: "0",
         imageUrl: "/matchstats/icon_yellowcard.png",
         imageAlt: "Yellow card",
         imageWidth: 31,
@@ -44,12 +44,12 @@ export const matchStatsConfig = {
     title: "Most touches",
     info: [
       {
-        dataPrimary: "85",
-        dataSecondary: "Bernardo Silva",
-        imageUrl: "/matchstats/playericon_silva.png",
-        imageAlt: "Bernardo Silva",
-        imageWidth: 42,
-        imageHeight: 42,
+        dataPrimary: "0",
+        dataSecondary: "Armstrong",
+        imageUrl: "/matchstats/playericon_armstrong.png",
+        imageAlt: "",
+        imageWidth: 48,
+        imageHeight: 48,
       },
     ],
   },
@@ -58,17 +58,17 @@ export const matchStatsConfig = {
     title: "Distance covered",
     info: [
       {
-        stat: "112km",
-        imageUrl: "/matchstats/badge_manc.png",
+        stat: "0km",
+        imageUrl: "/matchstats/badge_leeds.svg",
         imageAlt: "Team Badge",
         imageWidth: 32,
         imageHeight: 32,
       },
       {
-        stat: "118km",
-        imageUrl: "/matchstats/badge_mcf.png",
+        stat: "0km",
+        imageUrl: "/matchstats/badge_southampton.svg",
         imageAlt: "Team Badge",
-        imageWidth: 24,
+        imageWidth: 32,
         imageHeight: 32,
       },
     ],
@@ -78,11 +78,11 @@ export const matchStatsConfig = {
     title: "Top speed",
     info: [
       {
-        dataPrimary: "38kph",
-        dataSecondary: "Mbappe",
-        imageUrl: "/matchstats/playericon_mbappe.png",
-        imageAlt: "Mbappe",
-        imageWidth: 42,
+        dataPrimary: "0kph",
+        dataSecondary: "Armstrong",
+        imageUrl: "/matchstats/playericon_armstrong.png",
+        imageAlt: "Armstrong",
+        imageWidth: 48,
         imageHeight: 48,
       },
     ],
@@ -92,41 +92,67 @@ export const matchStatsConfig = {
     title: "Shots on target",
     info: [
       {
-        stat: "3",
-        imageUrl: "/matchstats/badge_manc.png",
+        stat: "0",
+        imageUrl: "/matchstats/badge_leeds.svg",
         imageAlt: "Team Badge",
         imageWidth: 32,
         imageHeight: 32,
       },
       {
-        stat: "4",
-        imageUrl: "/matchstats/badge_mcf.png",
+        stat: "0",
+        imageUrl: "/matchstats/badge_southampton.svg",
         imageAlt: "Team Badge",
-        imageWidth: 24,
+        imageWidth: 32,
         imageHeight: 32,
       },
     ],
   },
-  featuredPlayer: {
-    type: BoxType.FeatureStats,
-    title: "Player stats: Rodri",
-    imageUrl: "/matchstats/statsbox_header_rodri.png",
-    imageAlt: "Player Header",
-    imageWidth: 142,
-    imageHeight: 80,
-    headerBackgroundColor: "#1F80C4",
-    info: [
-      {
-        heading: "Current teams:",
-        detail:
-          "Manchester City F.C. (#16 / Midfielder), Spain national football team (#16 / Midfielder)",
+  featuredPlayers: [
+    {
+      type: BoxType.FeatureStats,
+      title: "Player stats: Mara",
+      imageUrl: "/matchstats/statsbox_header_mara.png",
+      imageAlt: "Player Header",
+      imageWidth: 142,
+      imageHeight: 80,
+      headerBackgroundColor: "#d0d0cc",
+      info: [
+        { heading: "Full name:", detail: "Sékou Mara" },
+        { heading: "Nationality:", detail: "French" },
+        { heading: "Position:", detail: "Forward" },
+        { heading: "Height:", detail: "1.83m" },
+      ],
+      infoListItems: {
+        title: "Senior Career",
+        bullets: [
+          "2022 - 2024: SFC (4 Gls)",
+          "2020 - 2022: Bordeaux (7 Gls)",
+          "2019 - 2020: Bordeaux B (5 Gls)",
+        ],
       },
-      { heading: "Full name:", detail: "Rodrigo Hernández " },
-      { heading: "Nationality:", detail: "Spanish" },
-    ],
-    infoListItems: {
-      title: "This match",
-      bullets: ["7 lost possessions", "1 yellow card", "92% pass accuracy"],
     },
-  },
+    {
+      type: BoxType.FeatureStats,
+      title: "Player stats: Piroe",
+      imageUrl: "/matchstats/statsbox_header_piroe.png",
+      imageAlt: "Player Header",
+      imageWidth: 142,
+      imageHeight: 80,
+      headerBackgroundColor: "#d0d0cc",
+      info: [
+        { heading: "Full name:", detail: "Joël Piroe" },
+        { heading: "Nationality:", detail: "Dutch" },
+        { heading: "Position:", detail: "Forward" },
+        { heading: "Height:", detail: "1.85m" },
+      ],
+      infoListItems: {
+        title: "Senior Career",
+        bullets: [
+          "2023 - Leeds United (29 Gls)",
+          "2021 - 2023: Swansea (41 Gls)",
+          "2019 - 2021: PSV",
+        ],
+      },
+    },
+  ],
 };

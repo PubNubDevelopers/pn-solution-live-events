@@ -80,7 +80,7 @@ export default function LiveStreamPoll ({
       })
       .then(result => {
         console.log(result)
-        if (result) {
+        if (result && result.channels[pollDeclarations]) {
           const previouslyDeclaredPoll = result.channels[pollDeclarations][0]
           console.log(previouslyDeclaredPoll)
           if (previouslyDeclaredPoll) {

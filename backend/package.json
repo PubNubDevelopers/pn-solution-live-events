@@ -19,6 +19,6 @@
   "description": "",
   "dependencies": {
     "nconf": "^0.12.1",
-    "pubnub": "^9.3.0"
+    "pubnub": "^9.3.2"
   }
 }

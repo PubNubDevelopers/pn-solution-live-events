@@ -1,1 +1,1 @@
-require('./game-data.js')
+require('./eventParser.js')

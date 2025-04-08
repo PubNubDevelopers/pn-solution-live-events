@@ -8,17 +8,17 @@ export const enum BoxType {
 export const matchStatsConfig = {
   statBox1: {
     type: BoxType.InfoBoxComparingTwoStatistics,
-    title: "Possession",
+    title: "Score",
     info: [
       {
-        stat: "0%",
+        stat: "0",
         imageUrl: "/matchstats/badge_leeds.svg",
         imageAlt: "Team Badge",
         imageWidth: 32,
         imageHeight: 32,
       },
       {
-        stat: "0%",
+        stat: "0",
         imageUrl: "/matchstats/badge_southampton.svg",
         imageAlt: "Team Badge",
         imageWidth: 32,

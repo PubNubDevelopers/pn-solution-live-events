@@ -1,7 +1,6 @@
 #!/bin/sh
-
-DEVELOPER=$( sed -e 's/"/\\"/g' build/developer.txt | tr -s '\n' ' ' | sed 's/ \+/ /g' | sed -e "s/[‘’']/\\'/g" )
-PROMPT=$(    sed -e 's/"/\\"/g' build/prompt.txt    | tr -s '\n' ' ' | sed 's/ \+/ /g' | sed -e "s/[‘’']/\\'/g" )
+DEVELOPER=$( sed -e 's/"/\\"/g' prompt/developer.txt | tr -s '\n' ' ' | sed 's/ \+/ /g' | sed -e "s/[‘’']/\\'/g" )
+PROMPT=$(    sed -e 's/"/\\"/g' prompt/user.txt    | tr -s '\n' ' ' | sed 's/ \+/ /g' | sed -e "s/[‘’']/\\'/g" )
 GAMEDATA=$(  sed -e 's/"/\\"/g' game-data.js        | tr -s '\n' ' ' | sed 's/ \+/ /g' | sed -e "s/[‘’']/\\'/g" )
 
 echo 

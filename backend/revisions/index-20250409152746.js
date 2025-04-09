@@ -115,11 +115,13 @@ function randInt(min, max) {
 
 // Safely set userId based on channel, per instructions
 function setPubNubUserIdForChannel(channel) {
-  if (channel === "game.chat") {
+  if (channel === "game.stream-reactions") {
     pubnub.setUserId(`bot-0${randInt(1, 9)}`);
+  } else if (channel === "game.chat") {
+    pubnub.setUserId(`user-0${randInt(1, 9)}`);
   } else {
     // default server identity
-    pubnub.setUserId(`user-0${randInt(1, 9)}`);
+    pubnub.setUserId(`server-01`);
   }
 }
 

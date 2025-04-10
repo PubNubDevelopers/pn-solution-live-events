@@ -70,6 +70,8 @@ export default function StreamWidget ({
       receivePresenceEvents: false
     })
     illuminateTestSubscription.onMessage = messageEvent => {
+      console.log('upgrade emoji')
+      console.log(messageEvent)
       //  Received a request to upgrade a specific emoji
       const emojiToUpgrade = messageEvent.message.emoji
       const replacementEmoji = messageEvent.message.replacementEmoji

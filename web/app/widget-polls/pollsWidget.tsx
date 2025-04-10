@@ -5,6 +5,7 @@ import {
   pollDeclarations,
   pollVotes,
   pollResults,
+  illuminatePollTesting,
   AlertType
 } from '../data/constants'
 
@@ -26,7 +27,12 @@ export default function PollsWidget ({
   useEffect(() => {
     if (!chat) return
     const subscriptionSet = chat.sdk.subscriptionSet({
-      channels: [pollDeclarations, pollVotes, pollResults]
+      channels: [
+        pollDeclarations,
+        pollVotes,
+        pollResults,
+        illuminatePollTesting
+      ]
     })
     subscriptionSet.onMessage = messageEvent => {
       console.log(messageEvent)
@@ -50,7 +56,7 @@ export default function PollsWidget ({
             if (!pollExists) {
               return [...prevPolls, newPoll]
             }
-            return prevPolls.map(poll => 
+            return prevPolls.map(poll =>
               poll.id === newPoll.id ? newPoll : poll
             )
           })
@@ -96,23 +102,29 @@ export default function PollsWidget ({
           const resultsOfPoll = messageEvent.message
           //  todo award points if you got this question correct (the question may not have any points associated with it, or a correct answer, in which case don't award points)
           console.log(resultsOfPoll)
-            setPolls(prevPolls =>
-              prevPolls.map(p =>
+          setPolls(prevPolls =>
+            prevPolls.map(p =>
               p.id === pollId
                 ? {
-                  ...p,
-                  ...resultsOfPoll,
-                  isPollOpen: false,
-                  options: p.options.map(option => ({
-                  ...option,
-                  ...(resultsOfPoll.options.find(o => o.id === option.id) || {}),
-                  myAnswer: p.options.find(o => o.id === option.id)?.myAnswer || false // Preserve the existing myAnswer property or default to false
-                  }))
-                }
+                    ...p,
+                    ...resultsOfPoll,
+                    isPollOpen: false,
+                    options: p.options.map(option => ({
+                      ...option,
+                      ...(resultsOfPoll.options.find(o => o.id === option.id) ||
+                        {}),
+                      myAnswer:
+                        p.options.find(o => o.id === option.id)?.myAnswer ||
+                        false // Preserve the existing myAnswer property or default to false
+                    }))
+                  }
                 : p
-              )
             )
+          )
         }
+      } else if (messageEvent.channel == illuminatePollTesting) {
+        console.log('ILLUMINATE IS REQUESTING A POLL')
+        console.log(messageEvent)
       }
     }
     subscriptionSet.subscribe()
@@ -153,9 +165,7 @@ export default function PollsWidget ({
 
       {currentlyVisiblePoll &&
         polls.find(
-          poll =>
-          poll.id == currentlyVisiblePoll &&
-          poll.isPollOpen == true
+          poll => poll.id == currentlyVisiblePoll && poll.isPollOpen == true
         )?.answered == false && (
           <OpenPollQuestion
             poll={polls.find(poll => poll.id == currentlyVisiblePoll)}
@@ -199,7 +209,9 @@ export default function PollsWidget ({
                   key={index}
                   poll={poll}
                   buttonText={`${isMobilePreview ? 'For' : 'Enter for'} ${
-                    poll.victoryPoints && poll.victoryPoints > 0 ? `${poll.victoryPoints} points` : 'fun'
+                    poll.victoryPoints && poll.victoryPoints > 0
+                      ? `${poll.victoryPoints} points`
+                      : 'fun'
                   }`}
                   onButtonClick={() => {
                     //  todo award points for entering poll

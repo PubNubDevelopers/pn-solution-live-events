@@ -8,6 +8,7 @@ import {
   pollDeclarations,
   pollVotes,
   pollResults,
+  illuminatePollTesting,
   clientVideoControlChannelId,
   pushChannelSelfId,
   pushChannelSalesId,
@@ -229,7 +230,7 @@ export default function Page () {
             })
           }
         >
-          Start Stream Manually 
+          Start Stream Manually
         </div>
 
         <div
@@ -241,7 +242,7 @@ export default function Page () {
             })
           }
         >
-          Stop Stream Manually 
+          Stop Stream Manually
         </div>
 
         <div
@@ -307,7 +308,7 @@ export default function Page () {
             })
           }
         >
-          Video has looped 
+          Video has looped
         </div>
 
         <div
@@ -319,7 +320,7 @@ export default function Page () {
             })
           }
         >
-          Video has ended 
+          Video has ended
         </div>
 
         <div className='text-xl'>
@@ -493,6 +494,15 @@ export default function Page () {
           onClick={() => sendPubNubMessage(pollResults, testPolls[2])}
         >
           End Poll 3 (send results)
+        </div>
+
+        <div
+          className={`${testStyle}`}
+          onClick={() =>
+            sendPubNubMessage(illuminatePollTesting, { pollId: 2 })
+          }
+        >
+          Mock Illuminate requesting a poll (DCC Testing only)
         </div>
 
         <div className='text-xl'>Match Statistics</div>

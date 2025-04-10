@@ -14,6 +14,7 @@ export const streamReactionsChannelId = "game.stream-reactions";
 export const pollDeclarations = "game.new-poll";
 export const pollVotes = "game.poll-votes";
 export const pollResults = "game.poll-results";
+export const illuminatePollTesting = "game.illuminate-poll";
 export const matchStatsChannelId = "game.match-stats";
 export const pushChannelSelfId = "game.push-self";
 export const pushChannelSalesId = "game.push-sales";

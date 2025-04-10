@@ -110,6 +110,7 @@ exports.polls = [
       },
     },
   },
+  //  todo - fake poll voting here
   {
     timeSinceVideoStartedInMs: 48000,
     persistInHistory: false,
@@ -120,6 +121,7 @@ exports.polls = [
         correctOption: 1,
         pollType: "side",
         options: [
+          //  todo - would be great if score was based on the actual fake poll data
           { id: 1, score: 10 },
           { id: 2, score: 10 },
           { id: 3, score: 10 },
@@ -144,6 +146,7 @@ exports.polls = [
       },
     },
   },
+  //  todo - fake poll voting here
   {
     timeSinceVideoStartedInMs: 90000,
     persistInHistory: false,
@@ -178,6 +181,7 @@ exports.polls = [
       },
     },
   },
+  //  todo - fake poll voting here
   {
     timeSinceVideoStartedInMs: 159000,
     persistInHistory: false,
@@ -212,6 +216,7 @@ exports.polls = [
       },
     },
   },
+  //  todo - fake poll voting here
   {
     timeSinceVideoStartedInMs: 203000,
     persistInHistory: false,
@@ -246,6 +251,7 @@ exports.polls = [
       },
     },
   },
+  //  todo - fake poll voting here
   {
     timeSinceVideoStartedInMs: 270000,
     persistInHistory: false,
@@ -281,6 +287,7 @@ exports.polls = [
       },
     },
   },
+  //  todo - fake poll voting here
   {
     timeSinceVideoStartedInMs: 317000,
     persistInHistory: false,
@@ -315,6 +322,7 @@ exports.polls = [
       },
     },
   },
+  //  todo - fake poll voting here
   {
     timeSinceVideoStartedInMs: 376000,
     persistInHistory: false,
@@ -349,6 +357,7 @@ exports.polls = [
       },
     },
   },
+  //  todo - fake poll voting here
   {
     timeSinceVideoStartedInMs: 436000,
     persistInHistory: false,
@@ -383,6 +392,7 @@ exports.polls = [
       },
     },
   },
+  //  todo - fake poll voting here
   {
     timeSinceVideoStartedInMs: 497000,
     persistInHistory: false,
@@ -416,6 +426,7 @@ exports.polls = [
       },
     },
   },
+  //  todo - fake poll voting here
   {
     timeSinceVideoStartedInMs: 558000,
     persistInHistory: false,
@@ -450,6 +461,7 @@ exports.polls = [
       },
     },
   },
+  //  todo - fake poll voting here
   {
     timeSinceVideoStartedInMs: 639000,
     persistInHistory: false,
@@ -485,6 +497,7 @@ exports.polls = [
       },
     },
   },
+  //  todo - fake poll voting here
   {
     timeSinceVideoStartedInMs: 679000,
     persistInHistory: false,
@@ -519,6 +532,7 @@ exports.polls = [
       },
     },
   },
+  //  todo - fake poll voting here
   {
     timeSinceVideoStartedInMs: 740000,
     persistInHistory: false,
@@ -552,6 +566,7 @@ exports.polls = [
       },
     },
   },
+  //  todo - fake poll voting here
   {
     timeSinceVideoStartedInMs: 827000,
     persistInHistory: false,
@@ -585,6 +600,7 @@ exports.polls = [
       },
     },
   },
+  //  todo - fake poll voting here
   {
     timeSinceVideoStartedInMs: 860000,
     persistInHistory: false,
@@ -619,6 +635,7 @@ exports.polls = [
       },
     },
   },
+  //  todo - fake poll voting here
   {
     timeSinceVideoStartedInMs: 920000,
     persistInHistory: false,
@@ -654,6 +671,7 @@ exports.polls = [
       },
     },
   },
+  //  todo - fake poll voting here
   {
     timeSinceVideoStartedInMs: 968000,
     persistInHistory: false,
@@ -689,6 +707,7 @@ exports.polls = [
       },
     },
   },
+  //  todo - fake poll voting here
   {
     timeSinceVideoStartedInMs: 1053000,
     persistInHistory: false,
@@ -724,6 +743,7 @@ exports.polls = [
       },
     },
   },
+  //  todo - fake poll voting here
   {
     timeSinceVideoStartedInMs: 1097000,
     persistInHistory: false,
@@ -759,6 +779,7 @@ exports.polls = [
       },
     },
   },
+  //  todo - fake poll voting here
   {
     timeSinceVideoStartedInMs: 1156000,
     persistInHistory: false,
@@ -794,6 +815,7 @@ exports.polls = [
       },
     },
   },
+  //  todo - fake poll voting here
   {
     timeSinceVideoStartedInMs: 1200000,
     persistInHistory: false,

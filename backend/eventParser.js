@@ -7,6 +7,7 @@ const gameReactions = require("./game-data/reactions.js");
 const gameChat = require("./game-data/chat.js");
 const onDemandFanExcitement = require("./on-demand/fan-excitement.js");
 const onDemandFanFrustration = require("./on-demand/fan-frustration.js");
+const illuminatePolls = require("./illuminate/illuminate-polls.js");
 
 //  Using my testing keyset
 const pubnub = new PubNub({
@@ -44,6 +45,27 @@ const pubnub = new PubNub({
   }
 })();
 */
+
+//  ILLUMINATE: POLLS
+
+(async function processEvents() {
+  for (const timedEvent of illuminatePolls.angry) {
+    await publishPubNubMessage(
+      timedEvent.action.channel,
+      timedEvent.action.data
+    );
+    //  Sleep
+    await new Promise((resolve) => setTimeout(resolve, 5000));
+  }
+  for (const timedEvent of illuminatePolls.cheer) {
+    await publishPubNubMessage(
+      timedEvent.action.channel,
+      timedEvent.action.data
+    );
+    //  Sleep
+    await new Promise((resolve) => setTimeout(resolve, 5000));
+  }
+})();
 
 //  ON DEMAND: FAN EXCITEMENT
 /*

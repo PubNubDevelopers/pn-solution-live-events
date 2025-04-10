@@ -33,24 +33,27 @@ export const urls = {
     },
   },
   illuminate: {
-    determinePoints: {
-      //  todo update this after the function has been created)
-      selfLed: "https://pubnub.com",
+    customEmoji: {
+      selfLed: "https://demo-admin.pubnub.com/user/627747/account/632313/illuminate/decisions/5fc334e8-480e-4d65-94b2-aa6cffd89a0a",
       salesLed:
         "https://admin.pubnub.com/illuminate/",
     },
-    customAds: {
+    dynamicAd: {
       //  todo update this after the function has been created
-      selfLed: "https://pubnub.com",
+      selfLed: "https://demo-admin.pubnub.com/user/627747/account/632313/illuminate/decisions/5fc334e8-480e-4d65-94b2-aa6cffd89a0a",
       //  todo update this after the function has been created
-      salesLed: "https://pubnub.com",
+      salesLed: "https://admin.pubnub.com/illuminate/",
     },
-    createNew: {
+    dynamicPoll: {
       //  todo update this after the function has been created
-      selfLed: "https://pubnub.com",
+      selfLed: "https://demo-admin.pubnub.com/user/627747/account/632313/illuminate/decisions/81eeed3a-1f33-4530-818f-3e57a73414e3",
       salesLed:
         "https://admin.pubnub.com/illuminate/",
     },
+    dashboard: {
+      selfLed: "https://demo-admin.pubnub.com/user/627747/account/632313/illuminate/dashboards/559b2088-f7e0-40b9-bb95-c70f8d9d872a",
+      salesLed: "https://admin.pubnub.com/illuminate/",
+    }
   },
   functions: {
     scoreSummary: {

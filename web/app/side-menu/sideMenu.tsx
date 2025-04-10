@@ -212,7 +212,7 @@ function SalesInstructionsToSwitchAccount ({ isGuidedDemo, instructionType }) {
           <div className='font-semibold'>Sales Only</div>
           <div className=''>
             {instructionType == 'illuminate'
-              ? `Switch organizations to '${urls.instructions.account}', then select the appropriate Illuminate dashboards and actions`
+              ? `Switch organizations to '${urls.instructions.account}', then Illuminate dashboards and actions are named 'Showcase: Live Events...'`
               : `Switch organizations to '${urls.instructions.account}', select the '${urls.instructions.appName}' app, then the '${urls.instructions.keysetName}' keyset`}
           </div>
         </div>
@@ -312,30 +312,39 @@ function SideMenuIlluminate ({ isGuidedDemo }) {
         instructionType={'illuminate'}
       />
       <TextWithLinkButton
-        label={'Determine points'}
+        label={'Unlock custom emoji'}
         buttonText={'View'}
         url={
           isGuidedDemo
-            ? urls.illuminate.determinePoints.salesLed
-            : urls.illuminate.determinePoints.selfLed
+            ? urls.illuminate.customEmoji.salesLed
+            : urls.illuminate.customEmoji.selfLed
         }
       />
       <TextWithLinkButton
-        label={'Custom ads'}
+        label={'Show dynamic ads'}
         buttonText={'View'}
         url={
           isGuidedDemo
-            ? urls.illuminate.customAds.salesLed
-            : urls.illuminate.customAds.selfLed
+            ? urls.illuminate.dynamicAd.salesLed
+            : urls.illuminate.dynamicAd.selfLed
         }
       />
       <TextWithLinkButton
-        label={'Something custom?'}
-        buttonText={'Create new'}
+        label={'Dynamic poll'}
+        buttonText={'View'}
         url={
           isGuidedDemo
-            ? urls.illuminate.createNew.salesLed
-            : urls.illuminate.createNew.selfLed
+            ? urls.illuminate.dynamicPoll.salesLed
+            : urls.illuminate.dynamicPoll.selfLed
+        }
+      />
+      <TextWithLinkButton
+        label={'Trigger Events Dymamically'}
+        buttonText={'Dashboard'}
+        url={
+          isGuidedDemo
+            ? urls.illuminate.dashboard.salesLed
+            : urls.illuminate.dashboard.selfLed
         }
       />
     </div>

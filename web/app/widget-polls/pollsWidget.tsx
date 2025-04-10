@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import GuideOverlay from '../components/guideOverlay'
 import Alert from '../components/alert'
 import {
@@ -15,7 +15,8 @@ export default function PollsWidget ({
   chat,
   guidesShown,
   visibleGuide,
-  setVisibleGuide
+  setVisibleGuide,
+  awardPoints
 }) {
   const [currentlyVisiblePoll, setCurrentlyVisiblePoll] = useState(null)
   const [polls, setPolls] = useState<any[]>([])
@@ -23,6 +24,10 @@ export default function PollsWidget ({
     points: number | null
     body: string
   } | null>(null)
+  const pollsRef = useRef(polls)
+  useEffect(() => {
+    pollsRef.current = polls
+  }, [polls])
 
   useEffect(() => {
     if (!chat) return
@@ -35,10 +40,10 @@ export default function PollsWidget ({
       ]
     })
     subscriptionSet.onMessage = messageEvent => {
-      console.log(messageEvent)
+      //console.log(messageEvent)
       if (messageEvent.channel == pollDeclarations) {
         //  We are being told about a new poll
-        console.log('setting poll alert: ' + isMobilePreview)
+        //console.log('setting poll alert: ' + isMobilePreview)
         const newPoll = messageEvent.message
         if (newPoll.pollType == 'side') {
           showPollAlert(messageEvent.message.alertText)
@@ -100,8 +105,27 @@ export default function PollsWidget ({
         console.log(pollType)
         if (pollId && pollType && pollType == 'side') {
           const resultsOfPoll = messageEvent.message
-          //  todo award points if you got this question correct (the question may not have any points associated with it, or a correct answer, in which case don't award points)
-          console.log(resultsOfPoll)
+
+          //  Results are in, determine if we had the correct answer
+          if (resultsOfPoll.correctOption && !isMobilePreview) {
+            const myPollAnswer = pollsRef.current
+              .find(p => p.id === resultsOfPoll.id)
+              ?.options.find(o => o.myAnswer === true)
+            const pointsForCorrectAnswer =
+              pollsRef.current.find(p => p.id === resultsOfPoll.id)
+                ?.victoryPoints || 0
+
+            if (myPollAnswer && pointsForCorrectAnswer > 0) {
+              //  User has given an answer to a question that might award points
+              if (myPollAnswer.id == resultsOfPoll.correctOption) {
+                awardPoints(pointsForCorrectAnswer, 'Correct Answer!')
+              } else {
+                awardPoints(1, 'Incorrect 😢')
+              }
+            }
+          }
+
+          //if (resultsOfPoll.correctOption && resultsOfPoll.correctOption == )
           setPolls(prevPolls =>
             prevPolls.map(p =>
               p.id === pollId

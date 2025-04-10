@@ -44,6 +44,12 @@ export default function PreviewMobile ({
   const defaultWidgetClasses =
     'rounded-lg border-1 border-navy200 bg-white shadow-sm'
 
+  const currentScoreRef = useRef(currentScore)
+  useEffect(() => {
+    console.log('updating current score ref')
+    currentScoreRef.current = currentScore
+  }, [currentScore])
+
   useEffect(() => {
     if (!chat) return
     //const channel = chat.sdk.channel(pushChannelId)
@@ -58,7 +64,7 @@ export default function PreviewMobile ({
         data => {
           setNotification(data)
         },
-        data => setDynamicAd(data),
+        data => setDynamicAd(data)
       )
     }
     subscriptionSet.subscribe()
@@ -111,6 +117,15 @@ export default function PreviewMobile ({
               guidesShown={guidesShown}
               visibleGuide={visibleGuide}
               setVisibleGuide={setVisibleGuide}
+              awardPoints={(points, message) => {
+                AwardPoints(
+                  chat,
+                  points,
+                  message,
+                  currentScoreRef.current,
+                  showNewPointsAlert
+                )
+              }}
             />
             {dynamicAd && (
               <AdvertsOfferWidget
@@ -123,7 +138,13 @@ export default function PreviewMobile ({
                 adId={dynamicAd.adId}
                 clickPoints={dynamicAd.clickPoints}
                 onAdClick={(points, adId) => {
-                  AwardPoints(chat, points, currentScore, showNewPointsAlert)
+                  AwardPoints(
+                    chat,
+                    points,
+                    null,
+                    currentScoreRef.current,
+                    showNewPointsAlert
+                  )
                   //  Prevent clicking on both Mobile and tablet previews
                   chat?.sdk.publish({
                     message: {},
@@ -147,6 +168,15 @@ export default function PreviewMobile ({
               guidesShown={guidesShown}
               visibleGuide={visibleGuide}
               setVisibleGuide={setVisibleGuide}
+              awardPoints={(points, message) => {
+                AwardPoints(
+                  chat,
+                  points,
+                  message,
+                  currentScoreRef.current,
+                  showNewPointsAlert
+                )
+              }}
             />
             <MatchStatsWidget
               className={`${defaultWidgetClasses}`}
@@ -180,9 +210,15 @@ export default function PreviewMobile ({
               guidesShown={guidesShown}
               visibleGuide={visibleGuide}
               setVisibleGuide={setVisibleGuide}
-              onAdClick={(points) => {
-                AwardPoints(chat, points, currentScore, showNewPointsAlert)
-              }}  
+              onAdClick={points => {
+                AwardPoints(
+                  chat,
+                  points,
+                  null,
+                  currentScoreRef.current,
+                  showNewPointsAlert
+                )
+              }}
             />
           </div>
         </div>
@@ -190,10 +226,10 @@ export default function PreviewMobile ({
     </div>
   )
 
-  function MobileHeader ({currentScore}) {
+  function MobileHeader ({ currentScore }) {
     return (
       <div className='flex flex-col w-full px-4 py-[11.5px]'>
-        <UserStatus chat={chat} logout={logout} currentScore={currentScore}/>
+        <UserStatus chat={chat} logout={logout} currentScore={currentScore} />
         <div className='text-2xl font-bold'>Live Stream</div>
       </div>
     )

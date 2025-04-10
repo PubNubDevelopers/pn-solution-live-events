@@ -26,12 +26,12 @@ export default function Page () {
   const testStyle = 'text-cherry cursor-pointer'
 
   //  Test polls all have the final score, but that is ignored in the initial declaration
-  //  The correctOption is not used for side polls, so is not included here
   const testPolls = [
     {
       id: 1, //  Assume this increments when we only show the most recent results
       title: 'Who will get more yellow cards?',
       victoryPoints: 2,
+      correctOption: 1, //  In production this would be part of the results message
       alertText: 'You unlocked a poll',
       pollType: 'side', //  The poll shows at the side of the UX
       options: [
@@ -44,6 +44,7 @@ export default function Page () {
       id: 2,
       title: 'Will the match go to extra time?',
       victoryPoints: 4,
+      correctOption: 1, //  In production this would be part of the results message
       alertText: 'This is very very long text which should get cut off',
       pollType: 'side',
       options: [
@@ -85,7 +86,7 @@ export default function Page () {
   const testPollLiveMatchResults = {
     id: 1,
     pollType: 'match',
-    correctOption: 2 //  In production this would be part of the results message
+    correctOption: 1 //  In production this would be part of the results message
   }
 
   //  App initialization

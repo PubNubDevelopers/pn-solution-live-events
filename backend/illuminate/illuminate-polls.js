@@ -8,6 +8,7 @@ exports.angry = [
         id: 101,
         title: "Which team is playing the dirtiest?",
         victoryPoints: 0,
+        alertText: 'Take your frustration out on this poll',
         pollType: "side",
         options: [
           { id: 1, text: "Leeds FC" },
@@ -46,6 +47,7 @@ exports.cheer = [
         id: 102,
         title: "Which team’s fans are celebrating the hardest?",
         victoryPoints: 0,
+        alertText: 'Only winners unlock this poll',
         pollType: "side",
         options: [
           { id: 1, text: "Leeds FC" },

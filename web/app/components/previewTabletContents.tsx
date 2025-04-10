@@ -46,6 +46,12 @@ export default function TabletContents ({
   const defaultWidgetClasses =
     'rounded-lg border-1 border-navy200 bg-white shadow-md'
 
+  const currentScoreRef = useRef(currentScore)
+  useEffect(() => {
+    console.log('updating current score ref')
+    currentScoreRef.current = currentScore
+  }, [currentScore])
+
   useEffect(() => {
     if (!chat) return
     //const channel = chat.sdk.channel(pushChannelId)
@@ -113,6 +119,15 @@ export default function TabletContents ({
             guidesShown={guidesShown}
             visibleGuide={visibleGuide}
             setVisibleGuide={setVisibleGuide}
+            awardPoints={(points, message) => {
+              AwardPoints(
+                chat,
+                points,
+                message,
+                currentScoreRef.current,
+                showNewPointsAlert
+              )
+            }}
           />
           <MatchStatsWidget
             className={`${defaultWidgetClasses}`}
@@ -131,7 +146,13 @@ export default function TabletContents ({
             visibleGuide={visibleGuide}
             setVisibleGuide={setVisibleGuide}
             onAdClick={points => {
-              AwardPoints(chat, points, currentScore, showNewPointsAlert)
+              AwardPoints(
+                chat,
+                points,
+                null,
+                currentScoreRef.current,
+                showNewPointsAlert
+              )
             }}
           />
           <div className='min-h-3'></div>
@@ -148,7 +169,13 @@ export default function TabletContents ({
               adId={dynamicAd.adId}
               clickPoints={dynamicAd.clickPoints}
               onAdClick={(points, adId) => {
-                AwardPoints(chat, points, currentScore, showNewPointsAlert)
+                AwardPoints(
+                  chat,
+                  points,
+                  null,
+                  currentScoreRef.current,
+                  showNewPointsAlert
+                )
                 //  Prevent clicking on both Mobile and tablet previews
                 chat?.sdk.publish({
                   message: {},
@@ -180,6 +207,15 @@ export default function TabletContents ({
             guidesShown={guidesShown}
             visibleGuide={visibleGuide}
             setVisibleGuide={setVisibleGuide}
+            awardPoints={(points, message) => {
+              AwardPoints(
+                chat,
+                points,
+                message,
+                currentScoreRef.current,
+                showNewPointsAlert
+              )
+            }}
           />
           <BotWidget
             className={`${defaultWidgetClasses}`}

@@ -14,7 +14,8 @@ export default function LiveStreamPoll ({
   isGuidedDemo,
   guidesShown,
   visibleGuide,
-  setVisibleGuide
+  setVisibleGuide,
+  awardPoints
 }) {
   const [currentPoll, setCurrentPoll] = useState<any | null>(null)
   const [currentPollAnswer, setCurrentPollAnswer] = useState<{
@@ -56,11 +57,12 @@ export default function LiveStreamPoll ({
               isPollOpen: false
             }
           })
-          if (correctOption == currentPollAnswer?.id) {
+          if (correctOption == currentPollAnswer?.id && currentPoll.victoryPoints) {
             //  ToDo handle points awards when user wins a poll
             console.log(
-              `ToDo: Award ${currentPoll.victoryPoints} victory points`
+              `Awarding ${currentPoll.victoryPoints} victory points`
             )
+            awardPoints(currentPoll.victoryPoints, null)
           }
         }
       }

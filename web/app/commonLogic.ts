@@ -28,9 +28,8 @@ export async function CommonMessageHandler(
     const clickPoints = messageEvent.message.clickPoints;
     if (adId && clickPoints) {
       onSetDynamicAd({ adId: adId, clickPoints: clickPoints });
-    }
-    else {
-      onSetDynamicAd(null)
+    } else {
+      onSetDynamicAd(null);
     }
   } else {
     //  Unrecognized message
@@ -41,20 +40,21 @@ export async function CommonMessageHandler(
 export async function AwardPoints(
   chat,
   pointsToAward,
+  customMessage,
   currentScore,
   awardPointsAnimation
 ) {
   if (!chat) return;
-  {
-    const newScore = currentScore + pointsToAward;
-    awardPointsAnimation(
-      pointsToAward,
-      `Point${Math.abs(pointsToAward) > 1 ? "s" : ""} Awarded`
-    );
-    await chat.currentUser.update({
-      custom: {
-        score: newScore,
-      },
-    });
-  }
+  
+  console.log(currentScore);
+  const newScore = currentScore + pointsToAward;
+  const message = customMessage
+    ? customMessage
+    : `Point${Math.abs(pointsToAward) > 1 ? "s" : ""} Awarded`;
+  awardPointsAnimation(pointsToAward, message);
+  await chat.currentUser.update({
+    custom: {
+      score: newScore,
+    },
+  });
 }

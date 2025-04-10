@@ -19,7 +19,8 @@ export default function StreamWidget ({
   isGuidedDemo,
   guidesShown,
   visibleGuide,
-  setVisibleGuide
+  setVisibleGuide,
+  awardPoints
 }) {
   //  ToDo: Currently this is only the occupancy from the Data Controls - need to add any other real presence count (including ourselves)
   const [occupancy, setOccupancy] = useState(0)
@@ -301,6 +302,7 @@ export default function StreamWidget ({
         guidesShown={guidesShown}
         visibleGuide={visibleGuide}
         setVisibleGuide={setVisibleGuide}
+        awardPoints={awardPoints}
       />
     </div>
   )

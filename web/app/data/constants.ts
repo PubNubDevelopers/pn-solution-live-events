@@ -4,7 +4,7 @@ export const channelData = [
     name: "Game Chat",
     description: "Public conversation about the game",
     avatar:
-      "https://pn-solution-live-events.netlify.app/avatars/group/euro2024.png",
+      "https://pn-solution-live-events.netlify.app/avatars/group/chat2.png",
     createInAppContext: true,
   },
 ];

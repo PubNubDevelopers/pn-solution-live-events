@@ -4,6 +4,7 @@ import {
   streamReactionsChannelId,
   clientVideoControlChannelId,
   illuminateUpgradeReaction,
+  dataControlOccupancyChannelId,
   AlertType,
   streamUrl
 } from '../data/constants'
@@ -24,6 +25,7 @@ export default function StreamWidget ({
 }) {
   //  ToDo: Currently this is only the occupancy from the Data Controls - need to add any other real presence count (including ourselves)
   const [occupancy, setOccupancy] = useState(0)
+  const [realOccupancy, setRealOccupancy] = useState(0)
   const [alert, setAlert] = useState<{
     points: number | null
     body: string
@@ -47,7 +49,6 @@ export default function StreamWidget ({
     { emoji: '🔥', upgraded: false },
     { emoji: '🎉', upgraded: false }
   ])
-
   const [videoUrl, setVideoUrl] = useState(streamUrl)
   const [isVideoPlaying, setIsVideoPlaying] = useState(false)
   const [actualVideoProgress, setActualVideoProgress] = useState(0)
@@ -60,17 +61,45 @@ export default function StreamWidget ({
     if (!chat) return
     //  Reactions
     const reactionsChannel = chat.sdk.channel(streamReactionsChannelId)
-    const reactionsSubscription = reactionsChannel.subscription({ receivePresenceEvents: false })
+    const reactionsSubscription = reactionsChannel.subscription({
+      receivePresenceEvents: true
+    })
     reactionsSubscription.onMessage = messageEvent => {
       handleReaction(messageEvent)
     }
+    reactionsSubscription.onPresence = presenceEvent => {
+      console.log('PRESENCE EVENT')
+      console.log(presenceEvent)
+      if (presenceEvent) {
+        setRealOccupancy(presenceEvent.occupancy)
+      }
+    }
     reactionsSubscription.subscribe()
-    //  Illuminate test
-    const illuminateTestChannel = chat.sdk.channel(illuminateUpgradeReaction)
-    const illuminateTestSubscription = illuminateTestChannel.subscription({
+    chat.sdk
+      .hereNow({ channels: [streamReactionsChannelId] })
+      .then(hereNowResult => {
+        console.log(hereNowResult)
+        if (hereNowResult) {
+          setRealOccupancy(hereNowResult.totalOccupancy)
+        }
+      })
+
+    //  Occupancy updates from Data Controls
+    const occupancyChannel = chat.sdk.channel(dataControlOccupancyChannelId)
+    const occupancySubscription = occupancyChannel.subscription({
+      receivePresenceEvent: false
+    })
+    occupancySubscription.onMessage = messageEvent => {
+      setOccupancy(+messageEvent.message.streamOccupancy)
+    }
+    occupancySubscription.subscribe()
+
+    //  Illuminate: Upgrade emoji
+    const illuminateEmojiChannel = chat.sdk.channel(illuminateUpgradeReaction)
+    const illuminateEmojiSubscription = illuminateEmojiChannel.subscription({
       receivePresenceEvents: false
     })
-    illuminateTestSubscription.onMessage = messageEvent => {
+    illuminateEmojiSubscription.onMessage = messageEvent => {
       console.log('upgrade emoji')
       console.log(messageEvent)
       //  Received a request to upgrade a specific emoji
@@ -78,10 +107,11 @@ export default function StreamWidget ({
       const replacementEmoji = messageEvent.message.replacementEmoji
       upgradeEmoji(emojiToUpgrade, replacementEmoji)
     }
-    illuminateTestSubscription.subscribe()
+    illuminateEmojiSubscription.subscribe()
     return () => {
       reactionsSubscription.unsubscribe()
-      illuminateTestSubscription.unsubscribe()
+      occupancySubscription.unsubscribe()
+      illuminateEmojiSubscription.unsubscribe()
     }
   }, [chat])
 
@@ -147,8 +177,6 @@ export default function StreamWidget ({
           container?.removeChild(emojiElement)
         } catch {}
       }, 2000)
-    } else if (messageEvent.message.type == 'occupancyControl') {
-      setOccupancy(+messageEvent.message.text)
     }
   }
 
@@ -337,7 +365,9 @@ export default function StreamWidget ({
       <div
         className={`flex flex-row items-center justify-center ${
           upgraded ? 'bg-appYellow1/40' : 'bg-white/10'
-        } ${isMobilePreview ? 'w-8 h-8 text-2xl' : 'w-10 h-10 text-3xl'} rounded-full px-1.5 pt-1 text-center cursor-pointer`}
+        } ${
+          isMobilePreview ? 'w-8 h-8 text-2xl' : 'w-10 h-10 text-3xl'
+        } rounded-full px-1.5 pt-1 text-center cursor-pointer`}
         onClick={e => {
           console.log('emoji click') //  only gets called once
           emojiClicked(emoji)
@@ -350,6 +380,7 @@ export default function StreamWidget ({
   }
 
   function LiveOccupancyCount () {
+    const displayOccupancy = occupancy + realOccupancy
     return (
       <div className='flex flex-row h-7 text-white bg-cherry shadow-md rounded-l-full rounded-r-full'>
         <div className='flex flex-row px-2 py-1 gap-1 items-center'>
@@ -358,7 +389,9 @@ export default function StreamWidget ({
         </div>
         <div className='flex flex-row px-2 py-1 gap-1 items-center border-l-2 border-white/20'>
           <RemoveRedEye />
-          {occupancy.toLocaleString(undefined, { maximumFractionDigits: 2 })}
+          {displayOccupancy.toLocaleString(undefined, {
+            maximumFractionDigits: 2
+          })}
         </div>
       </div>
     )

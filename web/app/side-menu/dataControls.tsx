@@ -1,6 +1,10 @@
 import { useState, useEffect } from 'react'
 import { Slider } from '@heroui/react'
-import { chatChannelId, streamReactionsChannelId } from '../data/constants'
+import {
+  chatChannelId,
+  streamReactionsChannelId,
+  dataControlOccupancyChannelId
+} from '../data/constants'
 import { PlayCircle } from './sideMenuIcons'
 
 const Expand = props => {
@@ -35,37 +39,49 @@ export default function SideMenuDataControls ({ chat }) {
     'Fan frustration',
     'Five minutes remaining',
     '5mins + Push Message',
-    'End match',
+    'End match'
   ]
   const [occupancy, setOccupancy] = useState<number | number[]>(0)
-  async function triggerSimulation(simulate) {
+  async function triggerSimulation (simulate) {
     try {
-      const res = await fetch('https://ps.pndsn.com/v1/blocks/sub-key/sub-c-12de08da-d5db-4255-8c4f-d9059385670a/simulate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ simulate: simulate, channel: streamReactionsChannelId, count: 120 })
-      });
-      console.log(await res.json());
+      const res = await fetch(
+        'https://ps.pndsn.com/v1/blocks/sub-key/sub-c-12de08da-d5db-4255-8c4f-d9059385670a/simulate',
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            simulate: simulate,
+            channel: streamReactionsChannelId,
+            count: 120
+          })
+        }
+      )
+      console.log(await res.json())
     } catch (error) {
-      console.error('Failed to trigger simulation:', error);
+      console.error('Failed to trigger simulation:', error)
     }
   }
 
   useEffect(() => {
-
-    async function sendControlMessage(occupancy)
-    {
-      if (chat)
-        {
-          await chat.sdk.publish({message: {text: `${streamWidgetOccupancy}`, type: 'occupancyControl'}, channel: streamReactionsChannelId})
-        }
+    async function sendControlMessage (liveStreamOccupancy, chatOccupancy) {
+      if (chat) {
+        await chat.sdk.publish({
+          message: {
+            streamOccupancy: `${liveStreamOccupancy}`,
+            chatOccupancy: `${chatOccupancy}`,
+            type: 'occupancyControl'
+          },
+          channel: dataControlOccupancyChannelId
+        })
+      }
     }
     const streamWidgetOccupancy =
       occupancy == 0 ? 0 : Math.round(Math.pow(Math.E, occupancy as number))
-
-    sendControlMessage(streamWidgetOccupancy)
-
-    console.log('ToDo: adjust chat widget occupancy based on ' + occupancy)
+    const chatWidgetOccupancy =
+      occupancy == 0
+        ? 0
+        : Math.round(Math.pow(Math.E, ((occupancy as number) / 2)))
+    sendControlMessage(streamWidgetOccupancy, chatWidgetOccupancy)
   }, [occupancy])
 
   return (
@@ -107,10 +123,8 @@ export default function SideMenuDataControls ({ chat }) {
             selectedSimulation == 0 ? 'text-navy500' : 'text-neutral50'
           } cursor-pointer`}
           onClick={e => {
-            triggerSimulation(`${simulationNames[selectedSimulation]}`) 
-            console.log(
-              `Simulating ${simulationNames[selectedSimulation]}`
-            )
+            triggerSimulation(`${simulationNames[selectedSimulation]}`)
+            console.log(`Simulating ${simulationNames[selectedSimulation]}`)
             e.stopPropagation()
           }}
         >

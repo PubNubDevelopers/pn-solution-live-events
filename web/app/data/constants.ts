@@ -21,6 +21,7 @@ export const pushChannelSalesId = "game.push-sales";
 export const dynamicAdChannelId = "game.dynamic-ad";
 export const clientVideoControlChannelId = "game.client-video-control";
 export const illuminateUpgradeReaction = "illuminate-upgrade-reaction";
+export const dataControlOccupancyChannelId = "game.dataControlsOccupancy"
 
 //export const streamUrl = "https://youtu.be/IprCMEH8Vt4";
 export const streamUrl = "https://vimeo.com/1073970603"

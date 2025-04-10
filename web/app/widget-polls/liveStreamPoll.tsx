@@ -57,11 +57,12 @@ export default function LiveStreamPoll ({
               isPollOpen: false
             }
           })
-          if (correctOption == currentPollAnswer?.id && currentPoll.victoryPoints) {
+          if (
+            correctOption == currentPollAnswer?.id &&
+            currentPoll.victoryPoints
+          ) {
             //  ToDo handle points awards when user wins a poll
-            console.log(
-              `Awarding ${currentPoll.victoryPoints} victory points`
-            )
+            console.log(`Awarding ${currentPoll.victoryPoints} victory points`)
             awardPoints(currentPoll.victoryPoints, null)
           }
         }
@@ -79,15 +80,25 @@ export default function LiveStreamPoll ({
     if (isGuidedDemo) return
     chat.sdk
       .fetchMessages({
-        channels: [pollDeclarations],
+        channels: [pollDeclarations, pollResults],
         count: 1
       })
       .then(result => {
         console.log(result)
+        const previouslyDeclaredPollResults = result.channels[pollResults]
         if (result && result.channels[pollDeclarations]) {
           const previouslyDeclaredPoll = result.channels[pollDeclarations][0]
           if (previouslyDeclaredPoll) {
-            handleNewLivePoll(previouslyDeclaredPoll)
+            console.log(previouslyDeclaredPoll)
+            console.log(previouslyDeclaredPollResults)
+            if (
+              !previouslyDeclaredPollResults ||
+              (previouslyDeclaredPollResults &&
+                previouslyDeclaredPollResults[0].timetoken <
+                  previouslyDeclaredPoll.timetoken)
+            ) {
+              handleNewLivePoll(previouslyDeclaredPoll)
+            }
           }
         }
       })

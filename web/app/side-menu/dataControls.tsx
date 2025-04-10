@@ -30,11 +30,12 @@ export default function SideMenuDataControls ({ chat }) {
     'Select',
     'Kick off',
     'Goal',
+    'Goal + Push Message',
     'Fan excitement',
     'Fan frustration',
     'Five minutes remaining',
+    '5mins + Push Message',
     'End match',
-    'Tag user in message'
   ]
   const [occupancy, setOccupancy] = useState<number | number[]>(0)
   async function triggerSimulation(simulate) {

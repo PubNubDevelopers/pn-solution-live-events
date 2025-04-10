@@ -174,7 +174,7 @@ function SideMenuContents ({ chat, isGuidedDemo, currentUser }) {
             }
           >
             <div className='pt-2'>
-              <SideMenuPushNotifications />
+              <SideMenuPushNotifications isGuidedDemo={isGuidedDemo} />
             </div>
           </AccordionItem>
         </Accordion>
@@ -374,9 +374,10 @@ function SideMenuFunctions ({ isGuidedDemo }) {
     </div>
   )
 }
-function SideMenuPushNotifications ({}) {
+function SideMenuPushNotifications ({ isGuidedDemo }) {
   //  todo set this to the correct emulator Url
-  const emulatorUrl = './emulator/'
+  const actionUrl = isGuidedDemo ? './emulator/' : 'https://www.pubnub.com/company/contact-sales/'
+  const buttonText = isGuidedDemo ? 'Open emulator' : "Contact us for a demo"
   return (
     <div className='flex flex-col gap-4 text-base font-semibold'>
       <div className='text-neutral50 font-normal'>
@@ -384,13 +385,12 @@ function SideMenuPushNotifications ({}) {
         <ul className='px-4 pt-1 list-disc'>
           <li>There are five minutes remaining</li>
           <li>A goal is scored</li>
-          <li>User is tagged</li>
         </ul>
       </div>
       <div className='w-fit'>
-        <a href={`${emulatorUrl}`} target='_blank' className={`no-underline`}>
+        <a href={`${actionUrl}`} target='_blank' className={`no-underline`}>
           <div className='flex flex-row h-10 items-center py-1 px-3 border-1 border-navy600 hover:bg-navy800 rounded-md cursor-pointer'>
-            Open emulator
+            {buttonText}
           </div>
         </a>
       </div>

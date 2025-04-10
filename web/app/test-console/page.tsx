@@ -292,6 +292,20 @@ export default function Page () {
           className={`${testStyle}`}
           onClick={() =>
             sendPubNubMessage(clientVideoControlChannelId, {
+              type: 'SEEK',
+              params: {
+                playbackTime: 1099000
+              }
+            })
+          }
+        >
+          Seek Stream (5 minutes remaining)
+        </div>
+
+        <div
+          className={`${testStyle}`}
+          onClick={() =>
+            sendPubNubMessage(clientVideoControlChannelId, {
               type: 'STATUS',
               params: { playbackTime: 10000 }
             })
@@ -418,7 +432,7 @@ export default function Page () {
         <div
           className={`${testStyle}`}
           onClick={() =>
-            sendPubNubMessage(pollResults, testPollLiveMatchResults)
+            sendPubNubMessage(pollResults, testPollLiveMatchResults, true)
           }
         >
           End Match Poll

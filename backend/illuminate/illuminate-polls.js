@@ -11,7 +11,7 @@ exports.angry = [
         alertText: 'Take your frustration out on this poll',
         pollType: "side",
         options: [
-          { id: 1, text: "Leeds FC" },
+          { id: 1, text: "Leeds United" },
           { id: 2, text: "Southampton FC" },
         ],
       },
@@ -50,7 +50,7 @@ exports.cheer = [
         alertText: 'Only winners unlock this poll',
         pollType: "side",
         options: [
-          { id: 1, text: "Leeds FC" },
+          { id: 1, text: "Leeds United" },
           { id: 2, text: "Southampton FC" },
         ],
       },

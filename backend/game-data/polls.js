@@ -1,25 +1,25 @@
 //  Goals happen at the following timestamps:
-//  Goal 1 at 48000   (0m 48s) by Joël Piroe (Leeds FC)
-//  Goal 2 at 159000  (2m 39s) by Georginio Rutter (Leeds FC)
-//  Goal 3 at 203000  (3m 23s) by Joël Piroe (Leeds FC)
+//  Goal 1 at 48000   (0m 48s) by Joël Piroe (Leeds Utd)
+//  Goal 2 at 159000  (2m 39s) by Georginio Rutter (Leeds Utd)
+//  Goal 3 at 203000  (3m 23s) by Joël Piroe (Leeds Utd)
 //  Goal 4 at 317000  (5m 17s) by James Ward-Prowse (Soton FC)
-//  Goal 5 at 679000  (11m 19s) by Daniel James (Leeds FC)
-//  Goal 6 at 920000  (15m 20s) by Joël Piroe (Leeds FC)
+//  Goal 5 at 679000  (11m 19s) by Daniel James (Leeds Utd)
+//  Goal 6 at 920000  (15m 20s) by Joël Piroe (Leeds Utd)
 //  Goal 7 at 1156000 (19m 16s) by Sékou Mara (Soton FC)
 //  Yellow card at 270000  ( 4m 30s) to Pascal Struijk (Leeds)
-//  Yellow card at 492000  ( 8m 12s) to Joël Piroe (Leeds FC)
+//  Yellow card at 492000  ( 8m 12s) to Joël Piroe (Leeds Utd)
 //  Yellow card at 637000  (10m 39s) to Ethan Ampadu (Leeds)
 //  Yellow card at 827000  (13m 47s) to Adam Armstrong (Soton FC)
-//  Red    card at 968500  (16m 08s) to Joe Rodon (Leeds FC)
+//  Red    card at 968500  (16m 08s) to Joe Rodon (Leeds Utd)
 //  Yellow card at 1053500 (17m 33s) to Ethan Ampadu (Leeds) (his second, resulting in a red)
 
 //  Game ends at 1200000 (20m)
 
 //  Players mentioned:
-//  Joe Rodon (Leeds FC)
-//  Joël Piroe (Leeds FC)
-//  Sam Byram (Leeds FC)
-//  Glen Kamara (Leeds FC)
+//  Joe Rodon (Leeds Utd)
+//  Joël Piroe (Leeds Utd)
+//  Sam Byram (Leeds Utd)
+//  Glen Kamara (Leeds Utd)
 //  Pascal Struijk (Leeds)
 //  Ethan Ampadu (Leeds)
 //  Adam Armstrong (Soton FC)
@@ -31,11 +31,11 @@
 
 //  Questions:
 //  1:  [Ends at     48s] Who will score the first goal?
-//    Options: Joël Piroe (Leeds FC)*, Daniel James (Leeds FC), Sékou Mara (Soton FC)
+//    Options: Joël Piroe (Leeds Utd)*, Daniel James (Leeds Utd), Sékou Mara (Soton FC)
 //  2:  [ends at  1m 30s] Will there be a penalty in the first half? (Yes)
 //    Options: Yes*, No
 //  3:  [ends at  2m 39s] Who will score the second goal?
-//    Options: James Ward-Prowse (Soton FC), Georginio Rutter (Leeds FC)*, Joël Piroe (Leeds FC)
+//    Options: James Ward-Prowse (Soton FC), Georginio Rutter (Leeds Utd)*, Joël Piroe (Leeds Utd)
 //  4:  [ends at  3m 23s] Which team will score next?
 //    Options: Southampton, Leeds*
 //  5:  [ends at  4m 30s] Who will get the first yellow card
@@ -45,15 +45,15 @@
 //  7:  [ends at  6m 16s] Will the match go to extra time?
 //    Options: Yes, No
 //  8:  [ends at  7m 16s] Who will be man of the match?
-//    Options: Jack Stevens (Soton FC), Joël Piroe (Leeds FC),  Glen Kamara (Leeds FC)
+//    Options: Jack Stevens (Soton FC), Joël Piroe (Leeds Utd),  Glen Kamara (Leeds Utd)
 //  9:  [ends at  8m 17s] Which team has the most wins in previous head-to-heads
 //    Options: Southampton, Leeds*
 //  10: [ends at  9m 18s] Previous head-to-heads: Who has scored more at St. Marys?
 //    Options: Southampton*, Leeds
 //  11: [ends at 10m 39s] Who will get a yellow card next?
-//    Options: Ethan Ampadu (Leeds)*, Joe Rodon (Leeds FC), Kyle Walker-Peters (Soton FC)
+//    Options: Ethan Ampadu (Leeds)*, Joe Rodon (Leeds Utd), Kyle Walker-Peters (Soton FC)
 //  12: [ends at 11m 19s] Who will score next?
-//    Options: Daniel James (Leeds FC)* , Joël Piroe (Leeds FC), Sékou Mara (Soton FC)
+//    Options: Daniel James (Leeds Utd)* , Joël Piroe (Leeds Utd), Sékou Mara (Soton FC)
 //  13: [ends at 12m 20s] Will the next goal be a header?
 //    Options: Yes, No
 //  14: [ends at 13m 47s] Which team will get a yellow next?
@@ -61,9 +61,9 @@
 //  15: [ends at 14m 20s] Will there be a goal in the next 10 minutes?
 //    Options: Yes, No
 //  16: [ends at 15m 20s] Who will score next for Leeds?
-//    Options: Joël Piroe (Leeds FC)*, Georginio Rutter (Leeds FC), Daniel James (Leeds FC)
+//    Options: Joël Piroe (Leeds Utd)*, Georginio Rutter (Leeds Utd), Daniel James (Leeds Utd)
 //  17: [ends at 16m 08s] Who will get the first red card?
-//    Options: Adam Armstrong (Soton FC), Ethan Ampadu (Leeds), Joe Rodon (Leeds FC)*
+//    Options: Adam Armstrong (Soton FC), Ethan Ampadu (Leeds), Joe Rodon (Leeds Utd)*
 //  18: [ends at 17m 33s] Next player to get 2 yellow cards?
 //    Options: Pascal Struijk, Joël Piroe, Ethan Ampadu*
 //  19: [ends at 18m 17s] Will Southampton make a comeback?
@@ -387,7 +387,7 @@ exports.polls = [
         pollType: "side",
         options: [
           { id: 1, text: "Southampton FC" },
-          { id: 2, text: "Leeds FC" },
+          { id: 2, text: "Leeds United" },
         ],
       },
     },
@@ -421,7 +421,7 @@ exports.polls = [
         pollType: "side",
         options: [
           { id: 1, text: "Southampton FC" },
-          { id: 2, text: "Leeds FC" },
+          { id: 2, text: "Leeds United" },
         ],
       },
     },

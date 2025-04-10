@@ -68,8 +68,6 @@ export default function StreamWidget ({
       handleReaction(messageEvent)
     }
     reactionsSubscription.onPresence = presenceEvent => {
-      console.log('PRESENCE EVENT')
-      console.log(presenceEvent)
       if (presenceEvent) {
         setRealOccupancy(presenceEvent.occupancy)
       }
@@ -78,7 +76,6 @@ export default function StreamWidget ({
     chat.sdk
       .hereNow({ channels: [streamReactionsChannelId] })
       .then(hereNowResult => {
-        console.log(hereNowResult)
         if (hereNowResult) {
           setRealOccupancy(hereNowResult.totalOccupancy)
         }
@@ -320,6 +317,9 @@ export default function StreamWidget ({
         <div className='absolute top-0 right-0'>
           <LiveOccupancyCount />
         </div>
+        <div className='absolute bottom-0 right-0 z-50'>
+          <VolumeButton />
+        </div>
       </div>
       <ReactionsBar />
 
@@ -396,6 +396,20 @@ export default function StreamWidget ({
       </div>
     )
   }
+
+  function VolumeButton () {
+    return (
+      <div
+        className='text-white/50 cursor-pointer'
+        onClick={e => {
+          e.stopPropagation()
+          setMuted(!muted)
+        }}
+      >
+        {muted ? <VolumeOffIcon /> : <VolumeOnIcon />}
+      </div>
+    )
+  }
 }
 
 const RemoveRedEye = props => {
@@ -453,6 +467,42 @@ const LiveStreamIcon = props => {
       <path
         className='cls-1'
         d='M73.44 82.67c7.04-2.96 12-9.97 12-18.15V31.26c0-10.85-8.71-19.65-19.46-19.65H34.02c-10.75 0-19.46 8.8-19.46 19.65v33.26c0 8.19 4.97 15.21 12.03 18.16'
+      />
+    </svg>
+  )
+}
+
+const VolumeOffIcon = props => {
+  return (
+    <svg
+      id='Icons'
+      xmlns='http://www.w3.org/2000/svg'
+      viewBox='0 0 24 24'
+      width='24'
+      height='24'
+      {...props}
+    >
+      <path
+        d='M4.34005 2.93506L2.93005 4.34506L7.29005 8.70506L7.00005 9.00506H3.00005V15.0051H7.00005L12.0001 20.0051V13.4151L16.1801 17.5951C15.5301 18.0851 14.8001 18.4751 14.0001 18.7051V20.7651C15.3401 20.4651 16.5701 19.8451 17.6101 19.0151L19.6601 21.0651L21.0701 19.6551L4.34005 2.93506ZM10.0001 15.1751L7.83005 13.0051H5.00005V11.0051H7.83005L8.71005 10.1251L10.0001 11.4151V15.1751ZM19.0001 12.0051C19.0001 12.8251 18.8501 13.6151 18.5901 14.3451L20.1201 15.8751C20.6801 14.7051 21.0001 13.3951 21.0001 12.0051C21.0001 7.72506 18.0101 4.14506 14.0001 3.23506V5.29506C16.8901 6.15506 19.0001 8.83506 19.0001 12.0051ZM12.0001 4.00506L10.1201 5.88506L12.0001 7.76506V4.00506ZM16.5001 12.0051C16.5001 10.2351 15.4801 8.71506 14.0001 7.97506V9.76506L16.4801 12.2451C16.4901 12.1651 16.5001 12.0851 16.5001 12.0051Z'
+        fill='currentColor'
+      />
+    </svg>
+  )
+}
+
+const VolumeOnIcon = props => {
+  return (
+    <svg
+      id='Icons'
+      xmlns='http://www.w3.org/2000/svg'
+      viewBox='0 0 24 24'
+      width='24'
+      height='24'
+      {...props}
+    >
+      <path
+        d='M3 8.99998V15H7L12 20V3.99998L7 8.99998H3ZM10 8.82998V15.17L7.83 13H5V11H7.83L10 8.82998ZM16.5 12C16.5 10.23 15.48 8.70998 14 7.96998V16.02C15.48 15.29 16.5 13.77 16.5 12ZM14 3.22998V5.28998C16.89 6.14998 19 8.82998 19 12C19 15.17 16.89 17.85 14 18.71V20.77C18.01 19.86 21 16.28 21 12C21 7.71998 18.01 4.13998 14 3.22998Z'
+        fill='currentColor'
       />
     </svg>
   )

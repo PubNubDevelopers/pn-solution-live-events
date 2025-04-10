@@ -9,6 +9,7 @@ export default function MatchStatsWidget ({
   className,
   isMobilePreview,
   chat,
+  isGuidedDemo,
   guidesShown,
   visibleGuide,
   setVisibleGuide
@@ -32,6 +33,26 @@ export default function MatchStatsWidget ({
     }
   }, [chat])
 
+  useEffect(() => {
+    if (!chat) return
+    if (isGuidedDemo) return
+    chat.sdk
+      .fetchMessages({
+        channels: [matchStatsChannelId],
+        count: 1
+      })
+      .then(result => {
+        console.log(result)
+        if (result && result.channels[matchStatsChannelId]) {
+          const previousMatchStats = result.channels[matchStatsChannelId][0]
+          if (previousMatchStats) {
+            processReceivedMessage(previousMatchStats.message)
+          }
+        }
+      })
+  }, [chat, isGuidedDemo])
+
+
   function processReceivedMessage (matchStatsMessage) {
     //  Todo This logic needs to be updated based on the format of the received message
     setMatchStats(prevStats => {
@@ -39,16 +60,22 @@ export default function MatchStatsWidget ({
 
       Object.keys(matchStatsMessage).forEach(key => {
         if (updatedStats[key] && updatedStats[key].info) {
-          updatedStats[key] = {
+            updatedStats[key] = {
             ...updatedStats[key],
             info: updatedStats[key].info.map((infoEntry, index) => ({
               ...infoEntry,
               stat: matchStatsMessage[key].info[index]?.stat || infoEntry.stat,
               dataPrimary:
-                matchStatsMessage[key].info[index]?.dataPrimary ||
-                infoEntry.dataPrimary
+              matchStatsMessage[key].info[index]?.dataPrimary ||
+              infoEntry.dataPrimary,
+              dataSecondary:
+              matchStatsMessage[key].info[index]?.dataSecondary ||
+              infoEntry.dataSecondary,
+              imageUrl:
+              matchStatsMessage[key].info[index]?.imageUrl ||
+              infoEntry.imageUrl
             }))
-          }
+            }
         }
       })
 

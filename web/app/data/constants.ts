@@ -21,8 +21,8 @@ export const dynamicAdChannelId = "game.dynamic-ad";
 export const clientVideoControlChannelId = "game.client-video-control";
 export const illuminateUpgradeReaction = "illuminate-upgrade-reaction";
 
-//export const streamUrl = 'https://v.ftcdn.net/05/31/66/96/700_F_531669685_zuA1YSiPFLmRrPPzBG2iryBnmDkfYqzS_ST.mp4'
-export const streamUrl = "https://youtu.be/IprCMEH8Vt4";
+//export const streamUrl = "https://youtu.be/IprCMEH8Vt4";
+export const streamUrl = "https://vimeo.com/1073970603"
 
 export const ads = [
   {

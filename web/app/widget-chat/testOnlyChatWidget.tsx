@@ -155,7 +155,7 @@ function MessageRow ({ message, user }) {
     return (
     <div className='flex flex-row items-start gap-4'>
       <Image
-        src={user.profileUrl ?? '/avatars/placeholder2.png'}
+        src={user?.profileUrl ?? '/avatars/placeholder2.png'}
         alt='Avatar'
         className='rounded-full'
         width={32}

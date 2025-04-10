@@ -11,6 +11,7 @@ import {
 export default function LiveStreamPoll ({
   isMobilePreview,
   chat,
+  isGuidedDemo,
   guidesShown,
   visibleGuide,
   setVisibleGuide
@@ -69,10 +70,11 @@ export default function LiveStreamPoll ({
     return () => {
       subscriptionSet.unsubscribe()
     }
-  }, [chat, currentPollAnswer])
+  }, [chat, currentPoll, currentPollAnswer])
 
   useEffect(() => {
     if (!chat) return
+    if (isGuidedDemo) return
     chat.sdk
       .fetchMessages({
         channels: [pollDeclarations],
@@ -82,13 +84,12 @@ export default function LiveStreamPoll ({
         console.log(result)
         if (result && result.channels[pollDeclarations]) {
           const previouslyDeclaredPoll = result.channels[pollDeclarations][0]
-          console.log(previouslyDeclaredPoll)
           if (previouslyDeclaredPoll) {
             handleNewLivePoll(previouslyDeclaredPoll)
           }
         }
       })
-  }, [chat])
+  }, [chat, isGuidedDemo])
 
   function handleNewLivePoll (messageEvent) {
     const newPoll = messageEvent.message

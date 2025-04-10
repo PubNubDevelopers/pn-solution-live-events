@@ -53,7 +53,7 @@ export default function Page () {
     {
       id: 3,
       title: 'Who will be man of the match?',
-      victoryPoints: 2,
+      victoryPoints: 0,
       pollType: 'side',
       options: [
         { id: 1, text: 'Haaland', score: 37 },
@@ -66,7 +66,8 @@ export default function Page () {
         { id: 4, text: 'Modric', score: 25 },
         { id: 5, text: 'Other', score: 7 }
       ]
-    }
+    },
+
   ]
 
   const testPollLiveMatch = {
@@ -75,11 +76,11 @@ export default function Page () {
     victoryPoints: 10,
     pollType: 'match', //  The poll appears below the stream
     options: [
-      { id: 1, text: 'Real Madrid' },
-      { id: 2, text: 'Man City' },
-      { id: 3, text: 'Draw' }
-    ]
-  }
+      { id: 1, text: "Leeds United F.C." },
+      { id: 2, text: "Southampton F.C." },
+      { id: 3, text: "Draw" },
+    ],
+}
 
   const testPollLiveMatchResults = {
     id: 1,
@@ -149,16 +150,18 @@ export default function Page () {
     await chat.sdk.publish({
       message: {
         statBox1: {
+          //  Score
           info: [
             {
-              stat: `${randomPercent}%`
+              stat: randomStat1Digit()
             },
             {
-              stat: `${randomPercentDiff}%`
+              stat: randomStat1Digit()
             }
           ]
         },
         statBox2: {
+          //  Yellow cards
           info: [
             {
               stat: randomStat1Digit()
@@ -166,36 +169,41 @@ export default function Page () {
           ]
         },
         statBox3: {
+          //Top Scorer
           info: [
             {
-              dataPrimary: randomStat2Digits()
+              dataPrimary: randomStat1Digit(),
+              dataSecondary: "Player Name",
+              imageUrl: "/matchstats/playericon_piroe.jpg",
             }
           ]
         },
         statBox4: {
+          //  Shots on goal
           info: [
             {
-              stat: `${randomStat3Digits()}km`
+              stat: randomStat1Digit()
             },
             {
-              stat: `${randomStat3Digits()}km`
+              stat: randomStat1Digit()
             }
           ]
         },
         statBox5: {
+          //  Red cards
           info: [
             {
-              dataPrimary: `${randomStat2Digits()}kph`
+              stat: randomStat1Digit()
             }
           ]
         },
         statBox6: {
           info: [
             {
-              stat: randomStat1Digit()
+              stat: `${randomStat2Digits()}%`
             },
             {
-              stat: randomStat1Digit()
+              stat: `${randomStat2Digits()}%`
             }
           ]
         }

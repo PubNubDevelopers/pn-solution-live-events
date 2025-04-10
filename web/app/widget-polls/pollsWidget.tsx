@@ -94,6 +94,7 @@ export default function PollsWidget ({
         console.log(pollType)
         if (pollId && pollType && pollType == 'side') {
           const resultsOfPoll = messageEvent.message
+          //  todo award points if you got this question correct (the question may not have any points associated with it, or a correct answer, in which case don't award points)
           console.log(resultsOfPoll)
             setPolls(prevPolls =>
               prevPolls.map(p =>
@@ -198,8 +199,8 @@ export default function PollsWidget ({
                   key={index}
                   poll={poll}
                   buttonText={`${isMobilePreview ? 'For' : 'Enter for'} ${
-                    poll.victoryPoints
-                  } points`}
+                    poll.victoryPoints && poll.victoryPoints > 0 ? `${poll.victoryPoints} points` : 'fun'
+                  }`}
                   onButtonClick={() => {
                     //  todo award points for entering poll
                     setCurrentlyVisiblePoll(poll.id)
@@ -220,7 +221,7 @@ export default function PollsWidget ({
               <PollRowWithButton
                 key={index}
                 poll={poll}
-                buttonText={`See Results`}
+                buttonText={`${isMobilePreview ? 'Results' : 'See Results'}`}
                 onButtonClick={() => {
                   setCurrentlyVisiblePoll(poll.id)
                 }}
@@ -330,7 +331,7 @@ export default function PollsWidget ({
   function PollResultsRow ({ text, scoreAsPercent, isMyAnswer }) {
     return (
       <div className='flex flex-row gap-3 items-center'>
-        <div className='w-28 truncate text-ellipsis'>{text}</div>
+        <div className='w-56 truncate text-ellipsis'>{text}</div>
         <div className='h-4 grow rounded bg-navy100'>
           <div className='relative'>
             <div

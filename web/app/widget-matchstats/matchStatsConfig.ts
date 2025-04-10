@@ -41,12 +41,12 @@ export const matchStatsConfig = {
   },
   statBox3: {
     type: BoxType.InfoBoxWithImageAndTwoData,
-    title: "Most touches",
+    title: "Top Scorer",
     info: [
       {
         dataPrimary: "0",
-        dataSecondary: "Armstrong",
-        imageUrl: "/matchstats/playericon_armstrong.png",
+        dataSecondary: "No goals yet",
+        imageUrl: "/matchstats/playericon_anon.png",
         imageAlt: "",
         imageWidth: 48,
         imageHeight: 48,
@@ -55,17 +55,17 @@ export const matchStatsConfig = {
   },
   statBox4: {
     type: BoxType.InfoBoxComparingTwoStatistics,
-    title: "Distance covered",
+    title: "Shots on Goal",
     info: [
       {
-        stat: "0km",
+        stat: "0",
         imageUrl: "/matchstats/badge_leeds.svg",
         imageAlt: "Team Badge",
         imageWidth: 32,
         imageHeight: 32,
       },
       {
-        stat: "0km",
+        stat: "0",
         imageUrl: "/matchstats/badge_southampton.svg",
         imageAlt: "Team Badge",
         imageWidth: 32,
@@ -74,32 +74,31 @@ export const matchStatsConfig = {
     ],
   },
   statBox5: {
-    type: BoxType.InfoBoxWithImageAndTwoData,
-    title: "Top speed",
+    type: BoxType.InfoBoxWithImageAndQuantity,
+    title: "Red cards",
     info: [
       {
-        dataPrimary: "0kph",
-        dataSecondary: "Armstrong",
-        imageUrl: "/matchstats/playericon_armstrong.png",
-        imageAlt: "Armstrong",
-        imageWidth: 48,
-        imageHeight: 48,
+        stat: "0",
+        imageUrl: "/matchstats/icon_redcard.png",
+        imageAlt: "Red card",
+        imageWidth: 31,
+        imageHeight: 40,
       },
     ],
   },
   statBox6: {
     type: BoxType.InfoBoxComparingTwoStatistics,
-    title: "Shots on target",
+    title: "Pass accuracy",
     info: [
       {
-        stat: "0",
+        stat: "0%",
         imageUrl: "/matchstats/badge_leeds.svg",
         imageAlt: "Team Badge",
         imageWidth: 32,
         imageHeight: 32,
       },
       {
-        stat: "0",
+        stat: "0%",
         imageUrl: "/matchstats/badge_southampton.svg",
         imageAlt: "Team Badge",
         imageWidth: 32,

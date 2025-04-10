@@ -16,6 +16,7 @@ export default function StreamWidget ({
   className,
   isMobilePreview,
   chat,
+  isGuidedDemo,
   guidesShown,
   visibleGuide,
   setVisibleGuide
@@ -53,23 +54,15 @@ export default function StreamWidget ({
   const playerRef = useRef<ReactPlayer>(null)
 
   useEffect(() => {
+    //  Handle all types of message other than video control
     if (!chat) return
     //  Reactions
-    const channel = chat.sdk.channel(streamReactionsChannelId)
-    const subscription = channel.subscription({ receivePresenceEvents: false })
-    subscription.onMessage = messageEvent => {
+    const reactionsChannel = chat.sdk.channel(streamReactionsChannelId)
+    const reactionsSubscription = reactionsChannel.subscription({ receivePresenceEvents: false })
+    reactionsSubscription.onMessage = messageEvent => {
       handleReaction(messageEvent)
     }
-    subscription.subscribe()
-    //  Video control
-    const videoControlChannel = chat.sdk.channel(clientVideoControlChannelId)
-    const videoControlSubscription = videoControlChannel.subscription({
-      receivePresenceEvents: false
-    })
-    videoControlSubscription.onMessage = messageEvent => {
-      handleVideoControl(messageEvent, isVideoPlaying)
-    }
-    videoControlSubscription.subscribe()
+    reactionsSubscription.subscribe()
     //  Illuminate test
     const illuminateTestChannel = chat.sdk.channel(illuminateUpgradeReaction)
     const illuminateTestSubscription = illuminateTestChannel.subscription({
@@ -83,9 +76,24 @@ export default function StreamWidget ({
     }
     illuminateTestSubscription.subscribe()
     return () => {
-      subscription.unsubscribe()
-      videoControlSubscription.unsubscribe()
+      reactionsSubscription.unsubscribe()
       illuminateTestSubscription.unsubscribe()
+    }
+  }, [chat])
+
+  useEffect(() => {
+    if (!chat) return
+    //  Video control
+    const videoControlChannel = chat.sdk.channel(clientVideoControlChannelId)
+    const videoControlSubscription = videoControlChannel.subscription({
+      receivePresenceEvents: false
+    })
+    videoControlSubscription.onMessage = messageEvent => {
+      handleVideoControl(messageEvent, isVideoPlaying)
+    }
+    videoControlSubscription.subscribe()
+    return () => {
+      videoControlSubscription.unsubscribe()
     }
   }, [chat, isVideoPlaying])
 
@@ -229,18 +237,6 @@ export default function StreamWidget ({
     })
   }
 
-  async function todoRemoveThisSendTestMessage (e, messageType, params) {
-    e.stopPropagation()
-    if (!chat) return
-    await chat.sdk.publish({
-      message: {
-        type: messageType,
-        params: params
-      },
-      channel: clientVideoControlChannelId
-    })
-  }
-
   function newEmojiAlert () {
     setAlert({ points: null, body: 'New emoji unlocked' })
   }
@@ -293,6 +289,7 @@ export default function StreamWidget ({
       <LiveStreamPoll
         isMobilePreview={isMobilePreview}
         chat={chat}
+        isGuidedDemo={isGuidedDemo}
         guidesShown={guidesShown}
         visibleGuide={visibleGuide}
         setVisibleGuide={setVisibleGuide}
@@ -332,6 +329,7 @@ export default function StreamWidget ({
           upgraded ? 'bg-appYellow1/40' : 'bg-white/10'
         } ${isMobilePreview ? 'w-8 h-8 text-2xl' : 'w-10 h-10 text-3xl'} rounded-full px-1.5 pt-1 text-center cursor-pointer`}
         onClick={e => {
+          console.log('emoji click') //  only gets called once
           emojiClicked(emoji)
           e.stopPropagation()
         }}

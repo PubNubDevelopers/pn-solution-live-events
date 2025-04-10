@@ -51,6 +51,7 @@ export default function StreamWidget ({
   const [isVideoPlaying, setIsVideoPlaying] = useState(false)
   const [actualVideoProgress, setActualVideoProgress] = useState(0)
   const [requestedVideoProgress, setRequestedVideoProgress] = useState(0)
+  const [muted, setMuted] = useState(true)
   const playerRef = useRef<ReactPlayer>(null)
 
   useEffect(() => {
@@ -89,13 +90,18 @@ export default function StreamWidget ({
       receivePresenceEvents: false
     })
     videoControlSubscription.onMessage = messageEvent => {
-      handleVideoControl(messageEvent, isVideoPlaying)
+      handleVideoControl(messageEvent, isVideoPlayingRef.current)
     }
     videoControlSubscription.subscribe()
     return () => {
       videoControlSubscription.unsubscribe()
     }
-  }, [chat, isVideoPlaying])
+  }, [chat])
+
+  const isVideoPlayingRef = useRef(isVideoPlaying)
+  useEffect(() => {
+    isVideoPlayingRef.current = isVideoPlaying
+  }, [isVideoPlaying])
 
   const previousReactionsRef = useRef(reactions)
 
@@ -190,7 +196,7 @@ export default function StreamWidget ({
     console.log('Video starting')
     //  todo does this logic of skipping to the requested time work for a large video we are host ourselves?
     if (requestedVideoProgress > 0) {
-      console.log('seeking to ' + requestedVideoProgress)
+      console.log(`seeking to ${requestedVideoProgress} ${isMobilePreview}`)
       playerRef.current?.seekTo(requestedVideoProgress, 'seconds')
     }
   }
@@ -259,7 +265,7 @@ export default function StreamWidget ({
               width={isMobilePreview ? 418 : 698}
               height={isMobilePreview ? 235 : 393}
               loop={false}
-              muted={true}
+              muted={isMobilePreview ? true : muted}
               pip={false}
               onReady={ev => onVideoReady(ev)}
               onStart={() => onVideoStart()}

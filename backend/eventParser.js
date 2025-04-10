@@ -17,6 +17,34 @@ const pubnub = new PubNub({
 
 //  THIS FILE IS FOR TEST PURPOSES ONLY
 
+//  START VIDEO AND PROVIDE STATUS
+/*
+(async function processEvents() {
+  const videoDurationInMs = 10000
+  //const videoDurationInMs = 1200000
+  await publishPubNubMessage("game.client-video-control", {
+    type: "START_STREAM",
+    params: {},
+  });
+  let videoHead = 0;
+  while (videoHead <= videoDurationInMs) {
+    const pnMessage = {
+      type: "STATUS",
+      params: {
+        playbackTime: videoHead,
+        videoStarted: videoHead == 0,
+        videoEnded: videoHead == videoDurationInMs,
+      },
+    }
+    console.log(pnMessage)
+    await publishPubNubMessage("game.client-video-control", pnMessage);
+    videoHead += 500;
+    //  Sleep - THIS WILL DRIFT - THIS IS TEST CODE ONLY
+    await new Promise((resolve) => setTimeout(resolve, 500));
+  }
+})();
+*/
+
 //  ON DEMAND: FAN EXCITEMENT
 /*
 (async function processEvents() {
@@ -70,7 +98,7 @@ const pubnub = new PubNub({
 */
 
 //  GAME DATA: CHAT
-
+/*
 (async function processEvents() {
   for (const timedEvent of gameChat.chat) {
     await publishPubNubMessage(
@@ -81,6 +109,7 @@ const pubnub = new PubNub({
     await new Promise((resolve) => setTimeout(resolve, 1000));
   }
 })();
+*/
 
 //  GAME DATA: REACTIONS
 /*

@@ -10,6 +10,7 @@ import {
 } from '../data/constants'
 import { PlayCircle } from '../side-menu/sideMenuIcons'
 import Alert from '../components/alert'
+import GuideOverlay from '../components/guideOverlay'
 import LiveStreamPoll from '../widget-polls/liveStreamPoll'
 import ReactPlayer from 'react-player'
 
@@ -315,12 +316,45 @@ export default function StreamWidget ({
           )}
         </div>
         <div className='absolute top-0 right-0'>
+          <GuideOverlay
+            id={'streamPresence'}
+            guidesShown={guidesShown}
+            visibleGuide={visibleGuide}
+            setVisibleGuide={setVisibleGuide}
+            text={<span>Live Stream Presence Indicator</span>}
+            xOffset={`right-[100px]`}
+            yOffset={'top-[20px]'}
+            flexStyle={'flex-row items-start'}
+          />
           <LiveOccupancyCount />
         </div>
-        <div className='absolute bottom-0 right-0 z-50'>
-          <VolumeButton />
-        </div>
+        {!isMobilePreview && (
+          <div className='absolute bottom-0 right-0 z-50'>
+            <VolumeButton />
+          </div>
+        )}
       </div>
+      <GuideOverlay
+        id={'reactionsBar1'}
+        guidesShown={guidesShown}
+        visibleGuide={visibleGuide}
+        setVisibleGuide={setVisibleGuide}
+        text={<span>Reactions Bar and upgrade</span>}
+        xOffset={`left-[100px]`}
+        yOffset={'bottom-[10px]'}
+        flexStyle={'flex-row items-end'}
+      />
+      <GuideOverlay
+        id={'reactionsBar2'}
+        guidesShown={guidesShown}
+        visibleGuide={visibleGuide}
+        setVisibleGuide={setVisibleGuide}
+        text={<span>Reactions Bar - Illuminate ads and polls</span>}
+        xOffset={`right-[100px]`}
+        yOffset={'bottom-[10px]'}
+        flexStyle={'flex-row items-end'}
+      />
+
       <ReactionsBar />
 
       <LiveStreamPoll
@@ -387,7 +421,7 @@ export default function StreamWidget ({
           <PlayCircle width={20} height={20} />
           LIVE
         </div>
-        <div className='flex flex-row px-2 py-1 gap-1 items-center border-l-2 border-white/20'>
+        <div className='flex flex-row px-2 py-1 gap-1 items-center border-l-2 border-white/20 min-w-14'>
           <RemoveRedEye />
           {displayOccupancy.toLocaleString(undefined, {
             maximumFractionDigits: 2

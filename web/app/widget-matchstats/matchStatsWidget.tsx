@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { BoxType, matchStatsConfig } from './matchStatsConfig'
+import GuideOverlay from '../components/guideOverlay'
 import { matchStatsChannelId } from '../data/constants'
 
 export default function MatchStatsWidget ({
@@ -52,7 +53,6 @@ export default function MatchStatsWidget ({
       })
   }, [chat, isGuidedDemo])
 
-
   function processReceivedMessage (matchStatsMessage) {
     //  Todo This logic needs to be updated based on the format of the received message
     setMatchStats(prevStats => {
@@ -60,22 +60,22 @@ export default function MatchStatsWidget ({
 
       Object.keys(matchStatsMessage).forEach(key => {
         if (updatedStats[key] && updatedStats[key].info) {
-            updatedStats[key] = {
+          updatedStats[key] = {
             ...updatedStats[key],
             info: updatedStats[key].info.map((infoEntry, index) => ({
               ...infoEntry,
               stat: matchStatsMessage[key].info[index]?.stat || infoEntry.stat,
               dataPrimary:
-              matchStatsMessage[key].info[index]?.dataPrimary ||
-              infoEntry.dataPrimary,
+                matchStatsMessage[key].info[index]?.dataPrimary ||
+                infoEntry.dataPrimary,
               dataSecondary:
-              matchStatsMessage[key].info[index]?.dataSecondary ||
-              infoEntry.dataSecondary,
+                matchStatsMessage[key].info[index]?.dataSecondary ||
+                infoEntry.dataSecondary,
               imageUrl:
-              matchStatsMessage[key].info[index]?.imageUrl ||
-              infoEntry.imageUrl
+                matchStatsMessage[key].info[index]?.imageUrl ||
+                infoEntry.imageUrl
             }))
-            }
+          }
         }
       })
 
@@ -85,6 +85,17 @@ export default function MatchStatsWidget ({
 
   return (
     <div className={`${className}`}>
+      <GuideOverlay
+        id={'matchStats'}
+        guidesShown={guidesShown}
+        visibleGuide={visibleGuide}
+        setVisibleGuide={setVisibleGuide}
+        text={<span>Match Stats</span>}
+        xOffset={`right-[50px]`}
+        yOffset={'top-[10px]'}
+        flexStyle={'flex-row items-start'}
+      />
+
       <div
         className={`${
           isMobilePreview
@@ -115,14 +126,22 @@ export default function MatchStatsWidget ({
             isMobilePreview ? 'col-span-2' : 'col-span-2 row-span-3'
           }`}
         >
-          {giveStatsBox(matchStats?.featuredPlayers[featuredPlayer], featuredPlayer, (player) => setFeaturedPlayer(player))}
+          {giveStatsBox(
+            matchStats?.featuredPlayers[featuredPlayer],
+            featuredPlayer,
+            player => setFeaturedPlayer(player)
+          )}
         </div>
       </div>
     </div>
   )
 }
 
-function giveStatsBox (boxConfig, featuredPlayer = 0, setFeaturedPlayer = (player) => {}) {
+function giveStatsBox (
+  boxConfig,
+  featuredPlayer = 0,
+  setFeaturedPlayer = player => {}
+) {
   const imagePlaceholder = '/avatars/placeholder.png'
   if (boxConfig?.type == BoxType.InfoBoxWithImageAndQuantity) {
     return (
@@ -179,7 +198,7 @@ function giveStatsBox (boxConfig, featuredPlayer = 0, setFeaturedPlayer = (playe
           let newPlayer = (featuredPlayer + 1) % NUM_FEATURED_PLAYERS
           if (direction === 0) {
             let newPlayer = (featuredPlayer + 1) % NUM_FEATURED_PLAYERS
-          } 
+          }
           setFeaturedPlayer(newPlayer)
         }}
       />

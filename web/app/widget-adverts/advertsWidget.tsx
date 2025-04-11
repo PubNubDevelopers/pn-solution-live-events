@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import { useState, useEffect } from 'react'
 import { ads } from '../data/constants'
+import GuideOverlay from '../components/guideOverlay'
 import PointsOverlay from './pointsOverlay'
 
 export default function AdvertsWidget ({
@@ -47,6 +48,16 @@ export default function AdvertsWidget ({
   if (!isMobilePreview) {
     return (
       <div className={`${className} p-2`}>
+        <GuideOverlay
+          id={'adverts'}
+          guidesShown={guidesShown}
+          visibleGuide={visibleGuide}
+          setVisibleGuide={setVisibleGuide}
+          text={<span>Adverts</span>}
+          xOffset={`right-[50px]`}
+          yOffset={'top-[10px]'}
+          flexStyle={'flex-row items-start'}
+        />
         <div className='flex flex-row gap-3 w-full justify-between overflow-x-scroll overscroll-none'>
           {nonPremiumAds.slice(0, 3).map((ad, index) => {
             return (
@@ -85,6 +96,17 @@ export default function AdvertsWidget ({
   if (isMobilePreview) {
     return (
       <div className={`${className} p-2`}>
+        <GuideOverlay
+          id={'adverts'}
+          guidesShown={guidesShown}
+          visibleGuide={visibleGuide}
+          setVisibleGuide={setVisibleGuide}
+          text={<span>Adverts</span>}
+          xOffset={`right-[50px]`}
+          yOffset={'top-[10px]'}
+          flexStyle={'flex-row items-start'}
+        />
+
         {nonPremiumAds[currentAdId].clickPoints != null &&
           nonPremiumAds[currentAdId].clickPoints > 0 && (
             <div className='relative pointer-events-none'>

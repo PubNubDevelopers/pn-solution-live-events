@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { liveCommentaryChannelId } from '../data/constants'
+import GuideOverlay from '../components/guideOverlay'
 import { Channel, Message as pnMessage } from '@pubnub/chat'
 
 export default function LiveCommentaryWidget ({
@@ -65,6 +66,17 @@ export default function LiveCommentaryWidget ({
   return (
     <div className={`${className} px-6 pt-3 pb-4`}>
       <div className='font-semibold text-base pb-3'>Live Commentary</div>
+      <GuideOverlay
+        id={'liveCommentary'}
+        guidesShown={guidesShown}
+        visibleGuide={visibleGuide}
+        setVisibleGuide={setVisibleGuide}
+        text={<span>Live Commentary</span>}
+        xOffset={`right-[50px]`}
+        yOffset={'top-[10px]'}
+        flexStyle={'flex-row items-start'}
+      />
+
       {!scrolledToBottom && (
         <SkipToLatestButton liveCommentaryScrollRef={liveCommentaryScrollRef} />
       )}

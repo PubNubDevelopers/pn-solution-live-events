@@ -43,10 +43,10 @@ function Bubble ({ id, text, style, visibleGuide, setVisibleGuide }) {
   return (
     <div className={`flex ${style} w-fit gap-1`}>
       <div
-        className={`min-w-60 max-w-72 min-h-16 p-4 border-1 text-neutral700 font-normal text-sm rounded-lg content-center z-30 ${
+        className={`min-w-60 max-w-72 min-h-16 p-4 border-1 text-neutral700 font-normal text-sm rounded-lg content-center ${
           visibleGuide == id
-            ? 'bg-white border-navy300 text-navy900 shadow-lg'
-            : 'bg-transparent border-transparent text-transparent'
+            ? 'z-30 bg-white border-navy300 text-navy900 shadow-lg'
+            : 'z-10 bg-transparent border-transparent text-transparent'
         }`}
         onClick={e => {
           e.stopPropagation()

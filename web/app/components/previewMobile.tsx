@@ -243,9 +243,6 @@ export default function PreviewMobile ({
           chat={chat}
           logout={logout}
           currentScore={currentScore}
-          guidesShown={guidesShown}
-          visibleGuide={visibleGuide}
-          setVisibleGuide={setVisibleGuide}
         />
         <div className='text-2xl font-bold'>Live Stream</div>
       </div>

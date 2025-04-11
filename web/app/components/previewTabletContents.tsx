@@ -2,8 +2,6 @@ import { useState, useEffect, useRef } from 'react'
 import UserStatus from './userStatus'
 import GuideOverlay from './guideOverlay'
 import ChatWidget from '../widget-chat/chatWidget'
-//  todo delete the test chat widget
-import TestChatWidget from '../widget-chat/testOnlyChatWidget'
 import StreamWidget from '../widget-stream/streamWidget'
 import MatchStatsWidget from '../widget-matchstats/matchStatsWidget'
 import AdvertsWidget from '../widget-adverts/advertsWidget'
@@ -196,14 +194,6 @@ export default function TabletContents ({
                 }}
               />
             )}
-            <TestChatWidget
-              className={`${defaultWidgetClasses}`}
-              isMobilePreview={false}
-              chat={chat}
-              guidesShown={guidesShown}
-              visibleGuide={visibleGuide}
-              setVisibleGuide={setVisibleGuide}
-            />
             <ChatWidget
               className={`${defaultWidgetClasses}`}
               isMobilePreview={false}

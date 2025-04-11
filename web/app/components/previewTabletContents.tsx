@@ -260,9 +260,6 @@ export default function TabletContents ({
           chat={chat}
           logout={logout}
           currentScore={currentScore}
-          guidesShown={guidesShown}
-          visibleGuide={visibleGuide}
-          setVisibleGuide={setVisibleGuide}
         />
       </div>
     )

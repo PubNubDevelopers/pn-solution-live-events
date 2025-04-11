@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import UserStatus from './userStatus'
+import GuideOverlay from './guideOverlay'
 import ChatWidget from '../widget-chat/chatWidget'
 //  todo delete the test chat widget
 import TestChatWidget from '../widget-chat/testOnlyChatWidget'
@@ -46,6 +47,12 @@ export default function TabletContents ({
   const defaultWidgetClasses =
     'rounded-lg border-1 border-navy200 bg-white shadow-md'
 
+  const currentScoreRef = useRef(currentScore)
+  useEffect(() => {
+    console.log('updating current score ref')
+    currentScoreRef.current = currentScore
+  }, [currentScore])
+
   useEffect(() => {
     if (!chat) return
     //const channel = chat.sdk.channel(pushChannelId)
@@ -74,7 +81,7 @@ export default function TabletContents ({
   }
 
   return (
-    <div className='w-full rounded-2xl bg-navy50 text-neutral-900 h-full overflow-y-auto overscroll-none '>
+    <div className='w-full rounded-2xl bg-navy50 text-neutral-900 h-full'>
       <div className='relative'>
         <div className='absolute w-1/2 right-0'>
           {alert && (
@@ -89,74 +96,106 @@ export default function TabletContents ({
         </div>
       </div>
       {notification && (
-        <Notification
-          heading={notification.heading}
-          message={notification.message}
-          imageUrl={notification.imageUrl}
-          onClose={() => {
+          <Notification
+            heading={notification.heading}
+            message={notification.message}
+            imageUrl={notification.imageUrl}
+            onClose={() => {
             setNotification(null)
-          }}
-        />
-      )}
-      <TabletHeader currentScore={currentScore} />
-      <div
-        className={`flex flex-row px-6 gap-3 w-full h-full ${
-          heightConstrained && 'min-h-[680px] max-h-[680px]'
-        } rounded-b-2xl`}
-      >
-        <div className={`w-[700px] flex flex-col gap-4`}>
-          <StreamWidget
-            className={`${defaultWidgetClasses}`}
-            isMobilePreview={false}
-            chat={chat}
-            isGuidedDemo={isGuidedDemo}
-            guidesShown={guidesShown}
-            visibleGuide={visibleGuide}
-            setVisibleGuide={setVisibleGuide}
-          />
-          <MatchStatsWidget
-            className={`${defaultWidgetClasses}`}
-            isMobilePreview={false}
-            chat={chat}
-            isGuidedDemo={isGuidedDemo}
-            guidesShown={guidesShown}
-            visibleGuide={visibleGuide}
-            setVisibleGuide={setVisibleGuide}
-          />
-          <AdvertsWidget
-            className={`${defaultWidgetClasses}`}
-            isMobilePreview={false}
-            chat={chat}
-            guidesShown={guidesShown}
-            visibleGuide={visibleGuide}
-            setVisibleGuide={setVisibleGuide}
-            onAdClick={points => {
-              AwardPoints(chat, points, currentScore, showNewPointsAlert)
             }}
           />
-          <div className='min-h-3'></div>
-        </div>
-        <div className='w-full flex flex-col gap-4'>
-          {dynamicAd && (
-            <AdvertsOfferWidget
+        )}
+      <TabletHeader currentScore={currentScore} />
+      <GuideOverlay
+        id={'userPoints'}
+        guidesShown={guidesShown}
+        visibleGuide={visibleGuide}
+        setVisibleGuide={setVisibleGuide}
+        text={<span>User Points</span>}
+        xOffset={`right-[120px]`}
+        yOffset={'top-[0px]'}
+        flexStyle={'flex-row items-start'}
+      />
+      <div className='overflow-y-auto overscroll-none'>
+        <div
+          className={`flex flex-row px-6 gap-3 w-full h-full ${
+            heightConstrained && 'min-h-[680px] max-h-[680px]'
+          } rounded-b-2xl`}
+        >
+          <div className={`w-[700px] flex flex-col gap-4`}>
+            <StreamWidget
+              className={`${defaultWidgetClasses}`}
+              isMobilePreview={false}
+              chat={chat}
+              isGuidedDemo={isGuidedDemo}
+              guidesShown={guidesShown}
+              visibleGuide={visibleGuide}
+              setVisibleGuide={setVisibleGuide}
+              awardPoints={(points, message) => {
+                AwardPoints(
+                  chat,
+                  points,
+                  message,
+                  currentScoreRef.current,
+                  showNewPointsAlert
+                )
+              }}
+            />
+            <MatchStatsWidget
+              className={`${defaultWidgetClasses}`}
+              isMobilePreview={false}
+              chat={chat}
+              isGuidedDemo={isGuidedDemo}
+              guidesShown={guidesShown}
+              visibleGuide={visibleGuide}
+              setVisibleGuide={setVisibleGuide}
+            />
+            <AdvertsWidget
               className={`${defaultWidgetClasses}`}
               isMobilePreview={false}
               chat={chat}
               guidesShown={guidesShown}
               visibleGuide={visibleGuide}
               setVisibleGuide={setVisibleGuide}
-              adId={dynamicAd.adId}
-              clickPoints={dynamicAd.clickPoints}
-              onAdClick={(points, adId) => {
-                AwardPoints(chat, points, currentScore, showNewPointsAlert)
-                //  Prevent clicking on both Mobile and tablet previews
-                chat?.sdk.publish({
-                  message: {},
-                  channel: dynamicAdChannelId
-                })
+              onAdClick={points => {
+                AwardPoints(
+                  chat,
+                  points,
+                  null,
+                  currentScoreRef.current,
+                  showNewPointsAlert
+                )
               }}
             />
-          )}
+            <div className='min-h-3'></div>
+          </div>
+          <div className='w-full flex flex-col gap-4'>
+            {dynamicAd && (
+              <AdvertsOfferWidget
+                className={`${defaultWidgetClasses}`}
+                isMobilePreview={false}
+                chat={chat}
+                guidesShown={guidesShown}
+                visibleGuide={visibleGuide}
+                setVisibleGuide={setVisibleGuide}
+                adId={dynamicAd.adId}
+                clickPoints={dynamicAd.clickPoints}
+                onAdClick={(points, adId) => {
+                  AwardPoints(
+                    chat,
+                    points,
+                    null,
+                    currentScoreRef.current,
+                    showNewPointsAlert
+                  )
+                  //  Prevent clicking on both Mobile and tablet previews
+                  chat?.sdk.publish({
+                    message: {},
+                    channel: dynamicAdChannelId
+                  })
+                }}
+              />
+            )}
             <TestChatWidget
               className={`${defaultWidgetClasses}`}
               isMobilePreview={false}
@@ -173,31 +212,41 @@ export default function TabletContents ({
               visibleGuide={visibleGuide}
               setVisibleGuide={setVisibleGuide}
             />
-          <PollsWidget
-            className={`${defaultWidgetClasses}`}
-            isMobilePreview={false}
-            chat={chat}
-            guidesShown={guidesShown}
-            visibleGuide={visibleGuide}
-            setVisibleGuide={setVisibleGuide}
-          />
-          <BotWidget
-            className={`${defaultWidgetClasses}`}
-            isMobilePreview={false}
-            chat={chat}
-            guidesShown={guidesShown}
-            visibleGuide={visibleGuide}
-            setVisibleGuide={setVisibleGuide}
-          />
-          <LiveCommentaryWidget
-            className={`${defaultWidgetClasses}`}
-            isMobilePreview={false}
-            chat={chat}
-            guidesShown={guidesShown}
-            visibleGuide={visibleGuide}
-            setVisibleGuide={setVisibleGuide}
-          />
-          <div className='min-h-3'></div>
+            <PollsWidget
+              className={`${defaultWidgetClasses}`}
+              isMobilePreview={false}
+              chat={chat}
+              guidesShown={guidesShown}
+              visibleGuide={visibleGuide}
+              setVisibleGuide={setVisibleGuide}
+              awardPoints={(points, message) => {
+                AwardPoints(
+                  chat,
+                  points,
+                  message,
+                  currentScoreRef.current,
+                  showNewPointsAlert
+                )
+              }}
+            />
+            <BotWidget
+              className={`${defaultWidgetClasses}`}
+              isMobilePreview={false}
+              chat={chat}
+              guidesShown={guidesShown}
+              visibleGuide={visibleGuide}
+              setVisibleGuide={setVisibleGuide}
+            />
+            <LiveCommentaryWidget
+              className={`${defaultWidgetClasses}`}
+              isMobilePreview={false}
+              chat={chat}
+              guidesShown={guidesShown}
+              visibleGuide={visibleGuide}
+              setVisibleGuide={setVisibleGuide}
+            />
+            <div className='min-h-3'></div>
+          </div>
         </div>
       </div>
     </div>
@@ -207,7 +256,14 @@ export default function TabletContents ({
     return (
       <div className='flex flex-row items-center justify-between w-full px-6 py-[11.5px]'>
         <div className='text-3xl font-bold'>Live Stream</div>
-        <UserStatus chat={chat} logout={logout} currentScore={currentScore} />
+        <UserStatus
+          chat={chat}
+          logout={logout}
+          currentScore={currentScore}
+          guidesShown={guidesShown}
+          visibleGuide={visibleGuide}
+          setVisibleGuide={setVisibleGuide}
+        />
       </div>
     )
   }

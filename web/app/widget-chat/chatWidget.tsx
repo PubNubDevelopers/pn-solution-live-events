@@ -431,17 +431,19 @@ export default function ChatWidget({
         setVisibleGuide={setVisibleGuide}
         text={
           <span>
-              This component demonstrates how to implement a complete chat solution using the PubNub Chat SDK:
-              <ul className="list-disc list-inside mt-2">
-                <li>Create and manage public, private, and direct channels</li>
+              The <span className='font-semibold'>PubNub Chat SDK</span> provides you with everything you need to develop a fully featured, production-ready chat component::
+              <ul className="list-disc list-inside my-2">
+                <li>Public, private, and direct channels</li>
                 <li>Send and receive real-time messages</li>
                 <li>Display typing indicators</li>
                 <li>Add emoji reactions to messages</li>
+                <li>Track whether users are online or offline</li>
               </ul>
-            </span>
+              Also: Integration with AI and Moderation through <span className='font-semibold'>BizOps Workspace</span> and <span className='font-semibold'>Functions</span>
+              </span>
         }
         xOffset={`${isMobilePreview ? 'left-[0px]' : '-left-[60px]'}`}
-        yOffset={''}
+        yOffset={'top-[10px]'}
         flexStyle={'flex-row items-start'}
       />
 

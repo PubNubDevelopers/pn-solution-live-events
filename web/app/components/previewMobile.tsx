@@ -83,41 +83,49 @@ export default function PreviewMobile ({
       className={`${className} w-[460px] border-4 border-navy100 rounded-3xl bg-black px-2 py-[14px] h-full max-h-[954px]`}
     >
       <div className='w-full rounded-2xl bg-navy50 text-neutral-900 h-full pb-[90px]'>
-          <div className='relative'>
-            <div className='absolute w-1/2 right-0'>
-              {alert && (
-                <Alert
-                  type={AlertType.POINTS}
-                  message={alert}
-                  onClose={() => {
-                    setAlert(null)
-                  }}
-                />
-              )}
-            </div>
+        <div className='relative'>
+          <div className='absolute w-1/2 right-0'>
+            {alert && (
+              <Alert
+                type={AlertType.POINTS}
+                message={alert}
+                onClose={() => {
+                  setAlert(null)
+                }}
+              />
+            )}
           </div>
-          {notification && (
-            <Notification
-              heading={notification.heading}
-              message={notification.message}
-              imageUrl={notification.imageUrl}
-              onClose={() => {
-                setNotification(null)
-              }}
-            />
-          )}
-            <MobileHeader currentScore={currentScore} />
-          <GuideOverlay
-            id={'userPoints'}
-            guidesShown={guidesShown}
-            visibleGuide={visibleGuide}
-            setVisibleGuide={setVisibleGuide}
-            text={<span>User Points</span>}
-            xOffset={`right-[60px]`}
-            yOffset={'-top-[40px]'}
-            flexStyle={'flex-row items-start'}
+        </div>
+        {notification && (
+          <Notification
+            heading={notification.heading}
+            message={notification.message}
+            imageUrl={notification.imageUrl}
+            onClose={() => {
+              setNotification(null)
+            }}
           />
-                <div className='w-full h-full overflow-y-auto overscroll-none'>
+        )}
+        <MobileHeader currentScore={currentScore} />
+        <GuideOverlay
+          id={'userPoints'}
+          guidesShown={guidesShown}
+          visibleGuide={visibleGuide}
+          setVisibleGuide={setVisibleGuide}
+          text={
+            <span>
+              User details and their points are securely stored in{' '}
+              <span className='font-semibold'>App Context</span>, a flexible
+              data store for user & app data. This allows{' '}
+              <span className='font-semibold'>per-user personalization</span>{' '}
+              and gamification.
+            </span>
+          }
+          xOffset={`right-[60px]`}
+          yOffset={'-top-[40px]'}
+          flexStyle={'flex-row items-start'}
+        />
+        <div className='w-full h-full overflow-y-auto overscroll-none'>
           <div className='flex flex-col px-2 gap-6 rounded-b-2xl'>
             <StreamWidget
               className={`${defaultWidgetClasses}`}
@@ -246,11 +254,7 @@ export default function PreviewMobile ({
   function MobileHeader ({ currentScore }) {
     return (
       <div className='flex flex-col w-full px-4 py-[11.5px]'>
-        <UserStatus
-          chat={chat}
-          logout={logout}
-          currentScore={currentScore}
-        />
+        <UserStatus chat={chat} logout={logout} currentScore={currentScore} />
         <div className='text-2xl font-bold'>Live Stream</div>
       </div>
     )

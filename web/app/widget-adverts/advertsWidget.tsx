@@ -53,7 +53,18 @@ export default function AdvertsWidget ({
           guidesShown={guidesShown}
           visibleGuide={visibleGuide}
           setVisibleGuide={setVisibleGuide}
-          text={<span>Adverts</span>}
+          text={
+            <span>
+              Increase user engagement with{' '}
+              <span className='font-semibold'>gamification</span>, providing
+              real-time insights into your users. This app incentivizes users to
+              click on Ads by gaining points, and uses{' '}
+              <span className='font-semibold'>App Context</span> to securely
+              track the score. You could even show a{' '}
+              <span className='font-semibold'>score leaderboard</span> using{' '}
+              <span className='font-semibold'>Functions</span>.
+            </span>
+          }
           xOffset={`right-[50px]`}
           yOffset={'top-[10px]'}
           flexStyle={'flex-row items-start'}
@@ -101,7 +112,18 @@ export default function AdvertsWidget ({
           guidesShown={guidesShown}
           visibleGuide={visibleGuide}
           setVisibleGuide={setVisibleGuide}
-          text={<span>Adverts</span>}
+          text={
+            <span>
+              Increase user engagement with{' '}
+              <span className='font-semibold'>gamification</span>, providing
+              real-time insights into your users. This app incentivizes users to
+              click on Ads by gaining points, and uses{' '}
+              <span className='font-semibold'>App Context</span> to securely
+              track the score. You could even show a{' '}
+              <span className='font-semibold'>score leaderboard</span> using{' '}
+              <span className='font-semibold'>Functions</span>.
+            </span>
+          }
           xOffset={`right-[50px]`}
           yOffset={'top-[10px]'}
           flexStyle={'flex-row items-start'}

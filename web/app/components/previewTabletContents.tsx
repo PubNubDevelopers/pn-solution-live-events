@@ -109,7 +109,15 @@ export default function TabletContents ({
         guidesShown={guidesShown}
         visibleGuide={visibleGuide}
         setVisibleGuide={setVisibleGuide}
-        text={<span>User Points</span>}
+        text={
+          <span>
+            User details and their points are securely stored in{' '}
+            <span className='font-semibold'>App Context</span>, a flexible data
+            store for user & app data. This allows{' '}
+            <span className='font-semibold'>per-user personalization</span> and
+            gamification.
+          </span>
+        }
         xOffset={`right-[120px]`}
         yOffset={'top-[0px]'}
         flexStyle={'flex-row items-start'}

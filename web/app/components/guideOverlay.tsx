@@ -11,7 +11,7 @@ export default function GuideOverlay ({
   flexStyle
 }) {
   return (
-    <div className={`${!guidesShown && 'hidden'} relative`}>
+    <div className={`${!guidesShown && 'hidden'} relative pointer-events-none`}>
       <div className={`absolute ${xOffset} ${yOffset}`}>
         <Bubble
           id={id}
@@ -74,7 +74,7 @@ function ColouredDot ({
 }) {
   return (
     <div
-      className='flex w-6 h-6 bg-brandAccent1 rounded-full items-center justify-center shadow-[0px_0px_12px_2px_rgba(59,130,246,1.00)] cursor-pointer z-20'
+      className='flex w-6 min-w-6 h-6 min-h-6 bg-brandAccent1 rounded-full items-center justify-center shadow-[0px_0px_12px_2px_rgba(59,130,246,1.00)] cursor-pointer z-20 pointer-events-auto'
       onClick={e => {
         setVisibleGuide(id)
         setBubbleIsRead(true)

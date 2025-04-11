@@ -178,7 +178,18 @@ export default function PollsWidget ({
         guidesShown={guidesShown}
         visibleGuide={visibleGuide}
         setVisibleGuide={setVisibleGuide}
-        text={'Polls Polls Polls'}
+        text={
+          <span>
+            Polls are built on top of PubNub’s{' '}
+            <span className='font-semibold'>Core Messaging Service</span>, to
+            announce new polls, allow users to vote, and distribute results.{' '}
+            <span className='font-semibold'>Functions</span> allow you to
+            tabulate results with serverless processing.{' '}
+            <span className='font-semibold'>Access Manager</span> provides fine
+            grain access control so users cannot see results before they are
+            published.{' '}
+          </span>
+        }
         xOffset={`${isMobilePreview ? 'left-[0px]' : '-left-[60px]'}`}
         yOffset={''}
         flexStyle={'flex-row items-start'}

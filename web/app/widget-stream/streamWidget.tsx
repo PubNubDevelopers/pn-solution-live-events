@@ -321,7 +321,14 @@ export default function StreamWidget ({
             guidesShown={guidesShown}
             visibleGuide={visibleGuide}
             setVisibleGuide={setVisibleGuide}
-            text={<span>Live Stream Presence Indicator</span>}
+            text={
+              <span>
+                <span className='font-semibold'>Presence</span> provides you
+                with offline and online user / device status as well as channel
+                occupancy, meaning you can see how many users are present in a
+                chat room or watching a live stream.
+              </span>
+            }
             xOffset={`right-[100px]`}
             yOffset={'top-[20px]'}
             flexStyle={'flex-row items-start'}
@@ -339,7 +346,16 @@ export default function StreamWidget ({
         guidesShown={guidesShown}
         visibleGuide={visibleGuide}
         setVisibleGuide={setVisibleGuide}
-        text={<span>Reactions Bar and upgrade</span>}
+        text={
+          <span>
+            If enough reactions are received you will trigger a{' '}
+            <span className='font-semibold'>PubNub Illuminate</span> action to{' '}
+            <span className='font-semibold'>upgrade the emoji</span>. PubNub
+            Illuminate allows you to take action immediately when predefined
+            conditions are reached, allowing you to experiment in real-time and
+            gain actionable insights in milliseconds.
+          </span>
+        }
         xOffset={`left-[100px]`}
         yOffset={'bottom-[10px]'}
         flexStyle={'flex-row items-end'}
@@ -349,7 +365,18 @@ export default function StreamWidget ({
         guidesShown={guidesShown}
         visibleGuide={visibleGuide}
         setVisibleGuide={setVisibleGuide}
-        text={<span>Reactions Bar - Illuminate ads and polls</span>}
+        text={
+          <span>
+            Some emoji (😡) are configured to{' '}
+            <span className='font-semibold'>
+              trigger dynamic polls, or serve dynamic ads
+            </span>{' '}
+            - this is all handled by{' '}
+            <span className='font-semibold'>PubNub Illuminate</span> which
+            tracks the number of events in real-time, and who is making those
+            events, allowing you to quickly refine your engagement strategy.
+          </span>
+        }
         xOffset={`right-[100px]`}
         yOffset={'bottom-[10px]'}
         flexStyle={'flex-row items-end'}

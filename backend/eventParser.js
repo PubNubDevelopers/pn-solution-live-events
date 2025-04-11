@@ -1,4 +1,5 @@
 const fs = require("fs");
+const path = require("path");
 const PubNub = require("pubnub");
 const gameCommentary = require("./game-data/commentary.js");
 const gameStats = require("./game-data/stats.js");
@@ -17,6 +18,7 @@ const pubnub = new PubNub({
   subscribeKey: "sub-c-f19c6fb1-c3a7-4a3b-bfaa-d424634e59e7",
   userId: "event-generator",
 });
+
 
 //  THIS FILE IS FOR TEST PURPOSES ONLY
 
@@ -49,7 +51,7 @@ const pubnub = new PubNub({
 */
 
 //  DATA CONTROL - PUSH MESSAGES
-
+/*
 (async function processEvents() {
   //for (const timedEvent of onDemandPushGoal.goalScored) {
   //  await publishPubNubMessage(
@@ -69,7 +71,7 @@ const pubnub = new PubNub({
     await new Promise((resolve) => setTimeout(resolve, 5000));
   }
 })();
-
+*/
 
 //  ILLUMINATE: POLLS
 /*

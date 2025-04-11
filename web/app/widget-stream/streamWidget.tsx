@@ -85,7 +85,7 @@ export default function StreamWidget ({
     //  Occupancy updates from Data Controls
     const occupancyChannel = chat.sdk.channel(dataControlOccupancyChannelId)
     const occupancySubscription = occupancyChannel.subscription({
-      receivePresenceEvent: false
+      receivePresenceEvents: false
     })
     occupancySubscription.onMessage = messageEvent => {
       setOccupancy(+messageEvent.message.streamOccupancy)

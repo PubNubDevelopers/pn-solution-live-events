@@ -32,7 +32,7 @@ export default function TabletContents ({
   const [notification, setNotification] = useState<{
     heading: string
     message: string
-    imageUrl: string
+    imageUrl: string | null
   } | null>(null)
   const [alert, setAlert] = useState<{ points: number; body: string } | null>(
     null
@@ -94,15 +94,15 @@ export default function TabletContents ({
         </div>
       </div>
       {notification && (
-          <Notification
-            heading={notification.heading}
-            message={notification.message}
-            imageUrl={notification.imageUrl}
-            onClose={() => {
+        <Notification
+          heading={notification.heading}
+          message={notification.message}
+          imageUrl={notification.imageUrl}
+          onClose={() => {
             setNotification(null)
-            }}
-          />
-        )}
+          }}
+        />
+      )}
       <TabletHeader currentScore={currentScore} />
       <GuideOverlay
         id={'userPoints'}
@@ -201,6 +201,13 @@ export default function TabletContents ({
               guidesShown={guidesShown}
               visibleGuide={visibleGuide}
               setVisibleGuide={setVisibleGuide}
+              userMentioned={messageText => {
+                setNotification({
+                  heading: 'You were mentioned',
+                  message: messageText,
+                  imageUrl: null
+                })
+              }}
             />
             <PollsWidget
               className={`${defaultWidgetClasses}`}
@@ -246,11 +253,7 @@ export default function TabletContents ({
     return (
       <div className='flex flex-row items-center justify-between w-full px-6 py-[11.5px]'>
         <div className='text-3xl font-bold'>Live Stream</div>
-        <UserStatus
-          chat={chat}
-          logout={logout}
-          currentScore={currentScore}
-        />
+        <UserStatus chat={chat} logout={logout} currentScore={currentScore} />
       </div>
     )
   }

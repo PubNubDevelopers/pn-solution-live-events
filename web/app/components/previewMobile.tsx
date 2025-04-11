@@ -32,7 +32,7 @@ export default function PreviewMobile ({
   const [notification, setNotification] = useState<{
     heading: string
     message: string
-    imageUrl: string
+    imageUrl: string | null
   } | null>(null)
   const [alert, setAlert] = useState<{ points: number; body: string } | null>(
     null
@@ -170,6 +170,13 @@ export default function PreviewMobile ({
               guidesShown={guidesShown}
               visibleGuide={visibleGuide}
               setVisibleGuide={setVisibleGuide}
+              userMentioned={messageText => {
+                setNotification({
+                  heading: 'You were mentioned',
+                  message: messageText,
+                  imageUrl: null
+                })
+              }}
             />
             <PollsWidget
               className={`${defaultWidgetClasses}`}

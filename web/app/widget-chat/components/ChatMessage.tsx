@@ -68,9 +68,9 @@ export default function ChatMessage({message, currentUser, users, channel}: Chat
   const filtered = users.filter(user => message.userId === user.id)
   const user = filtered.length === 1 ? filtered[0] : null
 
-  const renderMessagePart = (messagePart: MixedTextTypedElement) => {
+  const renderMessagePart = (messagePart: MixedTextTypedElement, index: number) => {
     if (messagePart.type === "mention") {
-      return <span className={'text-[#589CFF]'}>{messagePart.content.name}</span>
+      return <span key={index} className={'text-[#589CFF]'}>{messagePart.content.name}</span>
     }
     if (messagePart.type === "text") {
       return messagePart.content.text

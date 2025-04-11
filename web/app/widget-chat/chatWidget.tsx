@@ -2,7 +2,8 @@
 
 import {useState, useEffect, useRef} from 'react'
 import GuideOverlay from '../components/guideOverlay'
-import {Chat, User, Channel, Message} from '@pubnub/chat'
+import { dataControlOccupancyChannelId } from '../data/constants'
+import {Chat, User, Channel, Message, MixedTextTypedElement} from '@pubnub/chat'
 import TypingIndicator from './components/TypingIndicator'
 import ChatMessage from './components/ChatMessage'
 import ChannelList from './components/ChannelList'
@@ -16,6 +17,7 @@ interface ChatWidgetProps {
   guidesShown: boolean
   visibleGuide: string
   setVisibleGuide: (guide: string) => void
+  userMentioned: (messageText: string) => void
 }
 
 export default function ChatWidget({
@@ -24,7 +26,8 @@ export default function ChatWidget({
                                      chat,
                                      guidesShown,
                                      visibleGuide,
-                                     setVisibleGuide
+                                     setVisibleGuide,
+                                     userMentioned
                                    }: ChatWidgetProps) {
   // Channel state
   const [activeChannelId, setActiveChannelId] = useState<string | null>(null)
@@ -48,6 +51,7 @@ export default function ChatWidget({
   const [users, setUsers] = useState<User[]>([])
   const [selectedUsers, setSelectedUsers] = useState<string[]>([])
   const [whoIsPresent, setWhoIsPresent] = useState<string[]>([])
+  const [simulatedOccupancy, setSimulatedOccupancy] = useState(0)
 
   const messagesContainerRef = useRef<HTMLDivElement>(null)
 
@@ -65,6 +69,25 @@ export default function ChatWidget({
     if (!activeChannelId && publicChannels.length > 0) {
       setActiveChannelId(publicChannels[0].id)
     }
+
+    const renderMessagePartMention = (messagePart: MixedTextTypedElement, index: number) => {
+      if (messagePart.type === "mention") {
+        return messagePart.content.name
+      }
+      if (messagePart.type === "text") {
+        return messagePart.content.text
+      }
+      return '';
+    }
+    return chat.listenForEvents({
+      user: chat.currentUser.id,
+      type: 'mention',
+      callback: async evt => {
+        const channel = await chat.getChannel(evt.payload.channel)
+        const message = await channel?.getMessage(evt.payload.messageTimetoken)
+        userMentioned(`${message?.getMessageElements().map(renderMessagePartMention).join('')}`)
+      }
+    })
   }, [chat])
 
   /**
@@ -236,6 +259,16 @@ export default function ChatWidget({
         })
       }
 
+      //  Occupancy updates from Data Controls
+      const occupancyChannel = chat.sdk.channel(dataControlOccupancyChannelId)
+      const occupancySubscription = occupancyChannel.subscription({
+        receivePresenceEvents: false
+      })
+      occupancySubscription.onMessage = (messageEvent: any) => {
+          setSimulatedOccupancy(+messageEvent.message.chatOccupancy);
+      }
+      occupancySubscription.subscribe()
+
       // Return cleanup function
       return () => {
         if (typeof unsubscribeMessages === 'function') {
@@ -249,6 +282,7 @@ export default function ChatWidget({
         }
         setMessages([])
         setTypingUsers([])
+        occupancySubscription.unsubscribe()
       }
     } catch (error) {
       console.error(`Error setting up channel ${activeChannelId}:`, error)
@@ -383,10 +417,8 @@ export default function ChatWidget({
   }
 
   function backgroundClicked(e) {
-    console.log('chat clicked')
     setShowMentions(false)
     setShowReactions(false)
-    e.stopPropagation()
   }
 
   return (
@@ -451,7 +483,7 @@ export default function ChatWidget({
         <div className={'flex items-center justify-center gap-1'}>
           <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8" fill="none">
             <circle cx="4" cy="4" r="4" fill="#22C55E"/>
-          </svg> {whoIsPresent.length} online
+          </svg> {simulatedOccupancy + whoIsPresent.length} online
         </div>
       </div>}
 

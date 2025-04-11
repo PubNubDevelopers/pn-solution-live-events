@@ -62,6 +62,9 @@ export default function MessageInput({
     setShowReactions(false)
     event.stopPropagation()
     setMessageInput(messageInput + ' ' + emoji)
+    if (messageDraftRef.current) {
+      messageDraftRef.current.update(messageInput + ' ' + emoji)
+    }
   }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -115,6 +118,8 @@ export default function MessageInput({
 
   const handleSendMessage = async () => {
     if (messageDraftRef.current && messageInput.trim()) {
+
+
       try {
         await messageDraftRef.current.send()
         setMessageInput('')

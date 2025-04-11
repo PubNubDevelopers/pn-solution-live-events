@@ -42,6 +42,8 @@ export default function ChatWidget({
   const [showChannelCreate, setShowChannelCreate] = useState(false)
   const [channelName, setChannelName] = useState('')
   const [channelType, setChannelType] = useState('public')
+  const [showMentions, setShowMentions] = useState(false)
+  const [showReactions, setShowReactions] = useState(false)
   const [availableUsers, setAvailableUsers] = useState<User[]>([])
   const [users, setUsers] = useState<User[]>([])
   const [selectedUsers, setSelectedUsers] = useState<string[]>([])
@@ -380,8 +382,36 @@ export default function ChatWidget({
     )
   }
 
+  function backgroundClicked(e) {
+    console.log('chat clicked')
+    setShowMentions(false)
+    setShowReactions(false)
+    e.stopPropagation()
+  }
+
   return (
-    <div className={`${className} w-full h-full`} onClick={(e) => e.stopPropagation()}>
+    <div className={`${className} w-full h-full`} onClick={(e) => backgroundClicked(e)}>
+
+      <GuideOverlay
+        id={'chatGuide'}
+        guidesShown={guidesShown}
+        visibleGuide={visibleGuide}
+        setVisibleGuide={setVisibleGuide}
+        text={
+          <span>
+              This component demonstrates how to implement a complete chat solution using the PubNub Chat SDK:
+              <ul className="list-disc list-inside mt-2">
+                <li>Create and manage public, private, and direct channels</li>
+                <li>Send and receive real-time messages</li>
+                <li>Display typing indicators</li>
+                <li>Add emoji reactions to messages</li>
+              </ul>
+            </span>
+        }
+        xOffset={`${isMobilePreview ? 'left-[0px]' : '-left-[60px]'}`}
+        yOffset={''}
+        flexStyle={'flex-row items-start'}
+      />
 
       {!activeChannel && <div
         className="text-lg border-b pb-2 flex items-center bg-navy900 overflow-hidden rounded-t px-[16px] py-[12px] text-white text-[16px] font-[600] leading-[24px] h-[56px]">
@@ -407,11 +437,6 @@ export default function ChatWidget({
 
       {activeChannel && <div
         className="text-lg border-b pb-2 flex items-center bg-navy900 overflow-hidden rounded-t px-[16px] py-[12px] text-white text-[16px] font-[600] leading-[24px] h-[56px]">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-          <path
-            d="M12.4998 3.33341V9.16675H4.30817L3.33317 10.1417V3.33341H12.4998ZM13.3332 1.66675H2.49984C2.0415 1.66675 1.6665 2.04175 1.6665 2.50008V14.1667L4.99984 10.8334H13.3332C13.7915 10.8334 14.1665 10.4584 14.1665 10.0001V2.50008C14.1665 2.04175 13.7915 1.66675 13.3332 1.66675ZM17.4998 5.00008H15.8332V12.5001H4.99984V14.1667C4.99984 14.6251 5.37484 15.0001 5.83317 15.0001H14.9998L18.3332 18.3334V5.83342C18.3332 5.37508 17.9582 5.00008 17.4998 5.00008Z"
-            fill="white"/>
-        </svg>
         {/*<button className="cursor-pointer" onClick={() => {*/}
         {/*  setActiveChannel(null)*/}
         {/*  setActiveChannelId(null)*/}
@@ -420,7 +445,7 @@ export default function ChatWidget({
         {/*    <path d="M14.8627 3.225L13.3794 1.75L5.1377 10L13.3877 18.25L14.8627 16.775L8.0877 10L14.8627 3.225Z" fill="#FAFAFA"/>*/}
         {/*  </svg>*/}
         {/*</button>*/}
-        <div className={'rounded-full w-[32px] h-[32px] ml-[16px] bg-gray-100'} style={activeChannel.custom?.profileUrl ? {background: `url(${activeChannel.custom?.profileUrl}) center center no-repeat`} : {}}></div>
+        <div className={'rounded-full w-[32px] h-[32px] !bg-cover bg-gray-100'} style={activeChannel.custom?.profileUrl ? {background: `url(${activeChannel.custom?.profileUrl}) center center no-repeat`} : {}}></div>
         <div className={'ml-[16px]'}>{activeChannel.name || activeChannel.id}</div>
         <div className={'grow'}/>
         <div className={'flex items-center justify-center gap-1'}>
@@ -487,6 +512,10 @@ export default function ChatWidget({
         <MessageInput
           messageInput={messageInput}
           setMessageInput={setMessageInput}
+          showMentions={showMentions}
+          setShowMentions={setShowMentions}
+          showReactions={showReactions}
+          setShowReactions={setShowReactions}
           handleTyping={handleTyping}
           sendMessage={sendMessage}
           availableUsers={users}
@@ -494,30 +523,6 @@ export default function ChatWidget({
         />
 
       </div>}
-
-      {/* Guide Overlay */}
-      {guidesShown && visibleGuide === 'chat' && (
-        <GuideOverlay
-          id={'chatGuide'}
-          guidesShown={guidesShown}
-          visibleGuide={visibleGuide}
-          setVisibleGuide={setVisibleGuide}
-          text={
-            <span>
-              This component demonstrates how to implement a complete chat solution using the PubNub Chat SDK:
-              <ul className="list-disc list-inside mt-2">
-                <li>Create and manage public, private, and direct channels</li>
-                <li>Send and receive real-time messages</li>
-                <li>Display typing indicators</li>
-                <li>Add emoji reactions to messages</li>
-              </ul>
-            </span>
-          }
-          xOffset={`${isMobilePreview ? 'left-[0px]' : '-left-[60px]'}`}
-          yOffset={''}
-          flexStyle={'flex-row items-start'}
-        />
-      )}
     </div>
   )
 }

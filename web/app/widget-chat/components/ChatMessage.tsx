@@ -1,6 +1,7 @@
-import {useState} from 'react'
+import {useEffect, useState} from 'react'
 import {Message, User, Channel, TimetokenUtils, MixedTextTypedElement} from '@pubnub/chat'
 import {reactions} from "@/app/data/constants";
+import { useHover } from "@uidotdev/usehooks";
 
 interface ChatMessageProps {
   message: Message & {
@@ -13,16 +14,27 @@ interface ChatMessageProps {
 }
 
 export default function ChatMessage({message, currentUser, users, channel}: ChatMessageProps) {
+  const [ref, hovering] = useHover();
   const [showReactions, setShowReactions] = useState(false)
+
+  useEffect(() => {
+    if (hovering) {
+      setShowReactions(true)
+    }
+    if (showReactions && !hovering) {
+      setShowReactions(false)
+    }
+  }, [hovering])
+
   const isOwnMessage = message.userId === currentUser?.id
 
   /**
    * Toggles a reaction on a message
    */
   const toggleReaction = async (emoji: string) => {
+    setShowReactions(false)
     try {
       await message.toggleReaction(emoji)
-      setShowReactions(false)
     } catch (error) {
       console.error("Unable to toggle reaction:", error)
     }
@@ -64,6 +76,8 @@ export default function ChatMessage({message, currentUser, users, channel}: Chat
       return messagePart.content.text
     }
 
+    console.log(messagePart)
+
     return '';
   }
 
@@ -73,8 +87,7 @@ export default function ChatMessage({message, currentUser, users, channel}: Chat
                                className={'rounded-full w-[36px] h-[36px] mr-[16px] !bg-cover bg-gray-100'}
                                style={user ? {background: `url(${user?.profileUrl}) center center no-repeat`} : {}}></div>}
 
-        <div
-          className={`group relative max-w-[80%] flex items-end rounded-lg px-4 py-[4px] gap-[16px] ${isOwnMessage ? 'bg-navy900 text-white' : 'bg-navy100'}`}>
+        <div ref={ref} className={`group relative max-w-[80%] flex items-end rounded-lg px-4 py-[4px] gap-[16px] ${isOwnMessage ? 'bg-navy900 text-white' : 'bg-navy100'}`}>
           <div className={'text-[16px] font-[400] leading-[24px] tracking-[0.08px]'}>{message.getMessageElements().map(renderMessagePart)}</div>
           <div className={'text-[11px] font-[400] leading-[150%]'}>{pubnubTimetokenToHHMM(message.timetoken)}</div>
 
@@ -87,8 +100,8 @@ export default function ChatMessage({message, currentUser, users, channel}: Chat
             ))}
           </div>
 
-          <div
-            className="hidden absolute bottom-[-20px] bg-white border shadow-lg rounded-lg p-1 group-hover:flex gap-2 z-10">
+          {showReactions && <div
+            className="absolute bottom-[-20px] bg-white border shadow-lg rounded-lg p-1 flex gap-2 z-10">
             {reactions.map(emoji => (
               <button
                 key={emoji}
@@ -98,7 +111,7 @@ export default function ChatMessage({message, currentUser, users, channel}: Chat
                 {emoji}
               </button>
             ))}
-          </div>
+          </div>}
         </div>
 
         {isOwnMessage && <div className={'rounded-full w-[36px] h-[36px] ml-[16px] !bg-cover bg-gray-100'}

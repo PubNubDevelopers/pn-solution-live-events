@@ -829,7 +829,7 @@ exports.stats = [
   },
   {
     //  Yellow card to Mara
-    timeSinceVideoStartedInMs: 119000,
+    timeSinceVideoStartedInMs: 117000,
     persistInHistory: true,
     action: {
       channel: "game.match-stats",
@@ -7246,7 +7246,7 @@ exports.stats = [
   },
   {
     //  Red card to Rodon
-    timeSinceVideoStartedInMs: 968500,
+    timeSinceVideoStartedInMs: 964500,
     persistInHistory: true,
     action: {
       channel: "game.match-stats",

@@ -1831,7 +1831,7 @@ exports.commentary = [
   /*
   {
     //  Red card to Rodon
-    timeSinceVideoStartedInMs: 968500,
+    timeSinceVideoStartedInMs: 964500,
     persistInHistory: true,
     action: {
       channel: "game.match-stats",

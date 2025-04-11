@@ -6,11 +6,12 @@
 //  Goal 5 at 679000  (11m 19s) by Daniel James (Leeds Utd)
 //  Goal 6 at 920000  (15m 20s) by Joël Piroe (Leeds Utd)
 //  Goal 7 at 1156000 (19m 16s) by Sékou Mara (Soton FC)
+//  Yellow card at 117000  ( 1m 57s) to Sekou Mara (Soton FC)
 //  Yellow card at 270000  ( 4m 30s) to Pascal Struijk (Leeds)
 //  Yellow card at 492000  ( 8m 12s) to Joël Piroe (Leeds Utd)
 //  Yellow card at 637000  (10m 39s) to Ethan Ampadu (Leeds)
 //  Yellow card at 827000  (13m 47s) to Adam Armstrong (Soton FC)
-//  Red    card at 968500  (16m 08s) to Joe Rodon (Leeds Utd)
+//  Red    card at 964500  (16m 04s) to Joe Rodon (Leeds Utd)
 //  Yellow card at 1053500 (17m 33s) to Ethan Ampadu (Leeds) (his second, resulting in a red)
 
 //  Game ends at 1200000 (20m)
@@ -38,7 +39,7 @@
 //    Options: James Ward-Prowse (Soton FC), Georginio Rutter (Leeds Utd)*, Joël Piroe (Leeds Utd)
 //  4:  [ends at  3m 23s] Which team will score next?
 //    Options: Southampton, Leeds*
-//  5:  [ends at  4m 30s] Who will get the first yellow card
+//  5:  [ends at  4m 30s] Who will get the second yellow card
 //    Options: Pascal Struijk (Leeds)*, Adam Armstrong (Soton FC), Ryan Manning (Soton FC)
 //  6:  [ends at  5m 17s] Who will be Southampton's first scorer?
 //    Options:  Sékou Mara (Soton FC), James Ward-Prowse (Soton FC)*, They won't score!
@@ -240,7 +241,7 @@ exports.polls = [
       channel: "game.new-poll",
       data: {
         id: 5,
-        title: "Who will get the first yellow card?",
+        title: "Who will get the second yellow card?",
         victoryPoints: 2,
         pollType: "side",
         options: [

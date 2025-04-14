@@ -359,17 +359,16 @@ function SideMenuFunctions ({ isGuidedDemo }) {
         instructionType={'functions'}
       />
       <TextWithLinkButton
-        label={'Score Summary'}
+        label={'Example Function'}
         buttonText={'View Function'}
         url={
           isGuidedDemo
-            ? urls.functions.scoreSummary.salesLed
-            : urls.functions.scoreSummary.selfLed
+            ? urls.functions.demo.salesLed.view
+            : urls.functions.demo.selfLed.view
         }
       />
       <div className='text-neutral50 font-normal'>
-        Experience in the demo by asking "What's the score?" in the match
-        updates widget
+        Experience in the demo by asking any question.  Results are delivered to the app using a PubNub Function.
       </div>
     </div>
   )

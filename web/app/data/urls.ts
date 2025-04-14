@@ -56,11 +56,16 @@ export const urls = {
     }
   },
   functions: {
-    scoreSummary: {
+    demo: {
       //  todo update this after the function has been created
-      selfLed: "https://pubnub.com",
-      salesLed:
-        "https://admin.pubnub.com/functions/",
+      selfLed: {
+        view: "https://demo-admin.pubnub.com/user/627747/account/632313/functions-v2",
+        endpoint: "https://ps.pndsn.com/v1/blocks/sub-key/sub-c-11080239-8b55-4fa1-81ec-5af6c716e59a/demo"
+      },
+      salesLed: {
+        view: "https://admin.pubnub.com/functions/",
+        endpoint: "https://ps.pndsn.com/v1/blocks/sub-key/sub-c-fa08eb13-6d22-48f9-91a4-1d6eae913127/dem"
+      }
     },
   },
   popoutView: "./popout/",

@@ -216,6 +216,7 @@ export default function PreviewMobile ({
               className={`${defaultWidgetClasses}`}
               isMobilePreview={true}
               chat={chat}
+              isGuidedDemo={isGuidedDemo}
               guidesShown={guidesShown}
               visibleGuide={visibleGuide}
               setVisibleGuide={setVisibleGuide}

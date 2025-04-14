@@ -4,7 +4,7 @@ export const channelData = [
     name: "Game Chat",
     description: "Public conversation about the game",
     avatar:
-      "https://pn-solution-live-events.netlify.app/avatars/group/euro2024.png",
+      "https://pn-solution-live-events.netlify.app/avatars/group/chat2.png",
     createInAppContext: true,
   },
 ];
@@ -14,15 +14,19 @@ export const streamReactionsChannelId = "game.stream-reactions";
 export const pollDeclarations = "game.new-poll";
 export const pollVotes = "game.poll-votes";
 export const pollResults = "game.poll-results";
+export const illuminatePollTesting = "game.illuminate-poll";
 export const matchStatsChannelId = "game.match-stats";
 export const pushChannelSelfId = "game.push-self";
 export const pushChannelSalesId = "game.push-sales";
 export const dynamicAdChannelId = "game.dynamic-ad";
 export const clientVideoControlChannelId = "game.client-video-control";
 export const illuminateUpgradeReaction = "illuminate-upgrade-reaction";
+export const dataControlOccupancyChannelId = "game.dataControlsOccupancy"
 
-//export const streamUrl = 'https://v.ftcdn.net/05/31/66/96/700_F_531669685_zuA1YSiPFLmRrPPzBG2iryBnmDkfYqzS_ST.mp4'
-export const streamUrl = "https://youtu.be/IprCMEH8Vt4";
+//export const streamUrl = "https://youtu.be/IprCMEH8Vt4";
+export const streamUrl = "https://vimeo.com/1073970603"
+
+export const reactions = ["👍", "❤️", "😂", "😮", "👏"]
 
 export const ads = [
   {

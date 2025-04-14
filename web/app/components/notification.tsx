@@ -11,8 +11,8 @@ function Notification ({ heading, message, imageUrl, onClose }) {
     // Automatically close the alert after 3 seconds
     const timer = setTimeout(() => {
       setIsVisible(false)
-      setTimeout(onClose, 1000)
-    }, 3000)
+      setTimeout(onClose, 2000)
+    }, 4000)
 
     return () => clearTimeout(timer) // Cleanup the timer on unmount
   }, [onClose])

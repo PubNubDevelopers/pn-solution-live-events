@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import { useState, useEffect } from 'react'
 import { ads } from '../data/constants'
+import GuideOverlay from '../components/guideOverlay'
 import PointsOverlay from './pointsOverlay'
 
 export default function AdvertsWidget ({
@@ -47,6 +48,27 @@ export default function AdvertsWidget ({
   if (!isMobilePreview) {
     return (
       <div className={`${className} p-2`}>
+        <GuideOverlay
+          id={'adverts'}
+          guidesShown={guidesShown}
+          visibleGuide={visibleGuide}
+          setVisibleGuide={setVisibleGuide}
+          text={
+            <span>
+              Increase user engagement with{' '}
+              <span className='font-semibold'>gamification</span>, providing
+              real-time insights into your users. This app incentivizes users to
+              click on Ads by gaining points, and uses{' '}
+              <span className='font-semibold'>App Context</span> to securely
+              track the score. You could even show a{' '}
+              <span className='font-semibold'>score leaderboard</span> using{' '}
+              <span className='font-semibold'>Functions</span>.
+            </span>
+          }
+          xOffset={`right-[50px]`}
+          yOffset={'top-[10px]'}
+          flexStyle={'flex-row items-start'}
+        />
         <div className='flex flex-row gap-3 w-full justify-between overflow-x-scroll overscroll-none'>
           {nonPremiumAds.slice(0, 3).map((ad, index) => {
             return (
@@ -85,6 +107,28 @@ export default function AdvertsWidget ({
   if (isMobilePreview) {
     return (
       <div className={`${className} p-2`}>
+        <GuideOverlay
+          id={'adverts'}
+          guidesShown={guidesShown}
+          visibleGuide={visibleGuide}
+          setVisibleGuide={setVisibleGuide}
+          text={
+            <span>
+              Increase user engagement with{' '}
+              <span className='font-semibold'>gamification</span>, providing
+              real-time insights into your users. This app incentivizes users to
+              click on Ads by gaining points, and uses{' '}
+              <span className='font-semibold'>App Context</span> to securely
+              track the score. You could even show a{' '}
+              <span className='font-semibold'>score leaderboard</span> using{' '}
+              <span className='font-semibold'>Functions</span>.
+            </span>
+          }
+          xOffset={`right-[50px]`}
+          yOffset={'top-[10px]'}
+          flexStyle={'flex-row items-start'}
+        />
+
         {nonPremiumAds[currentAdId].clickPoints != null &&
           nonPremiumAds[currentAdId].clickPoints > 0 && (
             <div className='relative pointer-events-none'>

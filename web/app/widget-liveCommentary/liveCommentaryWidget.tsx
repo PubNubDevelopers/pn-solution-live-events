@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { liveCommentaryChannelId } from '../data/constants'
+import GuideOverlay from '../components/guideOverlay'
 import { Channel, Message as pnMessage } from '@pubnub/chat'
 
 export default function LiveCommentaryWidget ({
@@ -65,6 +66,29 @@ export default function LiveCommentaryWidget ({
   return (
     <div className={`${className} px-6 pt-3 pb-4`}>
       <div className='font-semibold text-base pb-3'>Live Commentary</div>
+      <GuideOverlay
+        id={'liveCommentary'}
+        guidesShown={guidesShown}
+        visibleGuide={visibleGuide}
+        setVisibleGuide={setVisibleGuide}
+        text={
+          <span>
+            PubNub Core Services includes a{' '}
+            <span className='font-semibold'>Pub/Sub Event API</span>, allowing
+            for{' '}
+            <span className='font-semibold'>
+              unlimited channels, message persistence, channel groups and
+              multiplexing
+            </span>
+            . Live commentary is delivered to any number of subscribed users as
+            they happen.
+          </span>
+        }
+        xOffset={`right-[50px]`}
+        yOffset={'top-[10px]'}
+        flexStyle={'flex-row items-start'}
+      />
+
       {!scrolledToBottom && (
         <SkipToLatestButton liveCommentaryScrollRef={liveCommentaryScrollRef} />
       )}

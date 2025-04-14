@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import GuideOverlay from '../components/guideOverlay'
 import Alert from '../components/alert'
 import {
   pollDeclarations,
   pollVotes,
   pollResults,
+  illuminatePollTesting,
   AlertType
 } from '../data/constants'
 
@@ -14,7 +15,8 @@ export default function PollsWidget ({
   chat,
   guidesShown,
   visibleGuide,
-  setVisibleGuide
+  setVisibleGuide,
+  awardPoints
 }) {
   const [currentlyVisiblePoll, setCurrentlyVisiblePoll] = useState(null)
   const [polls, setPolls] = useState<any[]>([])
@@ -22,17 +24,24 @@ export default function PollsWidget ({
     points: number | null
     body: string
   } | null>(null)
+  const pollsRef = useRef(polls)
+  useEffect(() => {
+    pollsRef.current = polls
+  }, [polls])
 
   useEffect(() => {
     if (!chat) return
     const subscriptionSet = chat.sdk.subscriptionSet({
-      channels: [pollDeclarations, pollVotes, pollResults]
+      channels: [
+        pollDeclarations,
+        pollVotes,
+        pollResults,
+        illuminatePollTesting
+      ]
     })
     subscriptionSet.onMessage = messageEvent => {
-      console.log(messageEvent)
       if (messageEvent.channel == pollDeclarations) {
         //  We are being told about a new poll
-        console.log('setting poll alert: ' + isMobilePreview)
         const newPoll = messageEvent.message
         if (newPoll.pollType == 'side') {
           showPollAlert(messageEvent.message.alertText)
@@ -50,21 +59,17 @@ export default function PollsWidget ({
             if (!pollExists) {
               return [...prevPolls, newPoll]
             }
-            return prevPolls.map(poll => 
+            return prevPolls.map(poll =>
               poll.id === newPoll.id ? newPoll : poll
             )
           })
         }
       } else if (messageEvent.channel == pollVotes) {
-        console.log(messageEvent)
         const pollId = messageEvent.message.pollId
-        console.log(pollId)
         const choiceId = messageEvent.message.choiceId
         const pollType = messageEvent.message.pollType
-        console.log(pollType)
         if (pollId && choiceId && pollType && pollType == 'side') {
           const isMyAnswer = messageEvent.publisher == chat?.currentUser.id
-          console.log('is my answer? ' + isMyAnswer)
           setPolls(prevPolls =>
             prevPolls.map(p =>
               p.id === pollId && p.pollType === 'side'
@@ -87,31 +92,55 @@ export default function PollsWidget ({
           )
         }
       } else if (messageEvent.channel == pollResults) {
-        console.log('poll results')
         const pollId = messageEvent.message.id
         const pollType = messageEvent.message.pollType
-        console.log(pollId)
-        console.log(pollType)
         if (pollId && pollType && pollType == 'side') {
           const resultsOfPoll = messageEvent.message
-          console.log(resultsOfPoll)
-            setPolls(prevPolls =>
-              prevPolls.map(p =>
+
+          //  Results are in, determine if we had the correct answer
+          if (resultsOfPoll.correctOption && !isMobilePreview) {
+            const myPollAnswer = pollsRef.current
+              .find(p => p.id === resultsOfPoll.id)
+              ?.options.find(o => o.myAnswer === true)
+            const pointsForCorrectAnswer =
+              pollsRef.current.find(p => p.id === resultsOfPoll.id)
+                ?.victoryPoints || 0
+
+            if (myPollAnswer && pointsForCorrectAnswer > 0) {
+              //  User has given an answer to a question that might award points
+              if (myPollAnswer.id == resultsOfPoll.correctOption) {
+                awardPoints(pointsForCorrectAnswer, 'Correct Answer!')
+              } else {
+                awardPoints(1, 'Incorrect 😢')
+              }
+            }
+          }
+
+          //if (resultsOfPoll.correctOption && resultsOfPoll.correctOption == )
+          setPolls(prevPolls =>
+            prevPolls.map(p =>
               p.id === pollId
                 ? {
-                  ...p,
-                  ...resultsOfPoll,
-                  isPollOpen: false,
-                  options: p.options.map(option => ({
-                  ...option,
-                  ...(resultsOfPoll.options.find(o => o.id === option.id) || {}),
-                  myAnswer: p.options.find(o => o.id === option.id)?.myAnswer || false // Preserve the existing myAnswer property or default to false
-                  }))
-                }
+                    ...p,
+                    ...resultsOfPoll,
+                    isPollOpen: false,
+                    options: p.options.map(option => ({
+                      ...option,
+                      ...(resultsOfPoll.options.find(o => o.id === option.id) ||
+                        {}),
+                      myAnswer:
+                        p.options.find(o => o.id === option.id)?.myAnswer ||
+                        false // Preserve the existing myAnswer property or default to false
+                    }))
+                  }
                 : p
-              )
             )
+          )
         }
+      } else if (messageEvent.channel == illuminatePollTesting) {
+        //  Only used for testing - Illuminate is requesting a poll
+        //console.log('TEST ONLY - ILLUMINATE IS REQUESTING A POLL')
+        //console.log(messageEvent)
       }
     }
     subscriptionSet.subscribe()
@@ -131,7 +160,6 @@ export default function PollsWidget ({
           type={AlertType.NEW_POLL}
           message={alert}
           onClose={() => {
-            console.log('setting alert to null')
             setAlert(null)
           }}
         />
@@ -141,7 +169,18 @@ export default function PollsWidget ({
         guidesShown={guidesShown}
         visibleGuide={visibleGuide}
         setVisibleGuide={setVisibleGuide}
-        text={'Polls Polls Polls'}
+        text={
+          <span>
+            Polls are built on top of PubNub’s{' '}
+            <span className='font-semibold'>Core Messaging Service</span>, to
+            announce new polls, allow users to vote, and distribute results.{' '}
+            <span className='font-semibold'>Functions</span> allow you to
+            tabulate results with serverless processing.{' '}
+            <span className='font-semibold'>Access Manager</span> provides fine
+            grain access control so users cannot see results before they are
+            published.{' '}
+          </span>
+        }
         xOffset={`${isMobilePreview ? 'left-[0px]' : '-left-[60px]'}`}
         yOffset={''}
         flexStyle={'flex-row items-start'}
@@ -152,9 +191,7 @@ export default function PollsWidget ({
 
       {currentlyVisiblePoll &&
         polls.find(
-          poll =>
-          poll.id == currentlyVisiblePoll &&
-          poll.isPollOpen == true
+          poll => poll.id == currentlyVisiblePoll && poll.isPollOpen == true
         )?.answered == false && (
           <OpenPollQuestion
             poll={polls.find(poll => poll.id == currentlyVisiblePoll)}
@@ -198,10 +235,11 @@ export default function PollsWidget ({
                   key={index}
                   poll={poll}
                   buttonText={`${isMobilePreview ? 'For' : 'Enter for'} ${
-                    poll.victoryPoints
-                  } points`}
+                    poll.victoryPoints && poll.victoryPoints > 0
+                      ? `${poll.victoryPoints} points`
+                      : 'fun'
+                  }`}
                   onButtonClick={() => {
-                    //  todo award points for entering poll
                     setCurrentlyVisiblePoll(poll.id)
                   }}
                 />
@@ -220,7 +258,7 @@ export default function PollsWidget ({
               <PollRowWithButton
                 key={index}
                 poll={poll}
-                buttonText={`See Results`}
+                buttonText={`${isMobilePreview ? 'Results' : 'See Results'}`}
                 onButtonClick={() => {
                   setCurrentlyVisiblePoll(poll.id)
                 }}
@@ -330,7 +368,7 @@ export default function PollsWidget ({
   function PollResultsRow ({ text, scoreAsPercent, isMyAnswer }) {
     return (
       <div className='flex flex-row gap-3 items-center'>
-        <div className='w-28 truncate text-ellipsis'>{text}</div>
+        <div className='w-56 truncate text-ellipsis'>{text}</div>
         <div className='h-4 grow rounded bg-navy100'>
           <div className='relative'>
             <div

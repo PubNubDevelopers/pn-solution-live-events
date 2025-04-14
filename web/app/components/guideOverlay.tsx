@@ -11,7 +11,7 @@ export default function GuideOverlay ({
   flexStyle
 }) {
   return (
-    <div className={`${!guidesShown && 'hidden'} relative`}>
+    <div className={`${!guidesShown && 'hidden'} relative pointer-events-none`}>
       <div className={`absolute ${xOffset} ${yOffset}`}>
         <Bubble
           id={id}
@@ -43,10 +43,10 @@ function Bubble ({ id, text, style, visibleGuide, setVisibleGuide }) {
   return (
     <div className={`flex ${style} w-fit gap-1`}>
       <div
-        className={`min-w-60 max-w-72 min-h-16 p-4 border-1 text-neutral700 font-normal text-sm rounded-lg content-center z-30 ${
+        className={`min-w-60 max-w-72 min-h-16 p-4 border-1 text-neutral700 font-normal text-sm rounded-lg content-center ${
           visibleGuide == id
-            ? 'bg-white border-navy300 text-navy900 shadow-lg'
-            : 'bg-transparent border-transparent text-transparent'
+            ? 'z-30 bg-white border-navy300 text-navy900 shadow-lg'
+            : 'z-10 bg-transparent border-transparent text-transparent'
         }`}
         onClick={e => {
           e.stopPropagation()
@@ -74,7 +74,7 @@ function ColouredDot ({
 }) {
   return (
     <div
-      className='flex w-6 h-6 bg-brandAccent1 rounded-full items-center justify-center shadow-[0px_0px_12px_2px_rgba(59,130,246,1.00)] cursor-pointer z-20'
+      className='flex w-6 min-w-6 h-6 min-h-6 bg-brandAccent1 rounded-full items-center justify-center shadow-[0px_0px_12px_2px_rgba(59,130,246,1.00)] cursor-pointer z-20 pointer-events-auto'
       onClick={e => {
         setVisibleGuide(id)
         setBubbleIsRead(true)

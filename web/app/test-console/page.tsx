@@ -8,6 +8,7 @@ import {
   pollDeclarations,
   pollVotes,
   pollResults,
+  illuminatePollTesting,
   clientVideoControlChannelId,
   pushChannelSelfId,
   pushChannelSalesId,
@@ -25,12 +26,12 @@ export default function Page () {
   const testStyle = 'text-cherry cursor-pointer'
 
   //  Test polls all have the final score, but that is ignored in the initial declaration
-  //  The correctOption is not used for side polls, so is not included here
   const testPolls = [
     {
       id: 1, //  Assume this increments when we only show the most recent results
       title: 'Who will get more yellow cards?',
       victoryPoints: 2,
+      correctOption: 1, //  In production this would be part of the results message
       alertText: 'You unlocked a poll',
       pollType: 'side', //  The poll shows at the side of the UX
       options: [
@@ -43,6 +44,7 @@ export default function Page () {
       id: 2,
       title: 'Will the match go to extra time?',
       victoryPoints: 4,
+      correctOption: 1, //  In production this would be part of the results message
       alertText: 'This is very very long text which should get cut off',
       pollType: 'side',
       options: [
@@ -53,7 +55,7 @@ export default function Page () {
     {
       id: 3,
       title: 'Who will be man of the match?',
-      victoryPoints: 2,
+      victoryPoints: 0,
       pollType: 'side',
       options: [
         { id: 1, text: 'Haaland', score: 37 },
@@ -75,8 +77,8 @@ export default function Page () {
     victoryPoints: 10,
     pollType: 'match', //  The poll appears below the stream
     options: [
-      { id: 1, text: 'Real Madrid' },
-      { id: 2, text: 'Man City' },
+      { id: 1, text: 'Leeds United F.C.' },
+      { id: 2, text: 'Southampton F.C.' },
       { id: 3, text: 'Draw' }
     ]
   }
@@ -84,7 +86,7 @@ export default function Page () {
   const testPollLiveMatchResults = {
     id: 1,
     pollType: 'match',
-    correctOption: 2 //  In production this would be part of the results message
+    correctOption: 1 //  In production this would be part of the results message
   }
 
   //  App initialization
@@ -103,7 +105,11 @@ export default function Page () {
     init()
   }, [])
 
-  async function sendPubNubMessage (channel, messageBody, shouldPersist = false) {
+  async function sendPubNubMessage (
+    channel,
+    messageBody,
+    shouldPersist = false
+  ) {
     await chat?.sdk.publish({
       message: messageBody,
       channel: channel,
@@ -149,16 +155,18 @@ export default function Page () {
     await chat.sdk.publish({
       message: {
         statBox1: {
+          //  Score
           info: [
             {
-              stat: `${randomPercent}%`
+              stat: randomStat1Digit()
             },
             {
-              stat: `${randomPercentDiff}%`
+              stat: randomStat1Digit()
             }
           ]
         },
         statBox2: {
+          //  Yellow cards
           info: [
             {
               stat: randomStat1Digit()
@@ -166,36 +174,41 @@ export default function Page () {
           ]
         },
         statBox3: {
+          //Top Scorer
           info: [
             {
-              dataPrimary: randomStat2Digits()
+              dataPrimary: randomStat1Digit(),
+              dataSecondary: 'Player Name',
+              imageUrl: '/matchstats/playericon_piroe.jpg'
             }
           ]
         },
         statBox4: {
+          //  Shots on goal
           info: [
             {
-              stat: `${randomStat3Digits()}km`
+              stat: randomStat1Digit()
             },
             {
-              stat: `${randomStat3Digits()}km`
+              stat: randomStat1Digit()
             }
           ]
         },
         statBox5: {
+          //  Red cards
           info: [
             {
-              dataPrimary: `${randomStat2Digits()}kph`
+              stat: randomStat1Digit()
             }
           ]
         },
         statBox6: {
           info: [
             {
-              stat: randomStat1Digit()
+              stat: `${randomStat2Digits()}%`
             },
             {
-              stat: randomStat1Digit()
+              stat: `${randomStat2Digits()}%`
             }
           ]
         }
@@ -208,7 +221,7 @@ export default function Page () {
     <main>
       <div className='flex flex-col h-fit min-h-screen w-screen min-w-screen p-6 gap-3'>
         <div className='text-3xl'>App Testing</div>
-        <div className='text-xl'>Video Stream</div>
+        <div className='text-xl'>Video Stream (Manual Testing)</div>
         <div
           className={`${testStyle}`}
           onClick={() =>
@@ -218,7 +231,7 @@ export default function Page () {
             })
           }
         >
-          Start Stream
+          Start Stream Manually
         </div>
 
         <div
@@ -230,7 +243,7 @@ export default function Page () {
             })
           }
         >
-          Stop Stream
+          Stop Stream Manually
         </div>
 
         <div
@@ -239,12 +252,54 @@ export default function Page () {
             sendPubNubMessage(clientVideoControlChannelId, {
               type: 'SEEK',
               params: {
-                playbackTime: 5000
+                playbackTime: 30000
               }
             })
           }
         >
-          Seek Stream (5s)
+          Seek Stream (Game Start)
+        </div>
+
+        <div
+          className={`${testStyle}`}
+          onClick={() =>
+            sendPubNubMessage(clientVideoControlChannelId, {
+              type: 'SEEK',
+              params: {
+                playbackTime: 48000
+              }
+            })
+          }
+        >
+          Seek Stream (Goal 1)
+        </div>
+
+        <div
+          className={`${testStyle}`}
+          onClick={() =>
+            sendPubNubMessage(clientVideoControlChannelId, {
+              type: 'SEEK',
+              params: {
+                playbackTime: 315000
+              }
+            })
+          }
+        >
+          Seek Stream (Goal 4)
+        </div>
+
+        <div
+          className={`${testStyle}`}
+          onClick={() =>
+            sendPubNubMessage(clientVideoControlChannelId, {
+              type: 'SEEK',
+              params: {
+                playbackTime: 1099000
+              }
+            })
+          }
+        >
+          Seek Stream (5 minutes remaining)
         </div>
 
         <div
@@ -256,7 +311,7 @@ export default function Page () {
             })
           }
         >
-          Join Late (video at 10s)
+          Join Late - Sends a single status message for playbackTime = 10s
         </div>
 
         <div
@@ -281,6 +336,16 @@ export default function Page () {
           }
         >
           Video has ended
+        </div>
+
+        <div className='text-xl'>
+          Video Stream (Testing based on Backend Messages)
+        </div>
+
+        <div className=''>
+          A backend test exists to start a stream and send status messages every
+          500ms, until the stream stops. This can be used to test starting the
+          stream, joining the stream late, and the stream looping.
         </div>
 
         <div className='text-xl'>Advertisements</div>
@@ -357,7 +422,9 @@ export default function Page () {
 
         <div
           className={`${testStyle}`}
-          onClick={() => sendPubNubMessage(pollDeclarations, testPollLiveMatch, true)}
+          onClick={() =>
+            sendPubNubMessage(pollDeclarations, testPollLiveMatch, true)
+          }
         >
           Start Match Poll
         </div>
@@ -365,7 +432,7 @@ export default function Page () {
         <div
           className={`${testStyle}`}
           onClick={() =>
-            sendPubNubMessage(pollResults, testPollLiveMatchResults)
+            sendPubNubMessage(pollResults, testPollLiveMatchResults, true)
           }
         >
           End Match Poll
@@ -382,8 +449,10 @@ export default function Page () {
 
         <div className={`${testStyle}`}>
           <span className='cursor-default'>Vote in Poll 1:</span>{' '}
-          <span onClick={() => voteInPoll(pollVotes, 1, 1)}>Option 1</span>{' | '}
-          <span onClick={() => voteInPoll(pollVotes, 1, 2)}>Option 2</span>{' | '}
+          <span onClick={() => voteInPoll(pollVotes, 1, 1)}>Option 1</span>
+          {' | '}
+          <span onClick={() => voteInPoll(pollVotes, 1, 2)}>Option 2</span>
+          {' | '}
           <span onClick={() => voteInPoll(pollVotes, 1, 3)}>Option 3</span>
         </div>
 
@@ -394,7 +463,6 @@ export default function Page () {
           End Poll 1 (send results)
         </div>
 
-
         <div
           className={`${testStyle}`}
           onClick={() => sendPubNubMessage(pollDeclarations, testPolls[1])}
@@ -404,7 +472,8 @@ export default function Page () {
 
         <div className={`${testStyle}`}>
           <span className='cursor-default'>Vote in Poll 2:</span>{' '}
-          <span onClick={() => voteInPoll(pollVotes, 2, 1)}>Option 1</span>{' | '}
+          <span onClick={() => voteInPoll(pollVotes, 2, 1)}>Option 1</span>
+          {' | '}
           <span onClick={() => voteInPoll(pollVotes, 2, 2)}>Option 2</span>
         </div>
 
@@ -415,8 +484,6 @@ export default function Page () {
           End Poll 2 (send results)
         </div>
 
-
-
         <div
           className={`${testStyle}`}
           onClick={() => sendPubNubMessage(pollDeclarations, testPolls[2])}
@@ -426,10 +493,14 @@ export default function Page () {
 
         <div className={`${testStyle}`}>
           <span className='cursor-default'>Vote in Poll 3:</span>{' '}
-          <span onClick={() => voteInPoll(pollVotes, 3, 1)}>Option 1</span>{' | '}
-          <span onClick={() => voteInPoll(pollVotes, 3, 2)}>Option 2</span>{' | '}
-          <span onClick={() => voteInPoll(pollVotes, 3, 3)}>Option 3</span>{' | '}
-          <span onClick={() => voteInPoll(pollVotes, 3, 4)}>Option 4</span>{' | '}
+          <span onClick={() => voteInPoll(pollVotes, 3, 1)}>Option 1</span>
+          {' | '}
+          <span onClick={() => voteInPoll(pollVotes, 3, 2)}>Option 2</span>
+          {' | '}
+          <span onClick={() => voteInPoll(pollVotes, 3, 3)}>Option 3</span>
+          {' | '}
+          <span onClick={() => voteInPoll(pollVotes, 3, 4)}>Option 4</span>
+          {' | '}
           <span onClick={() => voteInPoll(pollVotes, 3, 5)}>Option 5</span>
         </div>
 
@@ -440,8 +511,14 @@ export default function Page () {
           End Poll 3 (send results)
         </div>
 
-
-
+        <div
+          className={`${testStyle}`}
+          onClick={() =>
+            sendPubNubMessage(illuminatePollTesting, { pollId: 2 })
+          }
+        >
+          Mock Illuminate requesting a poll (DCC Testing only)
+        </div>
 
         <div className='text-xl'>Match Statistics</div>
 

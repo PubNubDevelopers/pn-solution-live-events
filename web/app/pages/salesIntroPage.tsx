@@ -61,7 +61,6 @@ export default function SalesIntroPage ({
   }
 
   function proceed (shouldClearIlluminateObjects) {
-    //  todo clear Illuminate objects if requested to do so (show a warning??)
     setSalesIntroPageShown(false)
     setLoginPageShown(true)
   }

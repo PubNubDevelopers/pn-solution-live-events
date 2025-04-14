@@ -11,9 +11,11 @@ import {
 export default function LiveStreamPoll ({
   isMobilePreview,
   chat,
+  isGuidedDemo,
   guidesShown,
   visibleGuide,
-  setVisibleGuide
+  setVisibleGuide,
+  awardPoints
 }) {
   const [currentPoll, setCurrentPoll] = useState<any | null>(null)
   const [currentPollAnswer, setCurrentPollAnswer] = useState<{
@@ -27,12 +29,10 @@ export default function LiveStreamPoll ({
       channels: [pollDeclarations, pollVotes, pollResults]
     })
     subscriptionSet.onMessage = messageEvent => {
-      console.log(messageEvent)
       if (messageEvent.channel == pollDeclarations) {
         //  We are being told about a new poll
         handleNewLivePoll(messageEvent)
       } else if (messageEvent.channel == pollVotes) {
-        console.log('poll vote')
         const choiceId = messageEvent.message.choiceId
         const pollType = messageEvent.message.pollType
         if (choiceId && pollType && pollType == 'match') {
@@ -55,11 +55,11 @@ export default function LiveStreamPoll ({
               isPollOpen: false
             }
           })
-          if (correctOption == currentPollAnswer?.id) {
-            //  ToDo handle points awards when user wins a poll
-            console.log(
-              `ToDo: Award ${currentPoll.victoryPoints} victory points`
-            )
+          if (
+            correctOption == currentPollAnswer?.id &&
+            currentPoll.victoryPoints
+          ) {
+            awardPoints(currentPoll.victoryPoints, null)
           }
         }
       }
@@ -69,26 +69,33 @@ export default function LiveStreamPoll ({
     return () => {
       subscriptionSet.unsubscribe()
     }
-  }, [chat, currentPollAnswer])
+  }, [chat, currentPoll, currentPollAnswer])
 
   useEffect(() => {
     if (!chat) return
+    if (isGuidedDemo) return
     chat.sdk
       .fetchMessages({
-        channels: [pollDeclarations],
+        channels: [pollDeclarations, pollResults],
         count: 1
       })
       .then(result => {
-        console.log(result)
+        const previouslyDeclaredPollResults = result.channels[pollResults]
         if (result && result.channels[pollDeclarations]) {
           const previouslyDeclaredPoll = result.channels[pollDeclarations][0]
-          console.log(previouslyDeclaredPoll)
           if (previouslyDeclaredPoll) {
-            handleNewLivePoll(previouslyDeclaredPoll)
+            if (
+              !previouslyDeclaredPollResults ||
+              (previouslyDeclaredPollResults &&
+                previouslyDeclaredPollResults[0].timetoken <
+                  previouslyDeclaredPoll.timetoken)
+            ) {
+              handleNewLivePoll(previouslyDeclaredPoll)
+            }
           }
         }
       })
-  }, [chat])
+  }, [chat, isGuidedDemo])
 
   function handleNewLivePoll (messageEvent) {
     const newPoll = messageEvent.message
@@ -149,7 +156,6 @@ export default function LiveStreamPoll ({
                 id={option.id}
                 buttonText={option.text}
                 onClick={(id, option) => {
-                  console.log(`Selected choice: ${option}`)
                   chat.sdk.publish({
                     message: {
                       pollId: 1,

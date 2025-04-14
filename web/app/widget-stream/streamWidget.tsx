@@ -4,11 +4,13 @@ import {
   streamReactionsChannelId,
   clientVideoControlChannelId,
   illuminateUpgradeReaction,
+  dataControlOccupancyChannelId,
   AlertType,
   streamUrl
 } from '../data/constants'
 import { PlayCircle } from '../side-menu/sideMenuIcons'
 import Alert from '../components/alert'
+import GuideOverlay from '../components/guideOverlay'
 import LiveStreamPoll from '../widget-polls/liveStreamPoll'
 import ReactPlayer from 'react-player'
 
@@ -16,12 +18,14 @@ export default function StreamWidget ({
   className,
   isMobilePreview,
   chat,
+  isGuidedDemo,
   guidesShown,
   visibleGuide,
-  setVisibleGuide
+  setVisibleGuide,
+  awardPoints
 }) {
-  //  ToDo: Currently this is only the occupancy from the Data Controls - need to add any other real presence count (including ourselves)
   const [occupancy, setOccupancy] = useState(0)
+  const [realOccupancy, setRealOccupancy] = useState(0)
   const [alert, setAlert] = useState<{
     points: number | null
     body: string
@@ -45,49 +49,87 @@ export default function StreamWidget ({
     { emoji: '🔥', upgraded: false },
     { emoji: '🎉', upgraded: false }
   ])
-
   const [videoUrl, setVideoUrl] = useState(streamUrl)
   const [isVideoPlaying, setIsVideoPlaying] = useState(false)
   const [actualVideoProgress, setActualVideoProgress] = useState(0)
   const [requestedVideoProgress, setRequestedVideoProgress] = useState(0)
+  const [muted, setMuted] = useState(true)
   const playerRef = useRef<ReactPlayer>(null)
 
   useEffect(() => {
+    //  Handle all types of message other than video control
     if (!chat) return
     //  Reactions
-    const channel = chat.sdk.channel(streamReactionsChannelId)
-    const subscription = channel.subscription({ receivePresenceEvents: false })
-    subscription.onMessage = messageEvent => {
+    const reactionsChannel = chat.sdk.channel(streamReactionsChannelId)
+    const reactionsSubscription = reactionsChannel.subscription({
+      receivePresenceEvents: true
+    })
+    reactionsSubscription.onMessage = messageEvent => {
       handleReaction(messageEvent)
     }
-    subscription.subscribe()
+    reactionsSubscription.onPresence = presenceEvent => {
+      if (presenceEvent) {
+        setRealOccupancy(presenceEvent.occupancy)
+      }
+    }
+    reactionsSubscription.subscribe()
+    chat.sdk
+      .hereNow({ channels: [streamReactionsChannelId] })
+      .then(hereNowResult => {
+        if (hereNowResult) {
+          setRealOccupancy(hereNowResult.totalOccupancy)
+        }
+      })
+
+    //  Occupancy updates from Data Controls
+    const occupancyChannel = chat.sdk.channel(dataControlOccupancyChannelId)
+    const occupancySubscription = occupancyChannel.subscription({
+      receivePresenceEvents: false
+    })
+    occupancySubscription.onMessage = messageEvent => {
+      setOccupancy(+messageEvent.message.streamOccupancy)
+    }
+    occupancySubscription.subscribe()
+
+    //  Illuminate: Upgrade emoji
+    const illuminateEmojiChannel = chat.sdk.channel(illuminateUpgradeReaction)
+    const illuminateEmojiSubscription = illuminateEmojiChannel.subscription({
+      receivePresenceEvents: false
+    })
+    illuminateEmojiSubscription.onMessage = messageEvent => {
+      //  Received a request to upgrade a specific emoji
+      const emojiToUpgrade = messageEvent.message.emoji
+      const replacementEmoji = messageEvent.message.replacementEmoji
+      upgradeEmoji(emojiToUpgrade, replacementEmoji)
+    }
+    illuminateEmojiSubscription.subscribe()
+    return () => {
+      reactionsSubscription.unsubscribe()
+      occupancySubscription.unsubscribe()
+      illuminateEmojiSubscription.unsubscribe()
+    }
+  }, [chat])
+
+  useEffect(() => {
+    if (!chat) return
     //  Video control
     const videoControlChannel = chat.sdk.channel(clientVideoControlChannelId)
     const videoControlSubscription = videoControlChannel.subscription({
       receivePresenceEvents: false
     })
     videoControlSubscription.onMessage = messageEvent => {
-      handleVideoControl(messageEvent, isVideoPlaying)
+      handleVideoControl(messageEvent, isVideoPlayingRef.current)
     }
     videoControlSubscription.subscribe()
-    //  Illuminate test
-    const illuminateTestChannel = chat.sdk.channel(illuminateUpgradeReaction)
-    const illuminateTestSubscription = illuminateTestChannel.subscription({
-      receivePresenceEvents: false
-    })
-    illuminateTestSubscription.onMessage = messageEvent => {
-      //  Received a request to upgrade a specific emoji
-      const emojiToUpgrade = messageEvent.message.emoji
-      const replacementEmoji = messageEvent.message.replacementEmoji
-      upgradeEmoji(emojiToUpgrade, replacementEmoji)
-    }
-    illuminateTestSubscription.subscribe()
     return () => {
-      subscription.unsubscribe()
       videoControlSubscription.unsubscribe()
-      illuminateTestSubscription.unsubscribe()
     }
-  }, [chat, isVideoPlaying])
+  }, [chat])
+
+  const isVideoPlayingRef = useRef(isVideoPlaying)
+  useEffect(() => {
+    isVideoPlayingRef.current = isVideoPlaying
+  }, [isVideoPlaying])
 
   const previousReactionsRef = useRef(reactions)
 
@@ -100,7 +142,6 @@ export default function StreamWidget ({
     )
 
     if (hasChanged) {
-      console.log('Reactions updated:', reactions)
       newEmojiAlert()
     }
 
@@ -130,8 +171,6 @@ export default function StreamWidget ({
           container?.removeChild(emojiElement)
         } catch {}
       }, 2000)
-    } else if (messageEvent.message.type == 'occupancyControl') {
-      setOccupancy(+messageEvent.message.text)
     }
   }
 
@@ -141,7 +180,6 @@ export default function StreamWidget ({
       setIsVideoPlaying(true)
     } else if (messageEvent.message.type == 'STATUS') {
       if (messageEvent.message.params.videoStarted) {
-        //  todo handle video looping
         setIsVideoPlaying(true)
         setRequestedVideoProgress(0)
         playerRef.current?.seekTo(0, 'seconds')
@@ -174,31 +212,23 @@ export default function StreamWidget ({
   }
 
   function onVideoReady (ev) {
-    console.log('Video ready')
-    console.log(ev)
+    //console.log('Video ready')
   }
 
   function onVideoStart () {
-    console.log('Video starting')
-    //  todo does this logic of skipping to the requested time work for a large video we are host ourselves?
+    //console.log('Video starting')
     if (requestedVideoProgress > 0) {
-      console.log('seeking to ' + requestedVideoProgress)
       playerRef.current?.seekTo(requestedVideoProgress, 'seconds')
     }
   }
 
   function onVideoPlay () {
-    console.log('Video playing')
-    //  todo: This doesn't work for YouTube videos FYI as you get a videoPlay callback
-    //  every time you seek (it seems).  I wouldn't trust this logic if the video is slow to load, but I need to rework the video sync logic anyway.
-    //if (videoProgress != 0) {
-    //  playerRef.current?.seekTo(videoProgress, 'seconds')
-    //}
+    //console.log('Video playing')
+    //  Note: Get an onVideoPlay every time you seek
   }
 
   function onVideoProgress (ev) {
-    //console.log(ev)
-    //console.log(`Played (seconds): ${ev.playedSeconds}`)
+    //console.log(`Progress - Played (seconds): ${ev.playedSeconds}`)
     setActualVideoProgress(ev.playedSeconds)
   }
 
@@ -229,18 +259,6 @@ export default function StreamWidget ({
     })
   }
 
-  async function todoRemoveThisSendTestMessage (e, messageType, params) {
-    e.stopPropagation()
-    if (!chat) return
-    await chat.sdk.publish({
-      message: {
-        type: messageType,
-        params: params
-      },
-      channel: clientVideoControlChannelId
-    })
-  }
-
   function newEmojiAlert () {
     setAlert({ points: null, body: 'New emoji unlocked' })
   }
@@ -263,7 +281,7 @@ export default function StreamWidget ({
               width={isMobilePreview ? 418 : 698}
               height={isMobilePreview ? 235 : 393}
               loop={false}
-              muted={true}
+              muted={isMobilePreview ? true : muted}
               pip={false}
               onReady={ev => onVideoReady(ev)}
               onStart={() => onVideoStart()}
@@ -285,17 +303,82 @@ export default function StreamWidget ({
           )}
         </div>
         <div className='absolute top-0 right-0'>
+          <GuideOverlay
+            id={'streamPresence'}
+            guidesShown={guidesShown}
+            visibleGuide={visibleGuide}
+            setVisibleGuide={setVisibleGuide}
+            text={
+              <span>
+                <span className='font-semibold'>Presence</span> provides you
+                with offline and online user / device status as well as channel
+                occupancy, meaning you can see how many users are present in a
+                chat room or watching a live stream.
+              </span>
+            }
+            xOffset={`right-[100px]`}
+            yOffset={'top-[20px]'}
+            flexStyle={'flex-row items-start'}
+          />
           <LiveOccupancyCount />
         </div>
+        {!isMobilePreview && (
+          <div className='absolute bottom-0 right-0 z-50'>
+            <VolumeButton />
+          </div>
+        )}
       </div>
+      <GuideOverlay
+        id={'reactionsBar1'}
+        guidesShown={guidesShown}
+        visibleGuide={visibleGuide}
+        setVisibleGuide={setVisibleGuide}
+        text={
+          <span>
+            If enough reactions are received you will trigger a{' '}
+            <span className='font-semibold'>PubNub Illuminate</span> action to{' '}
+            <span className='font-semibold'>upgrade the emoji</span>. PubNub
+            Illuminate allows you to take action immediately when predefined
+            conditions are reached, allowing you to experiment in real-time and
+            gain actionable insights in milliseconds.
+          </span>
+        }
+        xOffset={`left-[100px]`}
+        yOffset={'bottom-[10px]'}
+        flexStyle={'flex-row items-end'}
+      />
+      <GuideOverlay
+        id={'reactionsBar2'}
+        guidesShown={guidesShown}
+        visibleGuide={visibleGuide}
+        setVisibleGuide={setVisibleGuide}
+        text={
+          <span>
+            Some emoji (😡) are configured to{' '}
+            <span className='font-semibold'>
+              trigger dynamic polls, or serve dynamic ads
+            </span>{' '}
+            - this is all handled by{' '}
+            <span className='font-semibold'>PubNub Illuminate</span> which
+            tracks the number of events in real-time, and who is making those
+            events, allowing you to quickly refine your engagement strategy.
+          </span>
+        }
+        xOffset={`right-[100px]`}
+        yOffset={'bottom-[10px]'}
+        flexStyle={'flex-row items-end'}
+      />
+
       <ReactionsBar />
 
       <LiveStreamPoll
         isMobilePreview={isMobilePreview}
         chat={chat}
+        isGuidedDemo={isGuidedDemo}
         guidesShown={guidesShown}
         visibleGuide={visibleGuide}
         setVisibleGuide={setVisibleGuide}
+        awardPoints={awardPoints}
       />
     </div>
   )
@@ -330,7 +413,9 @@ export default function StreamWidget ({
       <div
         className={`flex flex-row items-center justify-center ${
           upgraded ? 'bg-appYellow1/40' : 'bg-white/10'
-        } ${isMobilePreview ? 'w-8 h-8 text-2xl' : 'w-10 h-10 text-3xl'} rounded-full px-1.5 pt-1 text-center cursor-pointer`}
+        } ${
+          isMobilePreview ? 'w-8 h-8 text-2xl' : 'w-10 h-10 text-3xl'
+        } rounded-full px-1.5 pt-1 text-center cursor-pointer`}
         onClick={e => {
           emojiClicked(emoji)
           e.stopPropagation()
@@ -342,16 +427,33 @@ export default function StreamWidget ({
   }
 
   function LiveOccupancyCount () {
+    const displayOccupancy = occupancy + realOccupancy
     return (
       <div className='flex flex-row h-7 text-white bg-cherry shadow-md rounded-l-full rounded-r-full'>
         <div className='flex flex-row px-2 py-1 gap-1 items-center'>
           <PlayCircle width={20} height={20} />
           LIVE
         </div>
-        <div className='flex flex-row px-2 py-1 gap-1 items-center border-l-2 border-white/20'>
+        <div className='flex flex-row px-2 py-1 gap-1 items-center border-l-2 border-white/20 min-w-14'>
           <RemoveRedEye />
-          {occupancy.toLocaleString(undefined, { maximumFractionDigits: 2 })}
+          {displayOccupancy.toLocaleString(undefined, {
+            maximumFractionDigits: 2
+          })}
         </div>
+      </div>
+    )
+  }
+
+  function VolumeButton () {
+    return (
+      <div
+        className='text-white/50 cursor-pointer'
+        onClick={e => {
+          e.stopPropagation()
+          setMuted(!muted)
+        }}
+      >
+        {muted ? <VolumeOffIcon /> : <VolumeOnIcon />}
       </div>
     )
   }
@@ -412,6 +514,42 @@ const LiveStreamIcon = props => {
       <path
         className='cls-1'
         d='M73.44 82.67c7.04-2.96 12-9.97 12-18.15V31.26c0-10.85-8.71-19.65-19.46-19.65H34.02c-10.75 0-19.46 8.8-19.46 19.65v33.26c0 8.19 4.97 15.21 12.03 18.16'
+      />
+    </svg>
+  )
+}
+
+const VolumeOffIcon = props => {
+  return (
+    <svg
+      id='Icons'
+      xmlns='http://www.w3.org/2000/svg'
+      viewBox='0 0 24 24'
+      width='24'
+      height='24'
+      {...props}
+    >
+      <path
+        d='M4.34005 2.93506L2.93005 4.34506L7.29005 8.70506L7.00005 9.00506H3.00005V15.0051H7.00005L12.0001 20.0051V13.4151L16.1801 17.5951C15.5301 18.0851 14.8001 18.4751 14.0001 18.7051V20.7651C15.3401 20.4651 16.5701 19.8451 17.6101 19.0151L19.6601 21.0651L21.0701 19.6551L4.34005 2.93506ZM10.0001 15.1751L7.83005 13.0051H5.00005V11.0051H7.83005L8.71005 10.1251L10.0001 11.4151V15.1751ZM19.0001 12.0051C19.0001 12.8251 18.8501 13.6151 18.5901 14.3451L20.1201 15.8751C20.6801 14.7051 21.0001 13.3951 21.0001 12.0051C21.0001 7.72506 18.0101 4.14506 14.0001 3.23506V5.29506C16.8901 6.15506 19.0001 8.83506 19.0001 12.0051ZM12.0001 4.00506L10.1201 5.88506L12.0001 7.76506V4.00506ZM16.5001 12.0051C16.5001 10.2351 15.4801 8.71506 14.0001 7.97506V9.76506L16.4801 12.2451C16.4901 12.1651 16.5001 12.0851 16.5001 12.0051Z'
+        fill='currentColor'
+      />
+    </svg>
+  )
+}
+
+const VolumeOnIcon = props => {
+  return (
+    <svg
+      id='Icons'
+      xmlns='http://www.w3.org/2000/svg'
+      viewBox='0 0 24 24'
+      width='24'
+      height='24'
+      {...props}
+    >
+      <path
+        d='M3 8.99998V15H7L12 20V3.99998L7 8.99998H3ZM10 8.82998V15.17L7.83 13H5V11H7.83L10 8.82998ZM16.5 12C16.5 10.23 15.48 8.70998 14 7.96998V16.02C15.48 15.29 16.5 13.77 16.5 12ZM14 3.22998V5.28998C16.89 6.14998 19 8.82998 19 12C19 15.17 16.89 17.85 14 18.71V20.77C18.01 19.86 21 16.28 21 12C21 7.71998 18.01 4.13998 14 3.22998Z'
+        fill='currentColor'
       />
     </svg>
   )

@@ -13,7 +13,6 @@ export async function CommonMessageHandler(
   const pushChannelId = isGuidedDemo ? pushChannelSalesId : pushChannelSelfId;
   if (messageEvent.channel === pushChannelId) {
     //  Received a message representing a Mobile Push Message, simulate this notification
-    //console.log(messageEvent.message.pn_fcm.data);
     const pushData = messageEvent.message.pn_fcm.data;
     const title = pushData.title ?? "Missing title";
     const body = pushData.body ?? "Missing body";
@@ -28,9 +27,8 @@ export async function CommonMessageHandler(
     const clickPoints = messageEvent.message.clickPoints;
     if (adId && clickPoints) {
       onSetDynamicAd({ adId: adId, clickPoints: clickPoints });
-    }
-    else {
-      onSetDynamicAd(null)
+    } else {
+      onSetDynamicAd(null);
     }
   } else {
     //  Unrecognized message
@@ -41,20 +39,20 @@ export async function CommonMessageHandler(
 export async function AwardPoints(
   chat,
   pointsToAward,
+  customMessage,
   currentScore,
   awardPointsAnimation
 ) {
   if (!chat) return;
-  {
-    const newScore = currentScore + pointsToAward;
-    awardPointsAnimation(
-      pointsToAward,
-      `Point${Math.abs(pointsToAward) > 1 ? "s" : ""} Awarded`
-    );
-    await chat.currentUser.update({
-      custom: {
-        score: newScore,
-      },
-    });
-  }
+  
+  const newScore = currentScore + pointsToAward;
+  const message = customMessage
+    ? customMessage
+    : `Point${Math.abs(pointsToAward) > 1 ? "s" : ""} Awarded`;
+  awardPointsAnimation(pointsToAward, message);
+  await chat.currentUser.update({
+    custom: {
+      score: newScore,
+    },
+  });
 }

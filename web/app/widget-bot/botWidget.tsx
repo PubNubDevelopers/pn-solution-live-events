@@ -1,44 +1,95 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Form, Input } from '@heroui/react'
+import { urls } from '../data/urls'
+
+interface SlowTextProps {
+  speed: number;
+  text: string;
+}
 
 export default function BotWidget ({
   className,
   isMobilePreview,
   chat,
+  isGuidedDemo,
   guidesShown,
   visibleGuide,
   setVisibleGuide
 }) {
   const [question, setQuestion] = useState('')
   const [answer, setAnswer] = useState('')
+  const string = '',
+    index = useRef(0)
+  //  Used if there is some issue communicating with PN Functions (e.g. Functions not set up on this keyset)
+  const predeterminedAnswer =
+    'PubNub Functions allows you to add code into PubNub to route, filter, aggregate, and augment messages.  Example use cases for live events include:\n\n* Use AI to process messages\n* Translate messages in real-time into multiple languages\n* Moderate messages for profanity or undesired behavior\n* Re-route important messages and signals for immediate action\n* Determine user sentiment in real-time and track sentiment as the event progresses\n\nAll PubNub Functions scale automatically and are proven to handle any size event.'
 
-  function submitQuestion (e) {
+  async function submitQuestion (e) {
     e.preventDefault()
-    console.log(`ToDo: Submit this question to a PubNub Function ${question}`)
     setQuestion('')
-    setAnswer(
-      `ToDo: Response from PubNub Function goes here ${new Date().toLocaleTimeString(
-        'en-US',
-        { hour12: false }
-      )}`
-    )
+    setAnswer('')
+    //  PubNub Functions can execute before or after any message passing through PubNub, allowing you transform,
+    //  re-route, or intercept any message.  Functions also support 'interval' requests, that run periodically, and
+    //  'onRequest' functions, the run immediately and demonstrated below.
+    //  See https://www.pubnub.com/docs/serverless/functions/overview for more information
+    const functionsEndpoint = isGuidedDemo
+      ? urls.functions.demo.salesLed.endpoint
+      : urls.functions.demo.selfLed.endpoint
+    try {
+      const res = await fetch(functionsEndpoint, {
+        method: 'GET', //  onRequest also supports POST
+        headers: { 'Content-Type': 'application/json' }
+      })
+      if (!res.ok) {
+        throw new Error('PubNub Function endpoint not available')
+      }
+      const responseText = await res.text()
+      setAnswer(responseText)
+    } catch (e) {
+      console.warn(
+        'PubNub Function endpoint not available: ' + functionsEndpoint
+      )
+      setAnswer(predeterminedAnswer)
+    }
+  }
+
+  function SlowText (props: SlowTextProps) {
+    const { speed, text } = props; 
+    const [placeholder, setPlaceholder] = useState(text[0])
+
+    const index = useRef(0)
+
+    useEffect(() => {
+      function tick () {
+        index.current++
+        setPlaceholder((prev: string) => prev + text[index.current])
+      }
+      if (index.current < text.length - 1) {
+        let addChar = setInterval(tick, speed)
+        return () => clearInterval(addChar)
+      }
+    }, [placeholder, speed, text])
+    return <span className='font-mono'>{placeholder}</span>
   }
 
   return (
     <div className={`${className}`}>
       <div className='flex flex-col gap-5'>
         <div className='flex flex-row pt-2 px-6 gap-2 items-center'>
-          <ChatBotIcon />
-          <div className='text-sm'>Get the latest match stats and updates</div>
+          <ChatBotIcon className='min-w-12 min-h-12' />
+          <div className='text-base'>
+            PubNub Functions can enhance your event with event-driven processing
+          </div>
         </div>
         <div className='px-4 h-11 w-full'>
           <Form className='' onSubmit={submitQuestion}>
             <Input
               size='lg'
               variant='bordered'
-              placeholder="e.g. ask me 'What's the score?'"
+              placeholder='Ask me how?...'
               value={question}
               onValueChange={async e => {
+                setAnswer('')
                 setQuestion(e)
               }}
               maxLength={200}
@@ -64,7 +115,9 @@ export default function BotWidget ({
             />
           </Form>
         </div>
-        <div className='flex flex-row px-6 pb-3 text-base'>{answer}</div>
+        <div className='flex flex-row px-6 pb-3 text-base whitespace-pre-line'>
+          <SlowText speed={10} text={answer} />
+        </div>
       </div>
     </div>
   )
@@ -92,7 +145,7 @@ const SendIcon = props => {
   )
 }
 
-const ChatBotIcon = props => {
+export const ChatBotIcon = props => {
   return (
     <svg
       aria-hidden='true'

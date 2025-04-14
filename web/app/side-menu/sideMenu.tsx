@@ -13,6 +13,7 @@ import {
   PushNotificationsIcon
 } from './sideMenuIcons'
 import SideMenuDataControls from './dataControls'
+import { ChatBotIcon } from '../widget-bot/botWidget'
 import SelfLedHelp from './selfLedHelp'
 import { chatChannelId } from '../data/constants'
 import { urls } from '../data/urls'
@@ -174,7 +175,7 @@ function SideMenuContents ({ chat, isGuidedDemo, currentUser }) {
             }
           >
             <div className='pt-2'>
-              <SideMenuPushNotifications />
+              <SideMenuPushNotifications isGuidedDemo={isGuidedDemo} />
             </div>
           </AccordionItem>
         </Accordion>
@@ -212,7 +213,7 @@ function SalesInstructionsToSwitchAccount ({ isGuidedDemo, instructionType }) {
           <div className='font-semibold'>Sales Only</div>
           <div className=''>
             {instructionType == 'illuminate'
-              ? `Switch organizations to '${urls.instructions.account}', then select the appropriate Illuminate dashboards and actions`
+              ? `Switch organizations to '${urls.instructions.account}', then Illuminate dashboards and actions are named 'Showcase: Live Events...'`
               : `Switch organizations to '${urls.instructions.account}', select the '${urls.instructions.appName}' app, then the '${urls.instructions.keysetName}' keyset`}
           </div>
         </div>
@@ -242,7 +243,7 @@ function SideMenuBizopsWorkspace ({ isGuidedDemo, currentUser }) {
       )
     else
       setChannelManagementUrl(
-        `${urls.bizOpsWorkspace.channelManagement.selfLed}${currentUser?.id}`
+        `${urls.bizOpsWorkspace.channelManagement.selfLed}${chatChannelId}`
       )
   }, [isGuidedDemo, currentUser])
 
@@ -292,14 +293,14 @@ function SideMenuChatModeration ({ isGuidedDemo }) {
         instructionType={'bizops'}
       />
       <TextWithLinkButton
-        label={'Language translation'}
-        buttonText={'View Function'}
-        url={translateFunctionUrl}
-      />
-      <TextWithLinkButton
         label={'Moderation'}
         buttonText={'View Channel Monitor'}
         url={channelModerationUrl}
+      />
+      <TextWithLinkButton
+        label={'Language translation'}
+        buttonText={'Integrations'}
+        url={translateFunctionUrl}
       />
     </div>
   )
@@ -312,30 +313,39 @@ function SideMenuIlluminate ({ isGuidedDemo }) {
         instructionType={'illuminate'}
       />
       <TextWithLinkButton
-        label={'Determine points'}
+        label={'Unlock custom emoji'}
         buttonText={'View'}
         url={
           isGuidedDemo
-            ? urls.illuminate.determinePoints.salesLed
-            : urls.illuminate.determinePoints.selfLed
+            ? urls.illuminate.customEmoji.salesLed
+            : urls.illuminate.customEmoji.selfLed
         }
       />
       <TextWithLinkButton
-        label={'Custom ads'}
+        label={'Show dynamic ads'}
         buttonText={'View'}
         url={
           isGuidedDemo
-            ? urls.illuminate.customAds.salesLed
-            : urls.illuminate.customAds.selfLed
+            ? urls.illuminate.dynamicAd.salesLed
+            : urls.illuminate.dynamicAd.selfLed
         }
       />
       <TextWithLinkButton
-        label={'Something custom?'}
-        buttonText={'Create new'}
+        label={'Dynamic poll'}
+        buttonText={'View'}
         url={
           isGuidedDemo
-            ? urls.illuminate.createNew.salesLed
-            : urls.illuminate.createNew.selfLed
+            ? urls.illuminate.dynamicPoll.salesLed
+            : urls.illuminate.dynamicPoll.selfLed
+        }
+      />
+      <TextWithLinkButton
+        label={'Trigger Events Dymamically'}
+        buttonText={'Dashboard'}
+        url={
+          isGuidedDemo
+            ? urls.illuminate.dashboard.salesLed
+            : urls.illuminate.dashboard.selfLed
         }
       />
     </div>
@@ -344,30 +354,28 @@ function SideMenuIlluminate ({ isGuidedDemo }) {
 function SideMenuFunctions ({ isGuidedDemo }) {
   return (
     <div className='flex flex-col gap-3 text-base font-semibold'>
-      {/* ToDo: Are there specific instructions for Functions?  Right now it's generic with BizOps (select app and keyset) */}
       <SalesInstructionsToSwitchAccount
         isGuidedDemo={isGuidedDemo}
         instructionType={'functions'}
       />
       <TextWithLinkButton
-        label={'Score Summary'}
+        label={'Example Function'}
         buttonText={'View Function'}
         url={
           isGuidedDemo
-            ? urls.functions.scoreSummary.salesLed
-            : urls.functions.scoreSummary.selfLed
+            ? urls.functions.demo.salesLed.view
+            : urls.functions.demo.selfLed.view
         }
       />
-      <div className='text-neutral50 font-normal'>
-        Experience in the demo by asking "What's the score?" in the match
-        updates widget
+      <div className='flex flex-row text-neutral50 font-normal gap-2 items-center'>
+      <ChatBotIcon className='max-w-8 min-w-8 max-h-8 min-h-8 bg-white rounded-lg' /><div className=''>Find the Functions Widget in the demo and ask a question.</div>
       </div>
     </div>
   )
 }
-function SideMenuPushNotifications ({}) {
-  //  todo set this to the correct emulator Url
-  const emulatorUrl = './emulator/'
+function SideMenuPushNotifications ({ isGuidedDemo }) {
+  const actionUrl = isGuidedDemo ? './emulator/' : 'https://www.pubnub.com/company/contact-sales/'
+  const buttonText = isGuidedDemo ? 'Open emulator' : "Contact us for a demo"
   return (
     <div className='flex flex-col gap-4 text-base font-semibold'>
       <div className='text-neutral50 font-normal'>
@@ -375,13 +383,12 @@ function SideMenuPushNotifications ({}) {
         <ul className='px-4 pt-1 list-disc'>
           <li>There are five minutes remaining</li>
           <li>A goal is scored</li>
-          <li>User is tagged</li>
         </ul>
       </div>
       <div className='w-fit'>
-        <a href={`${emulatorUrl}`} target='_blank' className={`no-underline`}>
+        <a href={`${actionUrl}`} target='_blank' className={`no-underline`}>
           <div className='flex flex-row h-10 items-center py-1 px-3 border-1 border-navy600 hover:bg-navy800 rounded-md cursor-pointer'>
-            Open emulator
+            {buttonText}
           </div>
         </a>
       </div>

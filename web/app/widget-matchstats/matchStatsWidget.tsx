@@ -3,17 +3,18 @@
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { BoxType, matchStatsConfig } from './matchStatsConfig'
+import GuideOverlay from '../components/guideOverlay'
 import { matchStatsChannelId } from '../data/constants'
 
 export default function MatchStatsWidget ({
   className,
   isMobilePreview,
   chat,
+  isGuidedDemo,
   guidesShown,
   visibleGuide,
   setVisibleGuide
 }) {
-  //  todo these stats need to be populated and updated from PubNub.  The PN message (or messages) will probably just contain the information in the 'info' fields - see definition of config
   const [matchStats, setMatchStats] = useState<any | null>(matchStatsConfig)
   const [featuredPlayer, setFeaturedPlayer] = useState(1)
   const commonStatsBoxClasses =
@@ -32,8 +33,25 @@ export default function MatchStatsWidget ({
     }
   }, [chat])
 
+  useEffect(() => {
+    if (!chat) return
+    if (isGuidedDemo) return
+    chat.sdk
+      .fetchMessages({
+        channels: [matchStatsChannelId],
+        count: 1
+      })
+      .then(result => {
+        if (result && result.channels[matchStatsChannelId]) {
+          const previousMatchStats = result.channels[matchStatsChannelId][0]
+          if (previousMatchStats) {
+            processReceivedMessage(previousMatchStats.message)
+          }
+        }
+      })
+  }, [chat, isGuidedDemo])
+
   function processReceivedMessage (matchStatsMessage) {
-    //  Todo This logic needs to be updated based on the format of the received message
     setMatchStats(prevStats => {
       const updatedStats = { ...prevStats }
 
@@ -46,7 +64,13 @@ export default function MatchStatsWidget ({
               stat: matchStatsMessage[key].info[index]?.stat || infoEntry.stat,
               dataPrimary:
                 matchStatsMessage[key].info[index]?.dataPrimary ||
-                infoEntry.dataPrimary
+                infoEntry.dataPrimary,
+              dataSecondary:
+                matchStatsMessage[key].info[index]?.dataSecondary ||
+                infoEntry.dataSecondary,
+              imageUrl:
+                matchStatsMessage[key].info[index]?.imageUrl ||
+                infoEntry.imageUrl
             }))
           }
         }
@@ -58,6 +82,30 @@ export default function MatchStatsWidget ({
 
   return (
     <div className={`${className}`}>
+      <GuideOverlay
+        id={'matchStats'}
+        guidesShown={guidesShown}
+        visibleGuide={visibleGuide}
+        setVisibleGuide={setVisibleGuide}
+        text={
+          <span>
+            PubNub Core Services includes a{' '}
+            <span className='font-semibold'>Pub/Sub Event API</span>, allowing
+            for{' '}
+            <span className='font-semibold'>
+              unlimited channels, message persistence, channel groups and
+              multiplexing
+            </span>
+            . Match stats are delivered to any number of subscribed users as
+            they happen, or users can catch up on the latest stats if they join
+            late.
+          </span>
+        }
+        xOffset={`right-[50px]`}
+        yOffset={'top-[10px]'}
+        flexStyle={'flex-row items-start'}
+      />
+
       <div
         className={`${
           isMobilePreview
@@ -88,14 +136,22 @@ export default function MatchStatsWidget ({
             isMobilePreview ? 'col-span-2' : 'col-span-2 row-span-3'
           }`}
         >
-          {giveStatsBox(matchStats?.featuredPlayers[featuredPlayer], featuredPlayer, (player) => setFeaturedPlayer(player))}
+          {giveStatsBox(
+            matchStats?.featuredPlayers[featuredPlayer],
+            featuredPlayer,
+            player => setFeaturedPlayer(player)
+          )}
         </div>
       </div>
     </div>
   )
 }
 
-function giveStatsBox (boxConfig, featuredPlayer = 0, setFeaturedPlayer = (player) => {}) {
+function giveStatsBox (
+  boxConfig,
+  featuredPlayer = 0,
+  setFeaturedPlayer = player => {}
+) {
   const imagePlaceholder = '/avatars/placeholder.png'
   if (boxConfig?.type == BoxType.InfoBoxWithImageAndQuantity) {
     return (
@@ -152,7 +208,7 @@ function giveStatsBox (boxConfig, featuredPlayer = 0, setFeaturedPlayer = (playe
           let newPlayer = (featuredPlayer + 1) % NUM_FEATURED_PLAYERS
           if (direction === 0) {
             let newPlayer = (featuredPlayer + 1) % NUM_FEATURED_PLAYERS
-          } 
+          }
           setFeaturedPlayer(newPlayer)
         }}
       />

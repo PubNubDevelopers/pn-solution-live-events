@@ -11,7 +11,6 @@ export const urls = {
       salesLed: "https://admin.pubnub.com/bizops/",
     },
     channelManagement: {
-      //  todo does this change for the read-only portal
       selfLed:
         "https://demo-admin.pubnub.com/user/627747/account/632313/app/35517029/key/1268872/bizops-dashboard/channels/",
       salesLed: "https://admin.pubnub.com/bizops/",
@@ -19,45 +18,47 @@ export const urls = {
   },
   chatAndModeration: {
     translation: {
-      //  todo update this after the function has been created (currently points to top level, but should point to actual function)
       selfLed:
-        "https://demo-admin.pubnub.com/user/627747/account/632313/functions-v2",
+        "https://www.pubnub.com/integrations/?sortBy=Most%20recent&categories=Language",
       salesLed:
-        "https://admin.pubnub.com/functions/",
+        "https://www.pubnub.com/integrations/?sortBy=Most%20recent&categories=Language",
     },
     moderation: {
-      //  ToDo: Navigating directly to the specific channel to be moderated was unreliable
       selfLed:
         "https://demo-admin.pubnub.com/user/627747/account/632313/app/35517029/key/1268872/moderation/",
       salesLed: "https://admin.pubnub.com/bizops/",
     },
   },
   illuminate: {
-    determinePoints: {
-      //  todo update this after the function has been created)
-      selfLed: "https://pubnub.com",
+    customEmoji: {
+      selfLed: "https://demo-admin.pubnub.com/user/627747/account/632313/illuminate/decisions/5fc334e8-480e-4d65-94b2-aa6cffd89a0a",
       salesLed:
         "https://admin.pubnub.com/illuminate/",
     },
-    customAds: {
-      //  todo update this after the function has been created
-      selfLed: "https://pubnub.com",
-      //  todo update this after the function has been created
-      salesLed: "https://pubnub.com",
+    dynamicAd: {
+      selfLed: "https://demo-admin.pubnub.com/user/627747/account/632313/illuminate/decisions/5fc334e8-480e-4d65-94b2-aa6cffd89a0a",
+      salesLed: "https://admin.pubnub.com/illuminate/",
     },
-    createNew: {
-      //  todo update this after the function has been created
-      selfLed: "https://pubnub.com",
+    dynamicPoll: {
+      selfLed: "https://demo-admin.pubnub.com/user/627747/account/632313/illuminate/decisions/81eeed3a-1f33-4530-818f-3e57a73414e3",
       salesLed:
         "https://admin.pubnub.com/illuminate/",
     },
+    dashboard: {
+      selfLed: "https://demo-admin.pubnub.com/user/627747/account/632313/illuminate/dashboards/559b2088-f7e0-40b9-bb95-c70f8d9d872a",
+      salesLed: "https://admin.pubnub.com/illuminate/",
+    }
   },
   functions: {
-    scoreSummary: {
-      //  todo update this after the function has been created
-      selfLed: "https://pubnub.com",
-      salesLed:
-        "https://admin.pubnub.com/functions/",
+    demo: {
+      selfLed: {
+        view: "https://demo-admin.pubnub.com/user/627747/account/632313/functions-v2",
+        endpoint: "https://ps.pndsn.com/v1/blocks/sub-key/sub-c-11080239-8b55-4fa1-81ec-5af6c716e59a/demo"
+      },
+      salesLed: {
+        view: "https://admin.pubnub.com/functions/",
+        endpoint: "https://ps.pndsn.com/v1/blocks/sub-key/sub-c-fa08eb13-6d22-48f9-91a4-1d6eae913127/dem"
+      }
     },
   },
   popoutView: "./popout/",

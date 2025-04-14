@@ -1,14 +1,15 @@
-1. Build a Node JS server app that runs in a run-loop setInterval once every second. 
-2. Trigger actions based on a timeline of events defined as an array of objects in milliseconds ms as timeSinceVideoStartedInMs found in exports.matchScript from our game-data.js file. The game-data.js file holds all the events and will be shared later.
-3. Chat mesages found in exports.chatMessagesForEvent from our chat-data.js file.
-4. Single server.js file that can be started with npm run.
-5. Output only code as JavaScript in the server.js file.
-6. The video needs to be synchronized via a periodic pubnub publish call to signal to the front-end app the timecode to seek to.
-7. The events in the timeline need to correspond to simulated user activity triggering emoji reactions, and chat messages.
-8. API Keys and config via ENV vars with `require("dotenv").config()`.
-9. Require PUBNUB_PUBLISH_KEY and PUBNUB_SUBSCRIBE_KEY in the .env file
-10. Print all actions and events with `console.log()` including video timeline tick events, and user actions that trigger other events and when the video seek occurs.
-11. Add realistic random delay between each simulated reactions and chat.
-12. Add extra activity for simulated reactions so it looks more exciting.
-13. Restart the timeline back to 0 when the timeline ends. This repeats forever.
-14. Start server on port 4000.
+1. Output only code as JavaScript in the index.js file.
+2. Build a Node JS app that runs in a run-loop setInterval once every second. 
+3. Import the following modules (found in the ./game-data/ directory):
+chat.js
+commentary.js
+polls.js
+reactions.js
+stats.js
+4. Merge the data from the above modules into a single array of objects called matchScript sorted by timeSinceVideoStartedInMs.
+5. In the run-loop, trigger pubnub.publish(...) on the action.data to the action.channel based on a timeline of events defined in the array of objects matchScript with milliseconds ms as timeSinceVideoStartedInMs var.
+6. The video needs to be synchronized via a periodic pubnub publish call to signal to the front-end app the timecode to seek to for each interval tick.
+7. API Keys and config via ENV vars with `require("dotenv").config()`.
+8. Require PUBNUB_PUBLISH_KEY and PUBNUB_SUBSCRIBE_KEY in the .env file
+9. Print all actions and events with `console.log()` including video timeline tick events, and user actions that trigger other events and when the video seek occurs.
+10. Restart the matchScript timeline back to 0 when the timeline ends. This repeats forever.

@@ -8,7 +8,7 @@ npm run generator
 
 # Rebuild Server
 
-Make changes to build/developer.txt or prompt.txt files.
+Make changes to prompt/developer.txt or prompt/user.md files.
 
 To rebuild the server after making changes:
 

@@ -5,7 +5,7 @@ echo "Building index.js... "
 echo "it will take 5 minutes... 🚧 🚀 🚧 "
 echo 
 
-jq -n --rawfile developer prompt/developer.txt --rawfile user prompt/user.md \
+time jq -n --rawfile developer prompt/developer.txt --rawfile user prompt/user.md \
 '{
   model: "o1-pro",
   input: [
@@ -25,5 +25,7 @@ jq -n --rawfile developer prompt/developer.txt --rawfile user prompt/user.md \
 
 cat index.js > revisions/index-$(date +%Y%m%d%H%M%S).js
 
+echo
 echo "Build complete 🎉 "
 echo "Output saved to index.js and revisions directory."
+echo

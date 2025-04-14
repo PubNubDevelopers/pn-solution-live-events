@@ -145,7 +145,7 @@ const SendIcon = props => {
   )
 }
 
-const ChatBotIcon = props => {
+export const ChatBotIcon = props => {
   return (
     <svg
       aria-hidden='true'

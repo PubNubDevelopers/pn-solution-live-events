@@ -13,6 +13,7 @@ import {
   PushNotificationsIcon
 } from './sideMenuIcons'
 import SideMenuDataControls from './dataControls'
+import { ChatBotIcon } from '../widget-bot/botWidget'
 import SelfLedHelp from './selfLedHelp'
 import { chatChannelId } from '../data/constants'
 import { urls } from '../data/urls'
@@ -242,7 +243,7 @@ function SideMenuBizopsWorkspace ({ isGuidedDemo, currentUser }) {
       )
     else
       setChannelManagementUrl(
-        `${urls.bizOpsWorkspace.channelManagement.selfLed}${currentUser?.id}`
+        `${urls.bizOpsWorkspace.channelManagement.selfLed}${chatChannelId}`
       )
   }, [isGuidedDemo, currentUser])
 
@@ -366,8 +367,8 @@ function SideMenuFunctions ({ isGuidedDemo }) {
             : urls.functions.demo.selfLed.view
         }
       />
-      <div className='text-neutral50 font-normal'>
-        Experience in the demo by asking any question.  Results are delivered to the app using a PubNub Function.
+      <div className='flex flex-row text-neutral50 font-normal gap-2 items-center'>
+      <ChatBotIcon className='max-w-8 min-w-8 max-h-8 min-h-8 bg-white rounded-lg' /><div className=''>Find the Functions Widget in the demo and ask a question.</div>
       </div>
     </div>
   )

@@ -24,7 +24,7 @@ export default function SportsEventPage ({
   const [currentScore, setCurrentScore] = useState(0)
 
   function backgroundClicked () {
-    console.log('background clicked')
+    //console.log('background clicked')
     setVisibleGuide('')
   }
 
@@ -42,7 +42,7 @@ export default function SportsEventPage ({
     setCurrentScore(chat.currentUser.custom?.score ?? 0)
     return chat.currentUser.streamUpdates(updatedUser => {
       if (updatedUser.custom?.score) {
-        console.log('user has updated - setting score to ' + updatedUser.custom.score)
+        //console.log('user has updated - setting score to ' + updatedUser.custom.score)
         setCurrentScore(updatedUser.custom.score)
       }
     })

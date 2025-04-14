@@ -40,10 +40,8 @@ export default function PollsWidget ({
       ]
     })
     subscriptionSet.onMessage = messageEvent => {
-      //console.log(messageEvent)
       if (messageEvent.channel == pollDeclarations) {
         //  We are being told about a new poll
-        //console.log('setting poll alert: ' + isMobilePreview)
         const newPoll = messageEvent.message
         if (newPoll.pollType == 'side') {
           showPollAlert(messageEvent.message.alertText)
@@ -67,15 +65,11 @@ export default function PollsWidget ({
           })
         }
       } else if (messageEvent.channel == pollVotes) {
-        console.log(messageEvent)
         const pollId = messageEvent.message.pollId
-        console.log(pollId)
         const choiceId = messageEvent.message.choiceId
         const pollType = messageEvent.message.pollType
-        console.log(pollType)
         if (pollId && choiceId && pollType && pollType == 'side') {
           const isMyAnswer = messageEvent.publisher == chat?.currentUser.id
-          console.log('is my answer? ' + isMyAnswer)
           setPolls(prevPolls =>
             prevPolls.map(p =>
               p.id === pollId && p.pollType === 'side'
@@ -98,11 +92,8 @@ export default function PollsWidget ({
           )
         }
       } else if (messageEvent.channel == pollResults) {
-        console.log('poll results')
         const pollId = messageEvent.message.id
         const pollType = messageEvent.message.pollType
-        console.log(pollId)
-        console.log(pollType)
         if (pollId && pollType && pollType == 'side') {
           const resultsOfPoll = messageEvent.message
 
@@ -147,8 +138,9 @@ export default function PollsWidget ({
           )
         }
       } else if (messageEvent.channel == illuminatePollTesting) {
-        console.log('ILLUMINATE IS REQUESTING A POLL')
-        console.log(messageEvent)
+        //  Only used for testing - Illuminate is requesting a poll
+        //console.log('TEST ONLY - ILLUMINATE IS REQUESTING A POLL')
+        //console.log(messageEvent)
       }
     }
     subscriptionSet.subscribe()
@@ -168,7 +160,6 @@ export default function PollsWidget ({
           type={AlertType.NEW_POLL}
           message={alert}
           onClose={() => {
-            console.log('setting alert to null')
             setAlert(null)
           }}
         />

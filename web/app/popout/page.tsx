@@ -31,9 +31,6 @@ export default function Page () {
     setCurrentScore(Number(chat.currentUser.custom?.score) || 0)
     return chat.currentUser.streamUpdates(updatedUser => {
       if (updatedUser.custom?.score) {
-        console.log(
-          'user has updated - setting score to ' + updatedUser.custom.score
-        )
         setCurrentScore(Number(updatedUser.custom.score) || 0)
       }
     })

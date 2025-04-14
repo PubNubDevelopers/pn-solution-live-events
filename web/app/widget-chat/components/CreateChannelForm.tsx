@@ -11,7 +11,7 @@ interface CreateChannelFormProps {
   createChannel: () => void
 }
 
-export default function CreateChannelForm({
+export default function CreateChannelForm ({
   channelName,
   setChannelName,
   channelType,
@@ -22,59 +22,65 @@ export default function CreateChannelForm({
   createChannel
 }: CreateChannelFormProps) {
   return (
-    <div className="h-[400px] py-[12px] px-[16px]">
+    <div className='h-[400px] py-[12px] px-[16px]'>
       <input
-        type="text"
-        placeholder="Channel name"
-        className="w-full p-2 mb-2 border rounded"
+        type='text'
+        placeholder='Channel name'
+        className='w-full p-2 mb-2 border rounded'
         value={channelName}
-        onChange={(e) => setChannelName(e.target.value)}
+        onChange={e => setChannelName(e.target.value)}
       />
-      
-      <div className="mb-2">
-        <label className="block mb-1">Channel Type:</label>
-        <select 
-          className="w-full p-2 border rounded"
+
+      <div className='mb-2'>
+        <label className='block mb-1'>Channel Type:</label>
+        <select
+          className='w-full p-2 border rounded'
           value={channelType}
-          onChange={(e) => setChannelType(e.target.value)}
+          onChange={e => setChannelType(e.target.value)}
         >
-          <option value="public">Public</option>
-          <option value="private">Private (Group)</option>
-          <option value="direct">Direct (1:1)</option>
+          <option value='public'>Public</option>
+          <option value='private'>Private (Group)</option>
+          <option value='direct'>Direct (1:1)</option>
         </select>
       </div>
-      
+
       {/* User selection for private/direct channels */}
       {(channelType === 'private' || channelType === 'direct') && (
-        <div className="mb-2">
-          <label className="block mb-1">
+        <div className='mb-2'>
+          <label className='block mb-1'>
             {channelType === 'direct' ? 'Select User:' : 'Select Users:'}
           </label>
-          <div className="max-h-24 overflow-y-auto border rounded p-1">
+          <div className='max-h-24 overflow-y-auto border rounded p-1'>
             {availableUsers.map(user => (
-              <div key={user.id} className="flex items-center mb-1">
+              <div key={user.id} className='flex items-center mb-1'>
                 <input
-                  type="checkbox"
+                  type='checkbox'
                   id={`user-${user.id}`}
                   checked={selectedUsers.includes(user.id)}
                   onChange={() => toggleUserSelection(user.id)}
-                  className="mr-2"
+                  className='mr-2'
                   // For direct chats, only allow one selection
-                  disabled={channelType === 'direct' && selectedUsers.length === 1 && !selectedUsers.includes(user.id)}
+                  disabled={
+                    channelType === 'direct' &&
+                    selectedUsers.length === 1 &&
+                    !selectedUsers.includes(user.id)
+                  }
                 />
-                <label htmlFor={`user-${user.id}`}>{user.name || user.id}</label>
+                <label htmlFor={`user-${user.id}`}>
+                  {user.name || user.id}
+                </label>
               </div>
             ))}
           </div>
         </div>
       )}
-      
-      <button 
-        className="w-full bg-navy900 text-white p-2 rounded"
+
+      <button
+        className='w-full bg-navy900 text-white p-2 rounded'
         onClick={createChannel}
       >
         Create Channel
       </button>
     </div>
   )
-} 
+}

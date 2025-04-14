@@ -42,7 +42,6 @@ export default function MatchStatsWidget ({
         count: 1
       })
       .then(result => {
-        console.log(result)
         if (result && result.channels[matchStatsChannelId]) {
           const previousMatchStats = result.channels[matchStatsChannelId][0]
           if (previousMatchStats) {

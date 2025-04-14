@@ -97,8 +97,6 @@ export default function StreamWidget ({
       receivePresenceEvents: false
     })
     illuminateEmojiSubscription.onMessage = messageEvent => {
-      console.log('upgrade emoji')
-      console.log(messageEvent)
       //  Received a request to upgrade a specific emoji
       const emojiToUpgrade = messageEvent.message.emoji
       const replacementEmoji = messageEvent.message.replacementEmoji
@@ -144,7 +142,6 @@ export default function StreamWidget ({
     )
 
     if (hasChanged) {
-      console.log('Reactions updated:', reactions)
       newEmojiAlert()
     }
 
@@ -215,14 +212,12 @@ export default function StreamWidget ({
   }
 
   function onVideoReady (ev) {
-    console.log('Video ready')
-    console.log(ev)
+    //console.log('Video ready')
   }
 
   function onVideoStart () {
-    console.log('Video starting')
+    //console.log('Video starting')
     if (requestedVideoProgress > 0) {
-      console.log(`seeking to ${requestedVideoProgress} ${isMobilePreview}`)
       playerRef.current?.seekTo(requestedVideoProgress, 'seconds')
     }
   }
@@ -233,8 +228,7 @@ export default function StreamWidget ({
   }
 
   function onVideoProgress (ev) {
-    //console.log(ev)
-    //console.log(`Played (seconds): ${ev.playedSeconds}`)
+    //console.log(`Progress - Played (seconds): ${ev.playedSeconds}`)
     setActualVideoProgress(ev.playedSeconds)
   }
 
@@ -423,7 +417,6 @@ export default function StreamWidget ({
           isMobilePreview ? 'w-8 h-8 text-2xl' : 'w-10 h-10 text-3xl'
         } rounded-full px-1.5 pt-1 text-center cursor-pointer`}
         onClick={e => {
-          console.log('emoji click') //  only gets called once
           emojiClicked(emoji)
           e.stopPropagation()
         }}

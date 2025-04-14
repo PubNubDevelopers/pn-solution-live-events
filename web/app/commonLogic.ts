@@ -13,7 +13,6 @@ export async function CommonMessageHandler(
   const pushChannelId = isGuidedDemo ? pushChannelSalesId : pushChannelSelfId;
   if (messageEvent.channel === pushChannelId) {
     //  Received a message representing a Mobile Push Message, simulate this notification
-    //console.log(messageEvent.message.pn_fcm.data);
     const pushData = messageEvent.message.pn_fcm.data;
     const title = pushData.title ?? "Missing title";
     const body = pushData.body ?? "Missing body";
@@ -46,7 +45,6 @@ export async function AwardPoints(
 ) {
   if (!chat) return;
   
-  console.log(currentScore);
   const newScore = currentScore + pointsToAward;
   const message = customMessage
     ? customMessage

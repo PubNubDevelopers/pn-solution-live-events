@@ -41,7 +41,6 @@ const pubnub = new PubNub({
         videoEnded: videoHead == videoDurationInMs,
       },
     }
-    console.log(pnMessage)
     await publishPubNubMessage("game.client-video-control", pnMessage);
     videoHead += 500;
     //  Sleep - THIS WILL DRIFT - THIS IS TEST CODE ONLY

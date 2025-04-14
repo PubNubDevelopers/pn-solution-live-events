@@ -47,7 +47,6 @@ export default function TabletContents ({
 
   const currentScoreRef = useRef(currentScore)
   useEffect(() => {
-    console.log('updating current score ref')
     currentScoreRef.current = currentScore
   }, [currentScore])
 

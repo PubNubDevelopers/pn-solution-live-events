@@ -118,7 +118,6 @@ export default function LoginPage ({
           setLoadMessage('Creating Public Channel data')
           const promises = [] as Promise<Channel | null | undefined>[]
           for (const channelInfo of channelData) {
-            console.log('creating channel ' + channelInfo.id)
             if (channelInfo.createInAppContext == true) {
               const tempPromise = localChat
                 .getChannel(channelInfo.id)
@@ -206,7 +205,6 @@ export default function LoginPage ({
                 name={user.name}
                 avatarUrl={user.avatar}
                 personSelected={key => {
-                  //console.log('logging in with ' + userArray[key].name)
                   login(userArray[key].id)
                 }}
               ></LoginAvatar>

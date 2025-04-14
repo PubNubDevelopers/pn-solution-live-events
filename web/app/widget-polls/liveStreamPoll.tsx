@@ -29,12 +29,10 @@ export default function LiveStreamPoll ({
       channels: [pollDeclarations, pollVotes, pollResults]
     })
     subscriptionSet.onMessage = messageEvent => {
-      console.log(messageEvent)
       if (messageEvent.channel == pollDeclarations) {
         //  We are being told about a new poll
         handleNewLivePoll(messageEvent)
       } else if (messageEvent.channel == pollVotes) {
-        console.log('poll vote')
         const choiceId = messageEvent.message.choiceId
         const pollType = messageEvent.message.pollType
         if (choiceId && pollType && pollType == 'match') {
@@ -61,7 +59,6 @@ export default function LiveStreamPoll ({
             correctOption == currentPollAnswer?.id &&
             currentPoll.victoryPoints
           ) {
-            console.log(`Awarding ${currentPoll.victoryPoints} victory points`)
             awardPoints(currentPoll.victoryPoints, null)
           }
         }
@@ -83,13 +80,10 @@ export default function LiveStreamPoll ({
         count: 1
       })
       .then(result => {
-        console.log(result)
         const previouslyDeclaredPollResults = result.channels[pollResults]
         if (result && result.channels[pollDeclarations]) {
           const previouslyDeclaredPoll = result.channels[pollDeclarations][0]
           if (previouslyDeclaredPoll) {
-            console.log(previouslyDeclaredPoll)
-            console.log(previouslyDeclaredPollResults)
             if (
               !previouslyDeclaredPollResults ||
               (previouslyDeclaredPollResults &&
@@ -162,7 +156,6 @@ export default function LiveStreamPoll ({
                 id={option.id}
                 buttonText={option.text}
                 onClick={(id, option) => {
-                  console.log(`Selected choice: ${option}`)
                   chat.sdk.publish({
                     message: {
                       pollId: 1,

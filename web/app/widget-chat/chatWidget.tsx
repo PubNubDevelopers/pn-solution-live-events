@@ -216,12 +216,6 @@ export default function ChatWidget({
       // Connect to channel to receive messages
       unsubscribeMessages = channel.connect(async (message: Message) => {
 
-        // await channel.streamPresence((userIds) => {
-        //   console.log("Currently present users: ", userIds)
-        // })
-
-        // console.log(activeChannelId, await channel.whoIsPresent(), await chat.whoIsPresent(activeChannelId))
-
         setMessages(prevMessages => {
           // Check if message already exists
           const messageExists = prevMessages.some(m => m.timetoken === message.timetoken)

@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react'
 import { reactions } from '@/app/data/constants'
 import { User, MessageDraftV2, Channel } from '@pubnub/chat'
 import { useHover } from '@uidotdev/usehooks'
+import { Restriction } from '../chatWidget'
 
 interface MessageInputProps {
   messageInput: string
@@ -14,6 +15,7 @@ interface MessageInputProps {
   sendMessage: () => void
   availableUsers: User[]
   channel: Channel
+  activeChannelRestrictions: Restriction | null
 }
 
 export default function MessageInput ({
@@ -26,7 +28,8 @@ export default function MessageInput ({
   showMentions,
   setShowMentions,
   showReactions,
-  setShowReactions
+  setShowReactions,
+  activeChannelRestrictions
 }: MessageInputProps) {
   const [ref, hovering] = useHover()
   const [mentionQuery, setMentionQuery] = useState('')
@@ -138,7 +141,12 @@ export default function MessageInput ({
   }
 
   return (
-    <div className='relative flex items-center py-[12px] px-[16px] gap-2 mt-1 border-t border-navy200'>
+    <div
+      className={`relative flex items-center py-[12px] px-[16px] gap-2 mt-1 border-t border-navy200 ${
+        (activeChannelRestrictions?.mute || activeChannelRestrictions?.ban) &&
+        'pointer-events-none opacity-50'
+      }`}
+    >
       <div
         className={
           'group relative rounded w-[32px] h-[32px] p-[6px] cursor-pointer'
@@ -190,7 +198,13 @@ export default function MessageInput ({
         <input
           ref={inputRef}
           type='text'
-          placeholder='Write your message here'
+          placeholder={`${
+            activeChannelRestrictions?.mute
+              ? 'You have been muted'
+              : activeChannelRestrictions?.ban
+              ? 'You have been banned'
+              : 'Write your message here'
+          }`}
           className='w-full focus:outline-none focus:shadow-outline'
           value={messageInput}
           onChange={handleInputChange}

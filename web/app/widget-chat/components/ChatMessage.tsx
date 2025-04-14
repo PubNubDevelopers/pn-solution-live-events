@@ -112,7 +112,7 @@ export default function ChatMessage ({
           style={
             user
               ? {
-                  background: `url(${user?.profileUrl}) center center no-repeat`
+                  background: `url(${user?.profileUrl ?? '/avatars/placeholder2.png'}) center center no-repeat`
                 }
               : {}
           }
@@ -128,7 +128,7 @@ export default function ChatMessage ({
         <div
           className={'text-[16px] font-[400] leading-[24px] tracking-[0.08px]'}
         >
-          {message.getMessageElements().map(renderMessagePart)}
+          {message.deleted ? 'This message has been deleted' : message.getMessageElements().map(renderMessagePart)}
         </div>
         <div className={'text-[11px] font-[400] leading-[150%]'}>
           {pubnubTimetokenToHHMM(message.timetoken)}

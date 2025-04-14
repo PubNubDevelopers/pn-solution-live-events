@@ -1,9 +1,15 @@
 'use client'
 
-import {useState, useEffect, useRef} from 'react'
+import { useState, useEffect, useRef } from 'react'
 import GuideOverlay from '../components/guideOverlay'
 import { dataControlOccupancyChannelId } from '../data/constants'
-import {Chat, User, Channel, Message, MixedTextTypedElement} from '@pubnub/chat'
+import {
+  Chat,
+  User,
+  Channel,
+  Message,
+  MixedTextTypedElement
+} from '@pubnub/chat'
 import TypingIndicator from './components/TypingIndicator'
 import ChatMessage from './components/ChatMessage'
 import ChannelList from './components/ChannelList'
@@ -20,15 +26,21 @@ interface ChatWidgetProps {
   userMentioned: (messageText: string) => void
 }
 
-export default function ChatWidget({
-                                     className,
-                                     isMobilePreview,
-                                     chat,
-                                     guidesShown,
-                                     visibleGuide,
-                                     setVisibleGuide,
-                                     userMentioned
-                                   }: ChatWidgetProps) {
+export interface Restriction {
+  ban: boolean;
+  mute: boolean;
+  reason: string | number | boolean | undefined;
+}
+
+export default function ChatWidget ({
+  className,
+  isMobilePreview,
+  chat,
+  guidesShown,
+  visibleGuide,
+  setVisibleGuide,
+  userMentioned
+}: ChatWidgetProps) {
   // Channel state
   const [activeChannelId, setActiveChannelId] = useState<string | null>(null)
   const [activeChannel, setActiveChannel] = useState<Channel | null>(null)
@@ -52,6 +64,8 @@ export default function ChatWidget({
   const [selectedUsers, setSelectedUsers] = useState<string[]>([])
   const [whoIsPresent, setWhoIsPresent] = useState<string[]>([])
   const [simulatedOccupancy, setSimulatedOccupancy] = useState(0)
+  const [activeChannelRestrictions, setActiveChannelRestrictions] =
+    useState<Restriction | null>(null)
 
   const messagesContainerRef = useRef<HTMLDivElement>(null)
 
@@ -70,25 +84,68 @@ export default function ChatWidget({
       setActiveChannelId(publicChannels[0].id)
     }
 
-    const renderMessagePartMention = (messagePart: MixedTextTypedElement, index: number) => {
-      if (messagePart.type === "mention") {
+    const renderMessagePartMention = (
+      messagePart: MixedTextTypedElement,
+      index: number
+    ) => {
+      if (messagePart.type === 'mention') {
         return messagePart.content.name
       }
-      if (messagePart.type === "text") {
+      if (messagePart.type === 'text') {
         return messagePart.content.text
       }
-      return '';
+      return ''
     }
-    return chat.listenForEvents({
+
+    const removeMentionsListener = chat.listenForEvents({
       user: chat.currentUser.id,
       type: 'mention',
       callback: async evt => {
         const channel = await chat.getChannel(evt.payload.channel)
         const message = await channel?.getMessage(evt.payload.messageTimetoken)
-        userMentioned(`${message?.getMessageElements().map(renderMessagePartMention).join('')}`)
+        userMentioned(
+          `${message
+            ?.getMessageElements()
+            .map(renderMessagePartMention)
+            .join('')}`
+        )
       }
     })
+
+    return () => {
+      removeMentionsListener()
+    }
   }, [chat])
+
+  useEffect(() => {
+    if (!chat || !activeChannel) return
+    updateActiveChannelRestrictions()
+    const removeModerationListener = chat.listenForEvents({
+      channel: `PUBNUB_INTERNAL_MODERATION.${chat.currentUser.id}`,
+      type: 'moderation',
+      callback: async evt => {
+        updateActiveChannelRestrictions()
+      }
+    })
+
+    return () => {
+      removeModerationListener()
+    }
+  }, [chat, activeChannel])
+
+  function updateActiveChannelRestrictions () {
+    //  Update the restrictions of the currently active channel whenever that changes
+    if (!activeChannel || !chat) return
+    activeChannel.getUserRestrictions(chat.currentUser).then(restrictions => {
+      const tempRestrictions: Restriction = {
+        ban: restrictions.ban,
+        mute: restrictions.mute,
+        reason: restrictions.reason
+      }
+      console.log(tempRestrictions)
+      setActiveChannelRestrictions(tempRestrictions)
+    })
+  }
 
   /**
    * When active channel ID changes, set up the active channel
@@ -169,7 +226,6 @@ export default function ChatWidget({
       const users = result.users || []
       setAvailableUsers(users.filter(user => user.id !== chat.currentUser.id))
       setUsers(users)
-
     } catch (error) {
       console.error('Error fetching users:', error)
     }
@@ -208,29 +264,28 @@ export default function ChatWidget({
       }
 
       // Initialize cleanup functions
-      let unsubscribeMessages = () => {
-      }
-      let typingUnsubscribe = () => {
-      }
+      let unsubscribeMessages = () => {}
+      let typingUnsubscribe = () => {}
 
       // Connect to channel to receive messages
       unsubscribeMessages = channel.connect(async (message: Message) => {
-
         setMessages(prevMessages => {
           // Check if message already exists
-          const messageExists = prevMessages.some(m => m.timetoken === message.timetoken)
+          const messageExists = prevMessages.some(
+            m => m.timetoken === message.timetoken
+          )
           if (messageExists) return prevMessages
           return [...prevMessages, message]
         })
       })
 
-      const stopPresenceUpdates = await channel.streamPresence((userIds) => {
+      const stopPresenceUpdates = await channel.streamPresence(userIds => {
         setWhoIsPresent(userIds)
       })
 
       // Set up typing indicator if not public channel
       if (channel.type !== 'public') {
-        typingUnsubscribe = channel.getTyping((typingUserIds) => {
+        typingUnsubscribe = channel.getTyping(typingUserIds => {
           // Convert user IDs to names
           const getDisplayNames = async () => {
             const names: string[] = []
@@ -259,7 +314,7 @@ export default function ChatWidget({
         receivePresenceEvents: false
       })
       occupancySubscription.onMessage = (messageEvent: any) => {
-          setSimulatedOccupancy(+messageEvent.message.chatOccupancy);
+        setSimulatedOccupancy(+messageEvent.message.chatOccupancy)
       }
       occupancySubscription.subscribe()
 
@@ -292,7 +347,8 @@ export default function ChatWidget({
    */
   const scrollToBottom = () => {
     if (messagesContainerRef.current) {
-      messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight
+      messagesContainerRef.current.scrollTop =
+        messagesContainerRef.current.scrollHeight
     }
   }
 
@@ -410,14 +466,16 @@ export default function ChatWidget({
     )
   }
 
-  function backgroundClicked(e) {
+  function backgroundClicked (e) {
     setShowMentions(false)
     setShowReactions(false)
   }
 
   return (
-    <div className={`${className} w-full h-full`} onClick={(e) => backgroundClicked(e)}>
-
+    <div
+      className={`${className} w-full h-full`}
+      onClick={e => backgroundClicked(e)}
+    >
       <GuideOverlay
         id={'chatGuide'}
         guidesShown={guidesShown}
@@ -425,63 +483,106 @@ export default function ChatWidget({
         setVisibleGuide={setVisibleGuide}
         text={
           <span>
-              The <span className='font-semibold'>PubNub Chat SDK</span> provides you with everything you need to develop a fully featured, production-ready chat component::
-              <ul className="list-disc list-inside my-2">
-                <li>Public, private, and direct channels</li>
-                <li>Send and receive real-time messages</li>
-                <li>Display typing indicators</li>
-                <li>Add emoji reactions to messages</li>
-                <li>Track whether users are online or offline</li>
-              </ul>
-              Also: Integration with AI and Moderation through <span className='font-semibold'>BizOps Workspace</span> and <span className='font-semibold'>Functions</span>
-              </span>
+            The <span className='font-semibold'>PubNub Chat SDK</span> provides
+            you with everything you need to develop a fully featured,
+            production-ready chat component::
+            <ul className='list-disc list-inside my-2'>
+              <li>Public, private, and direct channels</li>
+              <li>Send and receive real-time messages</li>
+              <li>Display typing indicators</li>
+              <li>Add emoji reactions to messages</li>
+              <li>Track whether users are online or offline</li>
+            </ul>
+            Also: Integration with AI and Moderation through{' '}
+            <span className='font-semibold'>BizOps Workspace</span> and{' '}
+            <span className='font-semibold'>Functions</span>
+          </span>
         }
         xOffset={`${isMobilePreview ? 'left-[0px]' : '-left-[60px]'}`}
         yOffset={'top-[10px]'}
         flexStyle={'flex-row items-start'}
       />
 
-      {!activeChannel && <div
-        className="text-lg border-b pb-2 flex items-center bg-navy900 overflow-hidden rounded-t px-[16px] py-[12px] text-white text-[16px] font-[600] leading-[24px] h-[56px]">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-          <path
-            d="M12.4998 3.33341V9.16675H4.30817L3.33317 10.1417V3.33341H12.4998ZM13.3332 1.66675H2.49984C2.0415 1.66675 1.6665 2.04175 1.6665 2.50008V14.1667L4.99984 10.8334H13.3332C13.7915 10.8334 14.1665 10.4584 14.1665 10.0001V2.50008C14.1665 2.04175 13.7915 1.66675 13.3332 1.66675ZM17.4998 5.00008H15.8332V12.5001H4.99984V14.1667C4.99984 14.6251 5.37484 15.0001 5.83317 15.0001H14.9998L18.3332 18.3334V5.83342C18.3332 5.37508 17.9582 5.00008 17.4998 5.00008Z"
-            fill="white"/>
-        </svg>
-        <div className={'pl-[16px]'}>{showChannelCreate ? 'Create channel' : 'Chats'}</div>
-        <div className={'grow'}/>
-        <button
-          className="cursor-pointer"
-          onClick={() => setShowChannelCreate(!showChannelCreate)}
-        >
-          {showChannelCreate ? 'Cancel' :
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-              <path
-                d="M15.8332 10.8334H10.8332V15.8334H9.1665V10.8334H4.1665V9.16675H9.1665V4.16675H10.8332V9.16675H15.8332V10.8334Z"
-                fill="#FAFAFA"/>
-            </svg>}
-        </button>
-      </div>}
-
-      {activeChannel && <div
-        className="text-lg border-b pb-2 flex items-center bg-navy900 overflow-hidden rounded-t px-[16px] py-[12px] text-white text-[16px] font-[600] leading-[24px] h-[56px]">
-        {/*<button className="cursor-pointer" onClick={() => {*/}
-        {/*  setActiveChannel(null)*/}
-        {/*  setActiveChannelId(null)*/}
-        {/*}}>*/}
-        {/*  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">*/}
-        {/*    <path d="M14.8627 3.225L13.3794 1.75L5.1377 10L13.3877 18.25L14.8627 16.775L8.0877 10L14.8627 3.225Z" fill="#FAFAFA"/>*/}
-        {/*  </svg>*/}
-        {/*</button>*/}
-        <div className={'rounded-full w-[32px] h-[32px] !bg-cover bg-gray-100'} style={activeChannel.custom?.profileUrl ? {background: `url(${activeChannel.custom?.profileUrl}) center center no-repeat`} : {}}></div>
-        <div className={'ml-[16px]'}>{activeChannel.name || activeChannel.id}</div>
-        <div className={'grow'}/>
-        <div className={'flex items-center justify-center gap-1'}>
-          <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8" fill="none">
-            <circle cx="4" cy="4" r="4" fill="#22C55E"/>
-          </svg> {simulatedOccupancy + whoIsPresent.length} online
+      {!activeChannel && (
+        <div className='text-lg border-b pb-2 flex items-center bg-navy900 overflow-hidden rounded-t px-[16px] py-[12px] text-white text-[16px] font-[600] leading-[24px] h-[56px]'>
+          <svg
+            xmlns='http://www.w3.org/2000/svg'
+            width='20'
+            height='20'
+            viewBox='0 0 20 20'
+            fill='none'
+          >
+            <path
+              d='M12.4998 3.33341V9.16675H4.30817L3.33317 10.1417V3.33341H12.4998ZM13.3332 1.66675H2.49984C2.0415 1.66675 1.6665 2.04175 1.6665 2.50008V14.1667L4.99984 10.8334H13.3332C13.7915 10.8334 14.1665 10.4584 14.1665 10.0001V2.50008C14.1665 2.04175 13.7915 1.66675 13.3332 1.66675ZM17.4998 5.00008H15.8332V12.5001H4.99984V14.1667C4.99984 14.6251 5.37484 15.0001 5.83317 15.0001H14.9998L18.3332 18.3334V5.83342C18.3332 5.37508 17.9582 5.00008 17.4998 5.00008Z'
+              fill='white'
+            />
+          </svg>
+          <div className={'pl-[16px]'}>
+            {showChannelCreate ? 'Create channel' : 'Chats'}
+          </div>
+          <div className={'grow'} />
+          <button
+            className='cursor-pointer'
+            onClick={() => setShowChannelCreate(!showChannelCreate)}
+          >
+            {showChannelCreate ? (
+              'Cancel'
+            ) : (
+              <svg
+                xmlns='http://www.w3.org/2000/svg'
+                width='20'
+                height='20'
+                viewBox='0 0 20 20'
+                fill='none'
+              >
+                <path
+                  d='M15.8332 10.8334H10.8332V15.8334H9.1665V10.8334H4.1665V9.16675H9.1665V4.16675H10.8332V9.16675H15.8332V10.8334Z'
+                  fill='#FAFAFA'
+                />
+              </svg>
+            )}
+          </button>
         </div>
-      </div>}
+      )}
+
+      {activeChannel && (
+        <div className='text-lg border-b pb-2 flex items-center bg-navy900 overflow-hidden rounded-t px-[16px] py-[12px] text-white text-[16px] font-[600] leading-[24px] h-[56px]'>
+          {/*<button className="cursor-pointer" onClick={() => {*/}
+          {/*  setActiveChannel(null)*/}
+          {/*  setActiveChannelId(null)*/}
+          {/*}}>*/}
+          {/*  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">*/}
+          {/*    <path d="M14.8627 3.225L13.3794 1.75L5.1377 10L13.3877 18.25L14.8627 16.775L8.0877 10L14.8627 3.225Z" fill="#FAFAFA"/>*/}
+          {/*  </svg>*/}
+          {/*</button>*/}
+          <div
+            className={'rounded-full w-[32px] h-[32px] !bg-cover bg-gray-100'}
+            style={
+              activeChannel.custom?.profileUrl
+                ? {
+                    background: `url(${activeChannel.custom?.profileUrl}) center center no-repeat`
+                  }
+                : {}
+            }
+          ></div>
+          <div className={'ml-[16px]'}>
+            {activeChannel.name || activeChannel.id}
+          </div>
+          <div className={'grow'} />
+          <div className={'flex items-center justify-center gap-1'}>
+            <svg
+              xmlns='http://www.w3.org/2000/svg'
+              width='8'
+              height='8'
+              viewBox='0 0 8 8'
+              fill='none'
+            >
+              <circle cx='4' cy='4' r='4' fill='#22C55E' />
+            </svg>{' '}
+            {simulatedOccupancy + whoIsPresent.length} online
+          </div>
+        </div>
+      )}
 
       {/* Create Channel Form */}
       {showChannelCreate && (
@@ -497,60 +598,74 @@ export default function ChatWidget({
         />
       )}
 
-      {!activeChannel && !showChannelCreate && <ChannelList
-        publicChannels={publicChannels}
-        privateChannels={privateChannels}
-        directChannels={directChannels}
-        activeChannelId={activeChannelId}
-        setActiveChannelId={setActiveChannelId}
-      />}
+      {!activeChannel && !showChannelCreate && (
+        <ChannelList
+          publicChannels={publicChannels}
+          privateChannels={privateChannels}
+          directChannels={directChannels}
+          activeChannelId={activeChannelId}
+          setActiveChannelId={setActiveChannelId}
+        />
+      )}
 
       {/* Chat Messages */}
-      {activeChannel &&<div className={'h-[400px] flex flex-col'}>
-        <div ref={messagesContainerRef} className="py-[12px] px-[16px] overflow-y-auto flex-grow">
-          {messages.length === 0 ? (
-            <div className="text-center text-gray-500 py-4">
-              No messages yet. Be the first to say something!
-            </div>
-          ) : (
-            <>
-              {messages.map((message, index) => {
 
-                // const user = await chat.getUser('')
+      {activeChannel && (
+        <div className={'h-[400px] flex flex-col'}>
+          <div
+            ref={messagesContainerRef}
+            className='py-[12px] px-[16px] overflow-y-auto flex-grow'
+          >
+            {messages.length === 0 ? (
+              <div className='text-center text-gray-500 py-4'>
+                No messages yet. Be the first to say something!
+              </div>
+            ) : activeChannelRestrictions?.ban ? (
+              <div className='flex flex-row justify-center items-center h-full'>
+                You have been banned from this chat. Please contact the
+                administrator
+              </div>
+            ) : (
+              <>
+                {messages.map((message, index) => {
+                  // const user = await chat.getUser('')
 
-                return <ChatMessage
-                  key={`${message.timetoken}-${index}`}
-                  message={message}
-                  currentUser={chat.currentUser}
-                  users={users}
-                  channel={activeChannel}
-                />
-              })}
-            </>
-          )}
+                  return (
+                    <ChatMessage
+                      key={`${message.timetoken}-${index}`}
+                      message={message}
+                      currentUser={chat.currentUser}
+                      users={users}
+                      channel={activeChannel}
+                    />
+                  )
+                })}
+              </>
+            )}
+          </div>
+
+          {/* Typing indicator */}
+          <div className='h-5'>
+            {activeChannel && typingUsers.length > 0 && (
+              <TypingIndicator typingUsers={typingUsers} />
+            )}
+          </div>
+
+          <MessageInput
+            messageInput={messageInput}
+            setMessageInput={setMessageInput}
+            showMentions={showMentions}
+            setShowMentions={setShowMentions}
+            showReactions={showReactions}
+            setShowReactions={setShowReactions}
+            handleTyping={handleTyping}
+            sendMessage={sendMessage}
+            availableUsers={users}
+            channel={activeChannel}
+            activeChannelRestrictions={activeChannelRestrictions}
+          />
         </div>
-
-        {/* Typing indicator */}
-        <div className="h-5">
-          {activeChannel && typingUsers.length > 0 && (
-            <TypingIndicator typingUsers={typingUsers}/>
-          )}
-        </div>
-
-        <MessageInput
-          messageInput={messageInput}
-          setMessageInput={setMessageInput}
-          showMentions={showMentions}
-          setShowMentions={setShowMentions}
-          showReactions={showReactions}
-          setShowReactions={setShowReactions}
-          handleTyping={handleTyping}
-          sendMessage={sendMessage}
-          availableUsers={users}
-          channel={activeChannel}
-        />
-
-      </div>}
+      )}
     </div>
   )
 }

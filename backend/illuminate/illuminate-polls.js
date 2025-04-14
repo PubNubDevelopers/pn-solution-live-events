@@ -8,7 +8,7 @@ exports.angry = [
         id: 101,
         title: "Which team is playing the dirtiest?",
         victoryPoints: 0,
-        alertText: 'Take your frustration out on this poll',
+        alertText: "Take your frustration out on this poll",
         pollType: "side",
         options: [
           { id: 1, text: "Leeds United" },
@@ -47,7 +47,7 @@ exports.cheer = [
         id: 102,
         title: "Which team’s fans are celebrating the hardest?",
         victoryPoints: 0,
-        alertText: 'Only winners unlock this poll',
+        alertText: "Only winners unlock this poll",
         pollType: "side",
         options: [
           { id: 1, text: "Leeds United" },
@@ -67,6 +67,7 @@ exports.cheer = [
         correctOption: 0,
         pollType: "side",
         options: [
+          //  todo - would be great if score was based on the actual fake poll data
           { id: 1, score: 50 },
           { id: 2, score: 50 },
         ],

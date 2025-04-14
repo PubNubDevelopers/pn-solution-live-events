@@ -24,7 +24,6 @@ export default function StreamWidget ({
   setVisibleGuide,
   awardPoints
 }) {
-  //  ToDo: Currently this is only the occupancy from the Data Controls - need to add any other real presence count (including ourselves)
   const [occupancy, setOccupancy] = useState(0)
   const [realOccupancy, setRealOccupancy] = useState(0)
   const [alert, setAlert] = useState<{
@@ -184,7 +183,6 @@ export default function StreamWidget ({
       setIsVideoPlaying(true)
     } else if (messageEvent.message.type == 'STATUS') {
       if (messageEvent.message.params.videoStarted) {
-        //  todo handle video looping
         setIsVideoPlaying(true)
         setRequestedVideoProgress(0)
         playerRef.current?.seekTo(0, 'seconds')
@@ -223,7 +221,6 @@ export default function StreamWidget ({
 
   function onVideoStart () {
     console.log('Video starting')
-    //  todo does this logic of skipping to the requested time work for a large video we are host ourselves?
     if (requestedVideoProgress > 0) {
       console.log(`seeking to ${requestedVideoProgress} ${isMobilePreview}`)
       playerRef.current?.seekTo(requestedVideoProgress, 'seconds')
@@ -231,12 +228,8 @@ export default function StreamWidget ({
   }
 
   function onVideoPlay () {
-    console.log('Video playing')
-    //  todo: This doesn't work for YouTube videos FYI as you get a videoPlay callback
-    //  every time you seek (it seems).  I wouldn't trust this logic if the video is slow to load, but I need to rework the video sync logic anyway.
-    //if (videoProgress != 0) {
-    //  playerRef.current?.seekTo(videoProgress, 'seconds')
-    //}
+    //console.log('Video playing')
+    //  Note: Get an onVideoPlay every time you seek
   }
 
   function onVideoProgress (ev) {

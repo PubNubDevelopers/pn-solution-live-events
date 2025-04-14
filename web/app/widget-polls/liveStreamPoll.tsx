@@ -61,7 +61,6 @@ export default function LiveStreamPoll ({
             correctOption == currentPollAnswer?.id &&
             currentPoll.victoryPoints
           ) {
-            //  ToDo handle points awards when user wins a poll
             console.log(`Awarding ${currentPoll.victoryPoints} victory points`)
             awardPoints(currentPoll.victoryPoints, null)
           }

@@ -82,7 +82,6 @@ export default function SportsEventPage ({
         setGuidesShown={setGuidesShown}
       ></Header>
 
-      {/* TODO - check works ok */}
       <div className='sm:hidden flex flex-col mt-10 h-screen justify-center w-full text-center gap-16 text-4xl'>
         This app is not designed for mobile
       </div>

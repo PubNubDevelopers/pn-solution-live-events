@@ -292,14 +292,14 @@ function SideMenuChatModeration ({ isGuidedDemo }) {
         instructionType={'bizops'}
       />
       <TextWithLinkButton
-        label={'Language translation'}
-        buttonText={'View Function'}
-        url={translateFunctionUrl}
-      />
-      <TextWithLinkButton
         label={'Moderation'}
         buttonText={'View Channel Monitor'}
         url={channelModerationUrl}
+      />
+      <TextWithLinkButton
+        label={'Language translation'}
+        buttonText={'Integrations'}
+        url={translateFunctionUrl}
       />
     </div>
   )
@@ -353,7 +353,6 @@ function SideMenuIlluminate ({ isGuidedDemo }) {
 function SideMenuFunctions ({ isGuidedDemo }) {
   return (
     <div className='flex flex-col gap-3 text-base font-semibold'>
-      {/* ToDo: Are there specific instructions for Functions?  Right now it's generic with BizOps (select app and keyset) */}
       <SalesInstructionsToSwitchAccount
         isGuidedDemo={isGuidedDemo}
         instructionType={'functions'}
@@ -374,7 +373,6 @@ function SideMenuFunctions ({ isGuidedDemo }) {
   )
 }
 function SideMenuPushNotifications ({ isGuidedDemo }) {
-  //  todo set this to the correct emulator Url
   const actionUrl = isGuidedDemo ? './emulator/' : 'https://www.pubnub.com/company/contact-sales/'
   const buttonText = isGuidedDemo ? 'Open emulator' : "Contact us for a demo"
   return (

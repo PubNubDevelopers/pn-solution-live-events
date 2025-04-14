@@ -249,7 +249,6 @@ export default function PollsWidget ({
                       : 'fun'
                   }`}
                   onButtonClick={() => {
-                    //  todo award points for entering poll
                     setCurrentlyVisiblePoll(poll.id)
                   }}
                 />

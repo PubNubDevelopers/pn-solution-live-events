@@ -15,7 +15,6 @@ export default function MatchStatsWidget ({
   visibleGuide,
   setVisibleGuide
 }) {
-  //  todo these stats need to be populated and updated from PubNub.  The PN message (or messages) will probably just contain the information in the 'info' fields - see definition of config
   const [matchStats, setMatchStats] = useState<any | null>(matchStatsConfig)
   const [featuredPlayer, setFeaturedPlayer] = useState(1)
   const commonStatsBoxClasses =
@@ -54,7 +53,6 @@ export default function MatchStatsWidget ({
   }, [chat, isGuidedDemo])
 
   function processReceivedMessage (matchStatsMessage) {
-    //  Todo This logic needs to be updated based on the format of the received message
     setMatchStats(prevStats => {
       const updatedStats = { ...prevStats }
 

@@ -27,6 +27,31 @@ export default function ChatMessage ({
 }: ChatMessageProps) {
   const [ref, hovering] = useHover()
   const [showReactions, setShowReactions] = useState(false)
+  const [userRestrictions, setUserRestrictions] = useState<{
+    ban: boolean
+    mute: boolean
+  }>({ ban: false, mute: false })
+
+  useEffect(() => {
+    // Check if the message sender is banned or muted
+    //  Note that for this demo implementation, this only takes effect when the chat is loaded
+    const checkUserRestrictions = async () => {
+      if (!channel || !message.userId) return
+
+      try {
+        // Find the user object from the users array
+        const messageUser = users.find(user => user.id === message.userId)
+        if (!messageUser) return
+
+        const restrictions = await channel.getUserRestrictions(messageUser)
+        setUserRestrictions(restrictions)
+      } catch (error) {
+        console.error('Error checking user restrictions:', error)
+      }
+    }
+
+    checkUserRestrictions()
+  }, [channel, message.userId, users])
 
   useEffect(() => {
     if (hovering) {
@@ -106,13 +131,15 @@ export default function ChatMessage ({
       {!isOwnMessage && (
         <div
           data-user={user?.name || 'Unknown User'}
-          className={
-            'rounded-full w-[36px] h-[36px] mr-[16px] !bg-cover bg-gray-100'
-          }
+          className={`rounded-full w-[36px] h-[36px] mr-[16px] !bg-cover bg-gray-100 ${
+            userRestrictions.ban || (userRestrictions.mute && 'grayscale')
+          }`}
           style={
             user
               ? {
-                  background: `url(${user?.profileUrl ?? '/avatars/placeholder2.png'}) center center no-repeat`
+                  background: `url(${
+                    user?.profileUrl ?? '/avatars/placeholder2.png'
+                  }) center center no-repeat`
                 }
               : {}
           }
@@ -126,15 +153,24 @@ export default function ChatMessage ({
         }`}
       >
         <div
-          className={'text-[16px] font-[400] leading-[24px] tracking-[0.08px]'}
+          className={`text-[16px] font-[400] leading-[24px] tracking-[0.08px] ${
+            userRestrictions.ban ||
+            userRestrictions.mute && 'text-neutral500 italic'
+          }`}
         >
-          {message.deleted ? 'This message has been deleted' : message.getMessageElements().map(renderMessagePart)}
+          {message.deleted
+            ? 'This message has been deleted'
+            : userRestrictions.ban
+            ? 'This user has been banned'
+            : userRestrictions.mute
+            ? 'This user has been muted'
+            : message.getMessageElements().map(renderMessagePart)}
         </div>
         <div className={'text-[11px] font-[400] leading-[150%]'}>
           {pubnubTimetokenToHHMM(message.timetoken)}
         </div>
 
-        {/*/!* Display reactions *!/*/}
+        {/* Display reactions */}
         <div className='absolute bottom-[-17px] right-[0] flex'>
           {Object.entries(reactionCounts).map(([emoji, count]) => (
             <div

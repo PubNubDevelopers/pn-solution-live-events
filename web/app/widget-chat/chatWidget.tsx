@@ -2,7 +2,10 @@
 
 import { useState, useEffect, useRef } from 'react'
 import GuideOverlay from '../components/guideOverlay'
-import { dataControlOccupancyChannelId } from '../data/constants'
+import {
+  dataControlOccupancyChannelId,
+  streamReactionsChannelId
+} from '../data/constants'
 import {
   Chat,
   User,
@@ -27,9 +30,9 @@ interface ChatWidgetProps {
 }
 
 export interface Restriction {
-  ban: boolean;
-  mute: boolean;
-  reason: string | number | boolean | undefined;
+  ban: boolean
+  mute: boolean
+  reason: string | number | boolean | undefined
 }
 
 export default function ChatWidget ({
@@ -63,6 +66,7 @@ export default function ChatWidget ({
   const [users, setUsers] = useState<User[]>([])
   const [selectedUsers, setSelectedUsers] = useState<string[]>([])
   const [whoIsPresent, setWhoIsPresent] = useState<string[]>([])
+  const [realOccupancy, setRealOccupancy] = useState(0)
   const [simulatedOccupancy, setSimulatedOccupancy] = useState(0)
   const [activeChannelRestrictions, setActiveChannelRestrictions] =
     useState<Restriction | null>(null)
@@ -251,7 +255,7 @@ export default function ChatWidget ({
       }
 
       setActiveChannel(channel)
-      setWhoIsPresent(await chat.whoIsPresent(activeChannelId))
+      //setWhoIsPresent(await chat.whoIsPresent(activeChannelId));
 
       // Get channel history
       try {
@@ -280,7 +284,7 @@ export default function ChatWidget ({
       })
 
       const stopPresenceUpdates = await channel.streamPresence(userIds => {
-        setWhoIsPresent(userIds)
+        //setWhoIsPresent(userIds);
       })
 
       // Set up typing indicator if not public channel
@@ -317,6 +321,25 @@ export default function ChatWidget ({
         setSimulatedOccupancy(+messageEvent.message.chatOccupancy)
       }
       occupancySubscription.subscribe()
+
+      //  For consistency with the live stream, use the reactions channel for real occupancy
+      const reactionsChannel = chat.sdk.channel(streamReactionsChannelId)
+      const reactionsSubscription = reactionsChannel.subscription({
+        receivePresenceEvents: true
+      })
+      reactionsSubscription.onPresence = (presenceEvent: any) => {
+        if (presenceEvent?.occupancy > 0) {
+          setRealOccupancy(presenceEvent.occupancy)
+        }
+      }
+      chat.sdk
+        .hereNow({ channels: [streamReactionsChannelId] })
+        .then(hereNowResult => {
+          if (hereNowResult) {
+            setRealOccupancy(hereNowResult.totalOccupancy + 1)
+          }
+        })
+      reactionsSubscription.subscribe()
 
       // Return cleanup function
       return () => {
@@ -579,7 +602,7 @@ export default function ChatWidget ({
             >
               <circle cx='4' cy='4' r='4' fill='#22C55E' />
             </svg>{' '}
-            {simulatedOccupancy + whoIsPresent.length} online
+            {simulatedOccupancy + realOccupancy} online
           </div>
         </div>
       )}

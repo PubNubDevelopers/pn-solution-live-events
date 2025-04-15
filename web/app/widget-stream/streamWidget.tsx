@@ -67,19 +67,19 @@ export default function StreamWidget ({
     reactionsSubscription.onMessage = messageEvent => {
       handleReaction(messageEvent)
     }
-    reactionsSubscription.onPresence = presenceEvent => {
-      if (presenceEvent) {
+    reactionsSubscription.onPresence = (presenceEvent: any) => {
+      if (presenceEvent?.occupancy > 0) {
         setRealOccupancy(presenceEvent.occupancy)
       }
     }
-    reactionsSubscription.subscribe()
     chat.sdk
-      .hereNow({ channels: [streamReactionsChannelId] })
-      .then(hereNowResult => {
-        if (hereNowResult) {
-          setRealOccupancy(hereNowResult.totalOccupancy)
-        }
-      })
+    .hereNow({ channels: [streamReactionsChannelId] })
+    .then(hereNowResult => {
+      if (hereNowResult) {
+        setRealOccupancy(hereNowResult.totalOccupancy + 1)
+      }
+    })
+    reactionsSubscription.subscribe()
 
     //  Occupancy updates from Data Controls
     const occupancyChannel = chat.sdk.channel(dataControlOccupancyChannelId)

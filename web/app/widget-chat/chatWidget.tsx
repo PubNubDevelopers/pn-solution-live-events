@@ -146,7 +146,6 @@ export default function ChatWidget ({
         mute: restrictions.mute,
         reason: restrictions.reason
       }
-      console.log(tempRestrictions)
       setActiveChannelRestrictions(tempRestrictions)
     })
   }

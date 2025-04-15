@@ -51,7 +51,7 @@ export default function StreamWidget ({
   ])
   const [videoUrl, setVideoUrl] = useState(streamUrl)
   const [isVideoPlaying, setIsVideoPlaying] = useState(false)
-  const [actualVideoProgress, setActualVideoProgress] = useState(0)
+  const actualVideoProgressRef = useRef(0)
   const [requestedVideoProgress, setRequestedVideoProgress] = useState(0)
   const [muted, setMuted] = useState(true)
   const playerRef = useRef<ReactPlayer>(null)
@@ -176,7 +176,7 @@ export default function StreamWidget ({
 
   function handleVideoControl (messageEvent, isVideoPlaying) {
     if (messageEvent.message.type == 'START_STREAM') {
-      setActualVideoProgress(0)
+      actualVideoProgressRef.current = 0
       setIsVideoPlaying(true)
     } else if (messageEvent.message.type == 'STATUS') {
       if (messageEvent.message.params.videoStarted) {
@@ -188,17 +188,15 @@ export default function StreamWidget ({
         //  FYI video is about to loop
         setIsVideoPlaying(false)
       }
-      const actualVideoProgress =
-        messageEvent.message.params.playbackTime / 1000
-      setActualVideoProgress(actualVideoProgress)
+      actualVideoProgressRef.current = messageEvent.message.params.playbackTime / 1000
       if (!isVideoPlaying) {
         //  The video is not playing locally, but the stream is running on the back end.  Join game in progress
-        setRequestedVideoProgress(actualVideoProgress)
+        setRequestedVideoProgress(actualVideoProgressRef.current)
         setIsVideoPlaying(true)
       }
     } else if (messageEvent.message.type == 'END_STREAM') {
       setIsVideoPlaying(false)
-      setActualVideoProgress(0)
+      actualVideoProgressRef.current = 0
       setRequestedVideoProgress(0)
     } else if (messageEvent.message.type == 'SEEK') {
       const requestedTime = messageEvent.message.params.playbackTime / 1000
@@ -228,8 +226,7 @@ export default function StreamWidget ({
   }
 
   function onVideoProgress (ev) {
-    //console.log(`Progress - Played (seconds): ${ev.playedSeconds}`)
-    setActualVideoProgress(ev.playedSeconds)
+    actualVideoProgressRef.current = ev.playedSeconds
   }
 
   function upgradeEmoji (

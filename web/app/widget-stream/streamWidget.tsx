@@ -320,7 +320,7 @@ export default function StreamWidget ({
           <LiveOccupancyCount />
         </div>
         {!isMobilePreview && (
-          <div className='absolute bottom-0 right-0 z-50'>
+          <div className='absolute bottom-4 right-4 z-50'>
             <VolumeButton />
           </div>
         )}
@@ -444,7 +444,7 @@ export default function StreamWidget ({
   function VolumeButton () {
     return (
       <div
-        className='text-white/50 cursor-pointer'
+        className='text-white cursor-pointer'
         onClick={e => {
           e.stopPropagation()
           setMuted(!muted)

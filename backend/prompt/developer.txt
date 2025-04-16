@@ -14,4 +14,8 @@ stats.js exports.stats
 9. userId: "game-server" for the PubNub initialization.
 10. Print all actions and events with `console.log()` including video timeline tick events, and user actions that trigger other events and when the video seek occurs.
 11. Restart the matchScript timeline back to 0 when the timeline ends. This repeats forever.
-12. Add realisic random delays to the events in the matchScript array when `repeat` is used.
+12. Add realistic random delays to the events in the matchScript array when `repeat` is used.
+13. Subscribe to PubNub control channel `game.client-video-control` and handle incoming messages of type:
+    - `START_STREAM`: reset the timeline to start (currentTime=0, scriptIndex=0, rebuild script)
+    - `SEEK`: jump to `params.playbackTime`, adjust `currentTime` and `scriptIndex`
+    - `END_STREAM`: advance to end of the timeline

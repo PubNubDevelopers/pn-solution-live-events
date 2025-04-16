@@ -19,6 +19,52 @@ const pubnub = new PubNub({
   userId: "game-server"
 });
 
+// Subscribe to control events from the UI
+const CONTROL_CHANNEL = "game.client-video-control";
+pubnub.subscribe({ channels: [CONTROL_CHANNEL] });
+pubnub.addListener({
+  message: async ({ channel, message }) => {
+    if (channel === CONTROL_CHANNEL) {
+      console.log("[Control] Received:", message);
+      await handleControlMessage(message);
+    }
+  }
+});
+
+/**
+ * Handle UI control messages to manipulate the timeline.
+ * Supported message types:
+ *  - START_STREAM: reset to start
+ *  - SEEK: jump to playbackTime
+ *  - END_STREAM: advance to end
+ */
+async function handleControlMessage(msg) {
+  switch (msg.type) {
+    case "START_STREAM":
+      currentTime = 0;
+      scriptIndex = 0;
+      matchScript = buildMatchScript();
+      console.log("[Control] Timeline reset to start");
+      break;
+    case "SEEK": {
+      const seekTime = msg.params.playbackTime;
+      currentTime = seekTime;
+      scriptIndex = matchScript.findIndex(
+        ev => ev.timeSinceVideoStartedInMs >= currentTime
+      );
+      if (scriptIndex < 0) scriptIndex = matchScript.length;
+      console.log(`[Control] Seek to ${currentTime}ms, next event index ${scriptIndex}`);
+      break;
+    }
+    case "END_STREAM":
+      currentTime = lastEventTime + MS_INTERVAL;
+      console.log("[Control] Timeline advanced to end");
+      break;
+    default:
+      console.log("[Control] Unknown control type:", msg.type);
+  }
+}
+
 // --------------------------------------------------------------------------------
 // Expand repeated events with realistic random delays
 function expandRepeatedEvents(events) {

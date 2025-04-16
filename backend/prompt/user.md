@@ -156,4 +156,16 @@ Assume that for each message in the "data controls" panel there will be an indiv
 | Five minutes remaining | Results in a "video seek" message.  The request will need to contain the time to seek to, specifically 1099000 |
 | End Match | Results in an "End stream" message |
 | Send Push Message | Results in a custom action array being run, either: push-goal.js push-5mins.js |
+  
+## Control Events via UI
+
+The frontend UI will publish control messages on the `game.client-video-control` channel to manipulate the timeline:
+
+| Type          | params                              | Description                                     |
+| ------------- | ----------------------------------- | ----------------------------------------------- |
+| START_STREAM  | `{}`                                | Reset video to start and restart event timeline |
+| SEEK          | `{ playbackTime: number /* ms */ }` | Seek video to specific time, update server clock|
+| END_STREAM    | `{}`                                | Jump to end of timeline                         |
+
+The backend must subscribe to this channel, listen for these messages, and apply the corresponding changes to `currentTime`, `scriptIndex`, and `matchScript`.
 

@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "generator": "node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node tests/timeline.test.js"
   },
   "repository": {
     "type": "git",

@@ -57,7 +57,7 @@ async function handleControlMessage(msg) {
       break;
     }
     case "END_STREAM":
-      currentTime = 1200000; // 20 minutes
+      currentTime = lastEventTime; // 20 minutes
       scriptIndex = matchScript.findIndex(
         ev => ev.timeSinceVideoStartedInMs >= currentTime
       );

@@ -57,7 +57,10 @@ async function handleControlMessage(msg) {
       break;
     }
     case "END_STREAM":
-      currentTime = lastEventTime + MS_INTERVAL;
+      currentTime = 1200000; // 20 minutes
+      scriptIndex = matchScript.findIndex(
+        ev => ev.timeSinceVideoStartedInMs >= currentTime
+      );
       console.log("[Control] Timeline advanced to end");
       break;
     default:

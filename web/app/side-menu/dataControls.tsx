@@ -3,7 +3,8 @@ import { Slider } from '@heroui/react'
 import {
   chatChannelId,
   streamReactionsChannelId,
-  dataControlOccupancyChannelId
+  dataControlOccupancyChannelId,
+  serverVideoControlChannelId
 } from '../data/constants'
 import { PlayCircle } from './sideMenuIcons'
 
@@ -42,24 +43,35 @@ export default function SideMenuDataControls ({ chat }) {
     'End match'
   ]
   const [occupancy, setOccupancy] = useState<number | number[]>(0)
-  async function triggerSimulation (simulate) {
-    try {
-      const res = await fetch(
-        'https://ps.pndsn.com/v1/blocks/sub-key/sub-c-12de08da-d5db-4255-8c4f-d9059385670a/simulate',
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            simulate: simulate,
-            channel: streamReactionsChannelId,
-            count: 120
-          })
-        }
-      )
-      console.log(await res.json())
-    } catch (error) {
-      console.error('Failed to trigger simulation:', error)
+  async function seekVideo (simulate) {
+    const start = 'START_STREAM';
+    const stop = 'END_STREAM';
+    const seek = 'SEEK';
+
+    let seekTime = 0;
+    let type = '';
+
+    switch (simulate) {
+      case 'Kick off':
+        type = start;
+        break;
+      case 'Goal':
+        type = seek;
+        seekTime = 30000;
+        break;
+      case 'End match':
+        type = stop;
+        break;
     }
+
+    // Publish the message to the server video control channel
+    await chat.sdk.publish({
+      message: {
+        type: type,
+        params: { playbackTime: seekTime }
+      },
+      channel: serverVideoControlChannelId
+    });
   }
 
   useEffect(() => {
@@ -123,7 +135,7 @@ export default function SideMenuDataControls ({ chat }) {
             selectedSimulation == 0 ? 'text-navy500' : 'text-neutral50'
           } cursor-pointer`}
           onClick={e => {
-            triggerSimulation(`${simulationNames[selectedSimulation]}`)
+            seekVideo(`${simulationNames[selectedSimulation]}`)
             console.log(`Simulating ${simulationNames[selectedSimulation]}`)
             e.stopPropagation()
           }}

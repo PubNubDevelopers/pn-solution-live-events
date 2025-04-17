@@ -1,0 +1,21 @@
+1. Output only code as JavaScript in the index.js file.
+2. Build a Node JS app that runs in a run-loop setInterval once every second. 
+3. Import the following modules (found in the ./game-data/ directory):
+chat.js exports.chat
+commentary.js exports.commentary
+polls.js exports.polls
+reactions.js exports.reactions
+stats.js exports.stats
+4. Merge the data from the above modules into a single array of objects called matchScript sorted by timeSinceVideoStartedInMs.
+5. In the run-loop, trigger pubnub.publish(...) on the action.data to the action.channel based on a timeline of events defined in the array of objects matchScript with milliseconds ms as timeSinceVideoStartedInMs var.
+6. The video needs to be synchronized via a periodic pubnub publish call to signal to the front-end app the timecode to seek to for each interval tick.
+7. API Keys and config via ENV vars with `require("dotenv").config()`.
+8. Require PUBNUB_PUBLISH_KEY and PUBNUB_SUBSCRIBE_KEY in the .env file.
+9. userId: "game-server" for the PubNub initialization.
+10. Print all actions and events with `console.log()` including video timeline tick events, and user actions that trigger other events and when the video seek occurs.
+11. Restart the matchScript timeline back to 0 when the timeline ends. This repeats forever.
+12. Add realistic random delays to the events in the matchScript array when `repeat` is used.
+13. Subscribe to PubNub control channel `game.client-video-control` and handle incoming messages of type:
+    - `START_STREAM`: reset the timeline to start (currentTime=0, scriptIndex=0, rebuild script)
+    - `SEEK`: jump to `params.playbackTime`, adjust `currentTime` and `scriptIndex`
+    - `END_STREAM`: advance to end of the timeline

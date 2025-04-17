@@ -57,10 +57,7 @@ async function handleControlMessage(msg) {
       break;
     }
     case "END_STREAM":
-      currentTime = lastEventTime; // 20 minutes
-      scriptIndex = matchScript.findIndex(
-        ev => ev.timeSinceVideoStartedInMs >= currentTime
-      );
+      currentTime = lastEventTime + MS_INTERVAL;
       console.log("[Control] Timeline advanced to end");
       break;
     default:
@@ -144,7 +141,7 @@ async function publishMessage(channel, message, persistInHistory = false) {
   try {
 
     // Set User ID
-    let userId = message.user || 'other';
+    let userId = message.user || 'game-server';
     pubnub.setUUID(userId);
     await pubnub.publish({
       channel: channel,

@@ -20,6 +20,7 @@ export const pushChannelSelfId = "game.push-self";
 export const pushChannelSalesId = "game.push-sales";
 export const dynamicAdChannelId = "game.dynamic-ad";
 export const clientVideoControlChannelId = "game.client-video-control";
+export const serverVideoControlChannelId = "game.server-video-control";
 export const illuminateUpgradeReaction = "illuminate-upgrade-reaction";
 export const dataControlOccupancyChannelId = "game.dataControlsOccupancy"
 

@@ -141,7 +141,7 @@ async function publishMessage(channel, message, persistInHistory = false) {
   try {
 
     // Set User ID
-    let userId = message.user || 'other';
+    let userId = message.user || 'game-server';
     pubnub.setUUID(userId);
     await pubnub.publish({
       channel: channel,

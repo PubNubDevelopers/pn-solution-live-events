@@ -11,6 +11,27 @@ const { commentary } = require("./game-data/commentary.js");
 const { polls } = require("./game-data/polls.js");
 const { reactions } = require("./game-data/reactions.js");
 const { stats } = require("./game-data/stats.js");
+// Import on-demand command scripts
+const { fanExcitement } = require("./on-demand/fan-excitement.js");
+const { fanFrustration } = require("./on-demand/fan-frustration.js");
+const { fiveMinutesRemaining } = require("./on-demand/push-5mins.js");
+const { goalScored } = require("./on-demand/push-goal.js");
+
+// Aggregate on-demand commands
+const onDemand = {
+  fanExcitement,
+  fanFrustration,
+  fiveMinutesRemaining,
+  goalScored
+};
+
+// Map control message types to on-demand command keys
+const ON_DEMAND_COMMANDS = {
+  FAN_EXCITEMENT: "fanExcitement",
+  FAN_FRUSTRATION: "fanFrustration",
+  FIVE_MINUTES_REMAINING: "fiveMinutesRemaining",
+  GOAL_SCORED: "goalScored"
+};
 
 // Initialize PubNub
 const pubnub = new PubNub({
@@ -39,6 +60,13 @@ pubnub.addListener({
  *  - END_STREAM: advance to end
  */
 async function handleControlMessage(msg) {
+  // Handle on-demand commands
+  if (ON_DEMAND_COMMANDS[msg.type]) {
+    const commandKey = ON_DEMAND_COMMANDS[msg.type];
+    console.log(`[Control] Triggering on-demand command: ${msg.type}`);
+    scheduleOnDemand(commandKey);
+    return;
+  }
   switch (msg.type) {
     case "START_STREAM":
       currentTime = 0;
@@ -103,6 +131,31 @@ function expandRepeatedEvents(events) {
   });
 
   return expanded;
+}
+/**
+ * Schedule on-demand events triggered by UI commands.
+ */
+function scheduleOnDemand(commandName) {
+  const events = onDemand[commandName];
+  if (!events) {
+    console.log(`[OnDemand] Unknown command: ${commandName}`);
+    return;
+  }
+  // Convert delayOffsetInMs to timeSinceVideoStartedInMs for expanding
+  const withTime = events.map(ev => ({
+    ...ev,
+    timeSinceVideoStartedInMs: ev.delayOffsetInMs
+  }));
+  // Expand repeated events
+  const expanded = expandRepeatedEvents(withTime);
+  // Schedule each event relative to now
+  expanded.forEach(ev => {
+    setTimeout(() => {
+      publishMessage(ev.action.channel, ev.action.data, !!ev.persistInHistory)
+        .catch(err => console.error(`[OnDemand] Error publishing event:`, err));
+    }, ev.timeSinceVideoStartedInMs);
+  });
+  console.log(`[OnDemand] Scheduled ${expanded.length} events for command: ${commandName}`);
 }
 
 // --------------------------------------------------------------------------------

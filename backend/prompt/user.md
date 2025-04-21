@@ -152,12 +152,12 @@ Assume that for each message in the "data controls" panel there will be an indiv
 
 | Data Controls request | Info |
 | :---- | :---- |
-| Kick Off | Results in a "start stream" message |
+| Kick Off | Results in a "START_STREAM stream" message |
 | Goal | Results in a "video seek" message.  The "Goal request will need to contain the time to seek to.  I.e. the fourth goal of the match at 315000 |
 | Fan Excitement | Results in a custom action array being run (example is given below) |
 | Fan frustration | Results in a custom action array being run |
 | Five minutes remaining | Results in a "video seek" message.  The request will need to contain the time to seek to, specifically 1099000 |
-| End Match | Results in an "End stream" message |
+| End Match | Results in an "END_STREAM" message |
 | Send Push Message | Results in a custom action array being run, either: push-goal.js push-5mins.js |
   
 ## Control Events via UI
@@ -169,6 +169,10 @@ The frontend UI will publish control messages on the `game.server-video-control`
 | START_STREAM  | `{}`                                | Reset video to start and restart event timeline |
 | SEEK          | `{ playbackTime: number /* ms */ }` | Seek video to specific time, update server clock|
 | END_STREAM    | `{}`                                | Jump to end of timeline                         |
+| FAN_EXCITEMENT | `{}`                                | Trigger fan excitement reactions (runs on-demand script) |
+| FAN_FRUSTRATION | `{}`                               | Trigger fan frustration reactions |
+| FIVE_MINUTES_REMAINING | `{}`                         | Trigger push notification for 5 minutes remaining |
+| GOAL_SCORED    | `{}`                                | Trigger push notification for goal scored |
 
 The backend must subscribe to this channel, listen for these messages, and apply the corresponding changes to `currentTime`, `scriptIndex`, and `matchScript`.
 

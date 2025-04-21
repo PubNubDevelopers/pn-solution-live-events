@@ -31,47 +31,31 @@ export default function SideMenuDataControls ({ chat }) {
   const [dataControlsDropDownVisible, setDataControlsDropDownVisible] =
     useState(false)
   const [selectedSimulation, setSelectedSimulation] = useState(0)
-  const simulationNames = [
-    'Select',
-    'Kick off',
-    'Goal',
-    'Goal + Push Message',
-    'Fan excitement',
-    'Fan frustration',
-    'Five minutes remaining',
-    '5mins + Push Message',
-    'End match'
+  // Map UI options to server control message types (backend/index.js handleControlMessage)
+  const simulationOptions = [
+    { label: 'Select', type: null },
+    { label: 'Kick off', type: 'START_STREAM' },
+    { label: 'Goal', type: 'SEEK', params: { playbackTime: 30000 } },
+    { label: 'Goal + Push Message', type: 'GOAL_SCORED' },
+    { label: 'Fan excitement', type: 'FAN_EXCITEMENT' },
+    { label: 'Fan frustration', type: 'FAN_FRUSTRATION' },
+    { label: 'Five minutes remaining', type: 'FIVE_MINUTES_REMAINING' },
+    { label: 'End match', type: 'END_STREAM' }
   ]
+  const simulationNames = simulationOptions.map(opt => opt.label)
   const [occupancy, setOccupancy] = useState<number | number[]>(0)
-  async function seekVideo (simulate) {
-    const start = 'START_STREAM';
-    const stop = 'END_STREAM';
-    const seek = 'SEEK';
-
-    let seekTime = 0;
-    let type = '';
-
-    switch (simulate) {
-      case 'Kick off':
-        type = start;
-        break;
-      case 'Goal':
-        type = seek;
-        seekTime = 30000;
-        break;
-      case 'End match':
-        type = stop;
-        break;
+  // Send a control message to the server video control channel
+  async function sendVideoControl() {
+    const option = simulationOptions[selectedSimulation]
+    if (!option || !option.type) return
+    const msg: any = { type: option.type }
+    if (option.params) {
+      msg.params = option.params
     }
-
-    // Publish the message to the server video control channel
     await chat.sdk.publish({
-      message: {
-        type: type,
-        params: { playbackTime: seekTime }
-      },
+      message: msg,
       channel: serverVideoControlChannelId
-    });
+    })
   }
 
   useEffect(() => {
@@ -135,7 +119,7 @@ export default function SideMenuDataControls ({ chat }) {
             selectedSimulation == 0 ? 'text-navy500' : 'text-neutral50'
           } cursor-pointer`}
           onClick={e => {
-            seekVideo(`${simulationNames[selectedSimulation]}`)
+            sendVideoControl()
             console.log(`Simulating ${simulationNames[selectedSimulation]}`)
             e.stopPropagation()
           }}

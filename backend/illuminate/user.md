@@ -52,3 +52,67 @@ Example format:
 ### 3. Reset all Illuminate objects in the Sales demo account
 
 This logic will execute when the sales person presses the "Reset Demo" button on logging in. We have an Illuminate API that requires the username and password for the "demo@pubnub.com" account to modify the Illuminate objects. This needs to be protected from unauthorized access or abuse.
+
+## Technical Integration Details
+
+To build and run the Node.js script that connects Illuminate with PubNub message events, follow these guidelines:
+
+1. Environment Setup
+   - Use Node.js v14+ and initialize a project:
+     ```bash
+     npm init -y
+     npm install pubnub axios inquirer dotenv dayjs lodash
+     ```
+   - Create a `.env` file at the project root with the following variables (excluding `ADMIN_PASSWORD`, which will be prompted at runtime):
+     ```ini
+     ADMIN_EMAIL=demo@pubnub.com
+     # ADMIN_PASSWORD will be prompted at runtime and should not be stored here
+     ACCOUNT_ID=<your_demo_account_id>
+     PUBNUB_PUBLISH_KEY=<your_pubnub_publish_key>
+     PUBNUB_SUBSCRIBE_KEY=<your_pubnub_subscribe_key>
+     CONTROL_CHANNEL=<data_controls_channel_name>
+     MESSAGE_CHANNEL=<message_feed_channel_name>
+     COOL_DOWN_MS=60000
+     AGGREGATION_WINDOW_SEC=60
+     POLL_COOLDOWN_MS=300000
+     ```
+
+2. Script Flow
+   - Load environment variables with `dotenv` or prompt for missing values via `inquirer`.
+   - Authenticate with Illuminate Admin API:
+     ```js
+     POST https://admin.pubnub.com/api/me
+     headers: { 'Content-Type': 'application/json' }
+     body: { email: ADMIN_EMAIL, password: ADMIN_PASSWORD }
+     // response.result.token => session_token
+     ```
+   - Include `X-Session-Token: session_token` on all subsequent Admin API calls.
+   - Provision Illuminate objects on reset or first run:
+     1. Deactivate any existing business objects:
+        `POST /illuminate/v1/accounts/{ACCOUNT_ID}/business-objects/deactivate`
+     2. Create Business Objects for each reaction type (e.g., 🎉, 😡) using JSONPath filters matching incoming PubNub messages.
+     3. Create Metrics to count events in the last `AGGREGATION_WINDOW_SEC` seconds.
+     4. Create Decisions with input thresholds, output fields, and action values (IDs 001, 002).
+   - Subscribe to PubNub channels:
+     ```js
+     const pubnub = new PubNub({ publishKey: PUBNUB_PUBLISH_KEY, subscribeKey: PUBNUB_SUBSCRIBE_KEY });
+     pubnub.subscribe({ channels: [CONTROL_CHANNEL, MESSAGE_CHANNEL] });
+     ```
+   - Event Handling & Aggregation:
+     • Buffer incoming messages from `MESSAGE_CHANNEL`, filter for reaction emojis, and maintain a sliding window of the last `AGGREGATION_WINDOW_SEC` seconds (use `dayjs` or simple timestamp arrays).
+     • Every few seconds, compute the count per reaction type and, if above threshold and not in cool-down, trigger Illuminate:
+       ```js
+       POST /illuminate/v1/accounts/{ACCOUNT_ID}/decisions/{decisionId}/action-data
+       body: { startDate, endDate, utcOffsetSec: 0, aggregationWindow: AGGREGATION_WINDOW_SEC }
+       ```
+     • On response, schedule each action in the returned array by its `delayOffsetInMs` to `pubnub.publish({ channel, message: action.data })`.
+     • Start a cool-down timer of `POLL_COOLDOWN_MS` (or per-decision `executionLimitIntervalInSeconds`) to prevent re-triggering too soon.
+
+3. Poll Simulation
+   - Use the provided `polls.js` modules (`require('./polls').angry`, `.cheer`) to simulate vote streams:
+     • After a `new-poll` action, generate fake vote messages on `MESSAGE_CHANNEL` at specified intervals, tally results, then publish a `game.poll-results` action.
+
+4. Error Handling & Logging
+   - Log all HTTP requests and PubNub publishes for troubleshooting.
+   - Retry transient failures with exponential backoff.
+   - Gracefully handle shutdown (unsubscribe, clear timers).

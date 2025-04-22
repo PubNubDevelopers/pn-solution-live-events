@@ -1,6 +1,6 @@
 1. Initialize the Node.js project
    - `npm init -y`
-   - Install dependencies: `npm install axios pubnub inquirer dotenv dayjs lodash`
+   - Install dependencies: `npm install axios inquirer dotenv`
 
 2. Configure credentials and environment
    - Load `ADMIN_EMAIL`, `ACCOUNT_ID`, `PUBNUB_PUBLISH_KEY`, `PUBNUB_SUBSCRIBE_KEY`, `CONTROL_CHANNEL`, `MESSAGE_CHANNEL`, `COOL_DOWN_MS`, `AGGREGATION_WINDOW_SEC` from environment or prompt via `inquirer`. Prompt for `ADMIN_PASSWORD` via `inquirer` at runtime (do not load from environment).
@@ -19,27 +19,16 @@
    d. Create Decisions linking metrics to actions:
       - POST `/illuminate/v1/accounts/{ACCOUNT_ID}/decisions` with input thresholds (e.g., >20), output fields, and `actionValues` (IDs 001, 002).
 
-5. Subscribe to PubNub channels
-   - Instantiate PubNub SDK and subscribe to `CONTROL_CHANNEL` and `MESSAGE_CHANNEL`.
-   - Listen for Data Controls events (to generate synthetic messages) and for reaction messages.
-
-6. Aggregate message data and trigger actions
-   - Maintain a sliding time window (use `dayjs` or timestamp buffer) of incoming reaction messages per type.
-   - On an interval (e.g., every 5 seconds), compute counts over `AGGREGATION_WINDOW_SEC`.
-   - If a count exceeds its decision threshold and not in cool-down:
-      - POST `/illuminate/v1/accounts/{ACCOUNT_ID}/decisions/{decisionId}/action-data` with `{ startDate, endDate, utcOffsetSec: 0, aggregationWindow: AGGREGATION_WINDOW_SEC }`.
-      - Begin a cool-down timer of `COOL_DOWN_MS` to prevent immediate re-triggering.
-   - On successful response, schedule each action by its `delayOffsetInMs` to `pubnub.publish({ channel, message: action.data })`.
-
-7. Simulate polls and votes
-   - Use the provided `polls.js` modules (`require('./polls').angry`, `.cheer`) to access action arrays for each decision ID.
-   - After publishing a `game.new-poll`, simulate votes over time on `MESSAGE_CHANNEL`, tally real and fake votes, then publish `game.poll-results`.
-
-8. CLI commands
+5. CLI commands
    - Provide a `reset` command to deactivate and re-provision all Illuminate objects.
    - Provide an `exit` or `quit` command to shutdown subscriptions and timers.
 
-9. Logging and error handling
-   - Log all HTTP requests, responses, PubNub publishes, and errors.
+6. Logging and error handling
+   - Log all HTTP requests, responses and errors.
    - Retry transient failures (e.g., network timeouts) with exponential backoff.
    - Graceful shutdown: unsubscribe from channels, clear timers.
+
+7. Only output JavaScript code, no comments or explanations.
+   - Use `axios` for HTTP requests.
+   - Use `inquirer` for CLI prompts.
+   - Use `dotenv` for environment variable management.

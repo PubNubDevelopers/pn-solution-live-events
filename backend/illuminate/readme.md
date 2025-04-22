@@ -14,7 +14,7 @@ This repository contains a build script (`./build.sh`) that generates a Node.js 
 1. Initialize the Node.js project and install dependencies:
    ```bash
    npm init -y
-   npm install axios pubnub inquirer dotenv dayjs lodash
+   npm install axios inquirer dotenv
    ```
 
 2. Create a `.env` file in the project root with the following variables (excluding `ADMIN_PASSWORD`, which will be prompted at runtime):
@@ -25,12 +25,6 @@ This repository contains a build script (`./build.sh`) that generates a Node.js 
 
    # Illuminate account and PubNub credentials
    ACCOUNT_ID=<your_demo_account_id>
-   PUBNUB_PUBLISH_KEY=<your_pubnub_publish_key>
-   PUBNUB_SUBSCRIBE_KEY=<your_pubnub_subscribe_key>
-
-   # PubNub channels
-   CONTROL_CHANNEL=<data_controls_channel_name>
-   MESSAGE_CHANNEL=<message_feed_channel_name>
 
    # Timing settings (in milliseconds/seconds)
    COOL_DOWN_MS=60000

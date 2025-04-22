@@ -27,7 +27,7 @@ exports.reactions = [
       channel: "game.stream-reactions",
       data: { text: `👏`, type: "reaction" },
     },
-    repeat: 9,
+    repeat: 4,
   },
   {
     timeSinceVideoStartedInMs: 48000,
@@ -36,7 +36,7 @@ exports.reactions = [
       channel: "game.stream-reactions",
       data: { text: `🔥`, type: "reaction" },
     },
-    repeat: 9,
+    repeat: 4,
   },
   {
     timeSinceVideoStartedInMs: 48000,
@@ -45,7 +45,7 @@ exports.reactions = [
       channel: "game.stream-reactions",
       data: { text: `🎉`, type: "reaction" },
     },
-    repeat: 9,
+    repeat: 4,
   },
   //  Yellow card 1
   {
@@ -55,7 +55,7 @@ exports.reactions = [
       channel: "game.stream-reactions",
       data: { text: `😢`, type: "reaction" },
     },
-    repeat: 9,
+    repeat: 4,
   },
   {
     timeSinceVideoStartedInMs: 117000,
@@ -64,7 +64,7 @@ exports.reactions = [
       channel: "game.stream-reactions",
       data: { text: `😡`, type: "reaction" },
     },
-    repeat: 9,
+    repeat: 4,
   },
   {
     timeSinceVideoStartedInMs: 117000,
@@ -73,7 +73,7 @@ exports.reactions = [
       channel: "game.stream-reactions",
       data: { text: `😮`, type: "reaction" },
     },
-    repeat: 9,
+    repeat: 4,
   },
   //  Goal 2
   {
@@ -83,7 +83,7 @@ exports.reactions = [
       channel: "game.stream-reactions",
       data: { text: `👏`, type: "reaction" },
     },
-    repeat: 9,
+    repeat: 4,
   },
   {
     timeSinceVideoStartedInMs: 159000,
@@ -92,7 +92,7 @@ exports.reactions = [
       channel: "game.stream-reactions",
       data: { text: `🔥`, type: "reaction" },
     },
-    repeat: 9,
+    repeat: 4,
   },
   {
     timeSinceVideoStartedInMs: 159000,
@@ -101,7 +101,7 @@ exports.reactions = [
       channel: "game.stream-reactions",
       data: { text: `🎉`, type: "reaction" },
     },
-    repeat: 9,
+    repeat: 4,
   },
   //  Goal 3
   {
@@ -111,7 +111,7 @@ exports.reactions = [
       channel: "game.stream-reactions",
       data: { text: `👏`, type: "reaction" },
     },
-    repeat: 9,
+    repeat: 4,
   },
   {
     timeSinceVideoStartedInMs: 203000,
@@ -120,7 +120,7 @@ exports.reactions = [
       channel: "game.stream-reactions",
       data: { text: `🔥`, type: "reaction" },
     },
-    repeat: 9,
+    repeat: 4,
   },
   {
     timeSinceVideoStartedInMs: 203000,
@@ -129,7 +129,7 @@ exports.reactions = [
       channel: "game.stream-reactions",
       data: { text: `🎉`, type: "reaction" },
     },
-    repeat: 9,
+    repeat: 4,
   },
   //  Yellow card 2
   {
@@ -139,7 +139,7 @@ exports.reactions = [
       channel: "game.stream-reactions",
       data: { text: `😢`, type: "reaction" },
     },
-    repeat: 9,
+    repeat: 4,
   },
   {
     timeSinceVideoStartedInMs: 270000,
@@ -148,7 +148,7 @@ exports.reactions = [
       channel: "game.stream-reactions",
       data: { text: `😡`, type: "reaction" },
     },
-    repeat: 9,
+    repeat: 4,
   },
   {
     timeSinceVideoStartedInMs: 270000,
@@ -157,7 +157,7 @@ exports.reactions = [
       channel: "game.stream-reactions",
       data: { text: `😮`, type: "reaction" },
     },
-    repeat: 9,
+    repeat: 4,
   },
   //  Goal 4
   {
@@ -167,7 +167,7 @@ exports.reactions = [
       channel: "game.stream-reactions",
       data: { text: `👏`, type: "reaction" },
     },
-    repeat: 9,
+    repeat: 4,
   },
   {
     timeSinceVideoStartedInMs: 317000,
@@ -176,7 +176,7 @@ exports.reactions = [
       channel: "game.stream-reactions",
       data: { text: `🔥`, type: "reaction" },
     },
-    repeat: 9,
+    repeat: 4,
   },
   {
     timeSinceVideoStartedInMs: 317000,
@@ -185,7 +185,7 @@ exports.reactions = [
       channel: "game.stream-reactions",
       data: { text: `🎉`, type: "reaction" },
     },
-    repeat: 9,
+    repeat: 4,
   },
   //  Yellow card 3
   {
@@ -195,7 +195,7 @@ exports.reactions = [
       channel: "game.stream-reactions",
       data: { text: `😢`, type: "reaction" },
     },
-    repeat: 9,
+    repeat: 4,
   },
   {
     timeSinceVideoStartedInMs: 492000,
@@ -204,7 +204,7 @@ exports.reactions = [
       channel: "game.stream-reactions",
       data: { text: `😡`, type: "reaction" },
     },
-    repeat: 9,
+    repeat: 4,
   },
   {
     timeSinceVideoStartedInMs: 492000,
@@ -213,7 +213,7 @@ exports.reactions = [
       channel: "game.stream-reactions",
       data: { text: `😮`, type: "reaction" },
     },
-    repeat: 9,
+    repeat: 4,
   }, //  Yellow card 4
   {
     timeSinceVideoStartedInMs: 637000,
@@ -222,7 +222,7 @@ exports.reactions = [
       channel: "game.stream-reactions",
       data: { text: `😢`, type: "reaction" },
     },
-    repeat: 9,
+    repeat: 4,
   },
   {
     timeSinceVideoStartedInMs: 637000,
@@ -231,7 +231,7 @@ exports.reactions = [
       channel: "game.stream-reactions",
       data: { text: `😡`, type: "reaction" },
     },
-    repeat: 9,
+    repeat: 4,
   },
   {
     timeSinceVideoStartedInMs: 637000,
@@ -240,7 +240,7 @@ exports.reactions = [
       channel: "game.stream-reactions",
       data: { text: `😮`, type: "reaction" },
     },
-    repeat: 9,
+    repeat: 4,
   },
   //  Goal 5
   {
@@ -250,7 +250,7 @@ exports.reactions = [
       channel: "game.stream-reactions",
       data: { text: `👏`, type: "reaction" },
     },
-    repeat: 9,
+    repeat: 4,
   },
   {
     timeSinceVideoStartedInMs: 679000,
@@ -259,7 +259,7 @@ exports.reactions = [
       channel: "game.stream-reactions",
       data: { text: `🔥`, type: "reaction" },
     },
-    repeat: 9,
+    repeat: 4,
   },
   {
     timeSinceVideoStartedInMs: 679000,
@@ -268,7 +268,7 @@ exports.reactions = [
       channel: "game.stream-reactions",
       data: { text: `🎉`, type: "reaction" },
     },
-    repeat: 9,
+    repeat: 4,
   },
   //  Yellow card 5
   {
@@ -278,7 +278,7 @@ exports.reactions = [
       channel: "game.stream-reactions",
       data: { text: `😢`, type: "reaction" },
     },
-    repeat: 9,
+    repeat: 4,
   },
   {
     timeSinceVideoStartedInMs: 827000,
@@ -287,7 +287,7 @@ exports.reactions = [
       channel: "game.stream-reactions",
       data: { text: `😡`, type: "reaction" },
     },
-    repeat: 9,
+    repeat: 4,
   },
   {
     timeSinceVideoStartedInMs: 827000,
@@ -296,7 +296,7 @@ exports.reactions = [
       channel: "game.stream-reactions",
       data: { text: `😮`, type: "reaction" },
     },
-    repeat: 9,
+    repeat: 4,
   },
   //  Goal 6
   {
@@ -306,7 +306,7 @@ exports.reactions = [
       channel: "game.stream-reactions",
       data: { text: `👏`, type: "reaction" },
     },
-    repeat: 9,
+    repeat: 4,
   },
   {
     timeSinceVideoStartedInMs: 920000,
@@ -315,7 +315,7 @@ exports.reactions = [
       channel: "game.stream-reactions",
       data: { text: `🔥`, type: "reaction" },
     },
-    repeat: 9,
+    repeat: 4,
   },
   {
     timeSinceVideoStartedInMs: 920000,
@@ -324,7 +324,7 @@ exports.reactions = [
       channel: "game.stream-reactions",
       data: { text: `🎉`, type: "reaction" },
     },
-    repeat: 9,
+    repeat: 4,
   },
   //  Red card 1
   {
@@ -334,7 +334,7 @@ exports.reactions = [
       channel: "game.stream-reactions",
       data: { text: `😢`, type: "reaction" },
     },
-    repeat: 9,
+    repeat: 4,
   },
   {
     timeSinceVideoStartedInMs: 964500,
@@ -343,7 +343,7 @@ exports.reactions = [
       channel: "game.stream-reactions",
       data: { text: `😡`, type: "reaction" },
     },
-    repeat: 9,
+    repeat: 4,
   },
   {
     timeSinceVideoStartedInMs: 964500,
@@ -352,7 +352,7 @@ exports.reactions = [
       channel: "game.stream-reactions",
       data: { text: `😮`, type: "reaction" },
     },
-    repeat: 9,
+    repeat: 4,
   },
   //  Yellow card 6 / Red card 2
   {
@@ -362,7 +362,7 @@ exports.reactions = [
       channel: "game.stream-reactions",
       data: { text: `😢`, type: "reaction" },
     },
-    repeat: 9,
+    repeat: 4,
   },
   {
     timeSinceVideoStartedInMs: 1053500,
@@ -371,7 +371,7 @@ exports.reactions = [
       channel: "game.stream-reactions",
       data: { text: `😡`, type: "reaction" },
     },
-    repeat: 9,
+    repeat: 4,
   },
   {
     timeSinceVideoStartedInMs: 1053500,
@@ -380,7 +380,7 @@ exports.reactions = [
       channel: "game.stream-reactions",
       data: { text: `😮`, type: "reaction" },
     },
-    repeat: 9,
+    repeat: 4,
   },
   //  Goal 7
   {
@@ -390,7 +390,7 @@ exports.reactions = [
       channel: "game.stream-reactions",
       data: { text: `👏`, type: "reaction" },
     },
-    repeat: 9,
+    repeat: 4,
   },
   {
     timeSinceVideoStartedInMs: 1156000,
@@ -399,7 +399,7 @@ exports.reactions = [
       channel: "game.stream-reactions",
       data: { text: `🔥`, type: "reaction" },
     },
-    repeat: 9,
+    repeat: 4,
   },
   {
     timeSinceVideoStartedInMs: 1156000,
@@ -408,6 +408,6 @@ exports.reactions = [
       channel: "game.stream-reactions",
       data: { text: `🎉`, type: "reaction" },
     },
-    repeat: 9,
+    repeat: 4,
   },
 ];

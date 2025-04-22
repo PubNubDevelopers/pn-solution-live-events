@@ -13,7 +13,8 @@ import {
   pushChannelSelfId,
   pushChannelSalesId,
   dynamicAdChannelId,
-  illuminateUpgradeReaction
+  illuminateUpgradeReaction,
+  serverVideoControlChannelId
 } from '../data/constants'
 
 export default function Page () {
@@ -514,10 +515,19 @@ export default function Page () {
         <div
           className={`${testStyle}`}
           onClick={() =>
-            sendPubNubMessage(illuminatePollTesting, { pollId: 2 })
+            sendPubNubMessage(serverVideoControlChannelId, { type: 'ON_DEMAND_SCRIPT', params: { scriptName: 'cheer' } })
           }
         >
-          Mock Illuminate requesting a poll (DCC Testing only)
+          Mock Illuminate requesting a poll (Cheering)
+        </div>
+
+        <div
+          className={`${testStyle}`}
+          onClick={() =>
+            sendPubNubMessage(serverVideoControlChannelId, { type: 'ON_DEMAND_SCRIPT', params: { scriptName: 'angry' } })
+          }
+        >
+          Mock Illuminate requesting a poll (Anger)
         </div>
 
         <div className='text-xl'>Match Statistics</div>

@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react'
 import GuideOverlay from '../components/guideOverlay'
 import {
   dataControlOccupancyChannelId,
+  serverVideoControlChannelId,
   streamReactionsChannelId
 } from '../data/constants'
 import {
@@ -278,7 +279,8 @@ export default function ChatWidget ({
             m => m.timetoken === message.timetoken
           )
           if (messageExists) return prevMessages
-          return [...prevMessages, message]
+          const newMessages = [...prevMessages, message]
+          return newMessages.slice(-20)
         })
       })
 
@@ -321,6 +323,21 @@ export default function ChatWidget ({
       }
       occupancySubscription.subscribe()
 
+      const serverVideoControlChannel = chat.sdk.channel(
+        serverVideoControlChannelId
+      )
+      const serverVideoControlSubscription = serverVideoControlChannel.subscription({
+        receivePresenceEvents: false
+      })
+      serverVideoControlSubscription.onMessage = (messageEvent: any) => {
+        if (messageEvent.message.type === 'START_STREAM')
+        {
+          setMessages([])
+        }
+      }
+      serverVideoControlSubscription.subscribe()
+
+
       //  For consistency with the live stream, use the reactions channel for real occupancy
       const reactionsChannel = chat.sdk.channel(streamReactionsChannelId)
       const reactionsSubscription = reactionsChannel.subscription({
@@ -354,6 +371,8 @@ export default function ChatWidget ({
         setMessages([])
         setTypingUsers([])
         occupancySubscription.unsubscribe()
+        reactionsSubscription.unsubscribe()
+        serverVideoControlSubscription.unsubscribe()
       }
     } catch (error) {
       console.error(`Error setting up channel ${activeChannelId}:`, error)
@@ -382,7 +401,7 @@ export default function ChatWidget ({
 
     try {
       // Use PubNub Chat SDK to send the message
-      await activeChannel.sendText(messageInput)
+      await activeChannel.sendText(messageInput, { storeInHistory: false })
       // await activeChannel.rea(messageInput)
 
       // Clear input and typing indicator
@@ -495,7 +514,7 @@ export default function ChatWidget ({
 
   return (
     <div
-      className={`${className} w-full h-full`}
+      className={`${className} w-full h-fit`}
       onClick={e => backgroundClicked(e)}
     >
       <GuideOverlay
@@ -507,7 +526,7 @@ export default function ChatWidget ({
           <span>
             The <span className='font-semibold'>PubNub Chat SDK</span> provides
             you with everything you need to develop a fully featured,
-            production-ready chat component::
+            production-ready chat component:
             <ul className='list-disc list-inside my-2'>
               <li>Public, private, and direct channels</li>
               <li>Send and receive real-time messages</li>

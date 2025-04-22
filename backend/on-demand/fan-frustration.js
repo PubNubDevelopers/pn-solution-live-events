@@ -15,7 +15,7 @@ exports.fanFrustration = [
       channel: "game.stream-reactions",
       data: { text: `😡`, type: "reaction" },
     },
-    repeat: 5,
+    repeat: 13,
   },
   {
     delayOffsetInMs: 0,
@@ -42,7 +42,7 @@ exports.fanFrustration = [
       channel: "game.stream-reactions",
       data: { text: `😡`, type: "reaction" },
     },
-    repeat: 5,
+    repeat: 13,
   },
   {
     delayOffsetInMs: 0,

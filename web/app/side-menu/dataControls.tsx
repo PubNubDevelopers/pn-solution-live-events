@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react'
 import { Slider } from '@heroui/react'
 import {
-  chatChannelId,
-  streamReactionsChannelId,
   dataControlOccupancyChannelId,
+  clientVideoControlChannelId,
   serverVideoControlChannelId
 } from '../data/constants'
 import { PlayCircle } from './sideMenuIcons'
@@ -43,35 +42,103 @@ export default function SideMenuDataControls ({ chat }) {
     'End match'
   ]
   const [occupancy, setOccupancy] = useState<number | number[]>(0)
-  async function seekVideo (simulate) {
-    const start = 'START_STREAM';
-    const stop = 'END_STREAM';
-    const seek = 'SEEK';
-
-    let seekTime = 0;
-    let type = '';
-
+  const [isStarted, setIsStarted] = useState(false)
+  async function sendMessageToBackend (simulate) {
     switch (simulate) {
       case 'Kick off':
-        type = start;
-        break;
+        //  Start the game
+        setIsStarted(true)
+        await chat.sdk.publish({
+          message: {
+            type: 'START_STREAM'
+          },
+          channel: serverVideoControlChannelId
+        })
+        break
       case 'Goal':
-        type = seek;
-        seekTime = 30000;
-        break;
-      case 'End match':
-        type = stop;
-        break;
-    }
+        //  Seek to the second goal
+        await chat.sdk.publish({
+          message: {
+            type: 'SEEK',
+            params: { playbackTime: 158000 }
+          },
+          channel: serverVideoControlChannelId
+        })
+        break
+      case 'Goal + Push Message':
+        //  Seek to the second goal
+        await chat.sdk.publish({
+          message: {
+            type: 'SEEK',
+            params: { playbackTime: 158000 }
+          },
+          channel: serverVideoControlChannelId
+        })
+        await chat.sdk.publish({
+          message: {
+            type: 'ON_DEMAND_SCRIPT',
+            params: { scriptName: 'push-goal' }
+          },
+          channel: serverVideoControlChannelId
+        })
+        break
+      case 'Fan excitement':
+        await chat.sdk.publish({
+          message: {
+            type: 'ON_DEMAND_SCRIPT',
+            params: { scriptName: 'fan-excitement' }
+          },
+          channel: serverVideoControlChannelId
+        })
 
-    // Publish the message to the server video control channel
-    await chat.sdk.publish({
-      message: {
-        type: type,
-        params: { playbackTime: seekTime }
-      },
-      channel: serverVideoControlChannelId
-    });
+        break
+      case 'Fan frustration':
+        await chat.sdk.publish({
+          message: {
+            type: 'ON_DEMAND_SCRIPT',
+            params: { scriptName: 'fan-frustration' }
+          },
+          channel: serverVideoControlChannelId
+        })
+        break
+      case 'Five minutes remaining':
+        //  Seek to 5 minutes remaining
+        await chat.sdk.publish({
+          message: {
+            type: 'SEEK',
+            params: { playbackTime: 1100000 }
+          },
+          channel: serverVideoControlChannelId
+        })
+        break
+      case '5mins + Push Message':
+        await chat.sdk.publish({
+          message: {
+            type: 'SEEK',
+            params: { playbackTime: 1100000 }
+          },
+          channel: serverVideoControlChannelId
+        })
+        await chat.sdk.publish({
+          message: {
+            type: 'ON_DEMAND_SCRIPT',
+            params: { scriptName: 'push-5mins' }
+          },
+          channel: serverVideoControlChannelId
+        })
+        break
+
+      case 'End match':
+        //  Start the game
+        await chat.sdk.publish({
+          message: {
+            type: 'END_STREAM'
+          },
+          channel: serverVideoControlChannelId
+        })
+        setIsStarted(false)
+        break
+    }
   }
 
   useEffect(() => {
@@ -92,9 +159,23 @@ export default function SideMenuDataControls ({ chat }) {
     const chatWidgetOccupancy =
       occupancy == 0
         ? 0
-        : Math.round(Math.pow(Math.E, ((occupancy as number) / 2)))
+        : Math.round(Math.pow(Math.E, (occupancy as number) / 2))
     sendControlMessage(streamWidgetOccupancy, chatWidgetOccupancy)
   }, [occupancy])
+
+  useEffect(() => {
+    if (!chat) return
+    const videoEventsChannel = chat.sdk.channel(clientVideoControlChannelId)
+    const videoEventsSubscription = videoEventsChannel.subscription({
+      receivePresenceEvents: false
+    })
+    videoEventsSubscription.onMessage = messageEvent => {
+      if (messageEvent.message?.type === 'STATUS') {
+        setIsStarted(true)
+      }
+    }
+    videoEventsSubscription.subscribe()
+  }, [chat])
 
   return (
     <div className='flex flex-col gap-3 text-base font-semibold'>
@@ -127,6 +208,7 @@ export default function SideMenuDataControls ({ chat }) {
               onClickOption={selected => {
                 setSelectedSimulation(selected)
               }}
+              isStarted={isStarted}
             />
           </div>
         </div>
@@ -135,8 +217,14 @@ export default function SideMenuDataControls ({ chat }) {
             selectedSimulation == 0 ? 'text-navy500' : 'text-neutral50'
           } cursor-pointer`}
           onClick={e => {
-            seekVideo(`${simulationNames[selectedSimulation]}`)
-            console.log(`Simulating ${simulationNames[selectedSimulation]}`)
+            sendMessageToBackend(`${simulationNames[selectedSimulation]}`)
+            if (
+              selectedSimulation == 1 ||
+              selectedSimulation == simulationNames.length - 1
+            ) {
+              //  If selected start or end match, discourage clicking that twice
+              setSelectedSimulation(0)
+            }
             e.stopPropagation()
           }}
         >
@@ -164,12 +252,12 @@ export default function SideMenuDataControls ({ chat }) {
     </div>
   )
 }
-
 function DataControlsDropDown ({
   dropDownVisible,
   setDropDownVisible,
   simulationNames,
-  onClickOption
+  onClickOption,
+  isStarted
 }) {
   return (
     <div
@@ -177,16 +265,22 @@ function DataControlsDropDown ({
         !dropDownVisible && 'hidden'
       } absolute w-48 top-[8px] left-[0px] bg-navy900 border-1 border-white/20 rounded-lg shadow-xl select-none z-40`}
     >
-      <div className='flex flex-col pt-2 text-neutral-50 text-sm max-h-96 overflow-auto'>
+      <div className='flex flex-col z-50 pt-2 text-neutral-50 text-sm max-h-96 overflow-auto'>
         {simulationNames.map(
           (name, index) =>
             index > 0 && (
               <div
                 key={index}
-                className='h-11 px-4 py-3 font-normal hover:bg-navy800 cursor-pointer'
+                className={`h-11 px-4 py-3 font-normal ${
+                  (index > 1 && isStarted) || (index == 1 && !isStarted)
+                    ? 'hover:bg-navy800 cursor-pointer'
+                    : 'text-navy400'
+                }`}
                 onClick={e => {
-                  onClickOption(index)
-                  setDropDownVisible(false)
+                  if ((index > 1 && isStarted) || (index == 1 && !isStarted)) {
+                    onClickOption(index)
+                    setDropDownVisible(false)
+                  }
                   e.stopPropagation()
                 }}
               >

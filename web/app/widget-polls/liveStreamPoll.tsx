@@ -73,7 +73,6 @@ export default function LiveStreamPoll ({
 
   useEffect(() => {
     if (!chat) return
-    if (isGuidedDemo) return
     chat.sdk
       .fetchMessages({
         channels: [pollDeclarations, pollResults],
@@ -95,7 +94,7 @@ export default function LiveStreamPoll ({
           }
         }
       })
-  }, [chat, isGuidedDemo])
+  }, [chat])
 
   function handleNewLivePoll (messageEvent) {
     const newPoll = messageEvent.message

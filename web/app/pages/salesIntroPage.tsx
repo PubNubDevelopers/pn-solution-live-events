@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import { urls } from '../data/urls'
 
 export default function SalesIntroPage ({
   setSalesIntroPageShown,
@@ -75,9 +76,9 @@ export default function SalesIntroPage ({
 
         <div className='flex flex-row gap-6 pt-[112px] pr-6 pb-6 overflow-auto'>
           <HomePageTemplateTile
-            title={'Continue'}
+            title={'Accept & Continue'}
             subtitle={
-              'Retain any changes made to the Illuminate Objects associated with this demo'
+              'This application uses a shared demo environment, if you modify anything on the backend, such as Illuminate Objects, please return them to their original state after using this demo.'
             }
             iconUrl={'/icons/start.svg'}
             tileClick={() => {
@@ -85,13 +86,13 @@ export default function SalesIntroPage ({
             }}
           />
           <HomePageTemplateTile
-            title={'Reset Demo'}
+            title={'Visit the Wiki First'}
             subtitle={
-              'This will reset all associated Illuminate Objects in the shared account back to their default state'
+              'If in doubt, visit the wiki for this application to understand how it works, and how to reset any backend objects if necessary.'
             }
             iconUrl={'/icons/auto_awesome.svg'}
             tileClick={() => {
-              proceed(true)
+              window.location.href = urls.wiki
             }}
           />
         </div>

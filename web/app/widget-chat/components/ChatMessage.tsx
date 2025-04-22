@@ -32,29 +32,9 @@ export default function ChatMessage ({
     mute: boolean
   }>({ ban: false, mute: false })
 
+  
   useEffect(() => {
-    // Check if the message sender is banned or muted
-    //  Note that for this demo implementation, this only takes effect when the chat is loaded
-    const checkUserRestrictions = async () => {
-      if (!channel || !message.userId) return
-
-      try {
-        // Find the user object from the users array
-        const messageUser = users.find(user => user.id === message.userId)
-        if (!messageUser) return
-
-        const restrictions = await channel.getUserRestrictions(messageUser)
-        setUserRestrictions(restrictions)
-      } catch (error) {
-        console.error('Error checking user restrictions:', error)
-      }
-    }
-
-    checkUserRestrictions()
-  }, [channel, message.userId, users])
-
-  useEffect(() => {
-    if (hovering) {
+    if (hovering && message.userId.startsWith('user-')) {
       setShowReactions(true)
     }
     if (showReactions && !hovering) {

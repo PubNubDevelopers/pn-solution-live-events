@@ -62,4 +62,5 @@ export const urls = {
     },
   },
   popoutView: "./popout/",
+  wiki: "https://pubnub.atlassian.net/wiki/spaces/GROW/pages/4104781884/Chat+Builder",
 };

@@ -1,0 +1,8 @@
+1. write a nodejs script that asks for the username and password.
+2. use this information to fecth an access token from the server.
+3. use the access token to fetch the user profile.
+4. print the user profile to the console.
+5. ask the user if they want to provision the illumnate app.
+6. if the user says yes, proceed with the provisioning and follow the user's instructions.
+7. if the user says no, exit the script.
+8. use the token to provision the illuminate with business objects and actions based on the user's instructions.

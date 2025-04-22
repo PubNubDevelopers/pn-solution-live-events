@@ -16,6 +16,7 @@ import {
   illuminateUpgradeReaction,
   serverVideoControlChannelId
 } from '../data/constants'
+import { getAuthKey } from '../getAuthKey'
 
 export default function Page () {
   const [chat, setChat] = useState<Chat | null>(null)
@@ -94,10 +95,13 @@ export default function Page () {
   useEffect(() => {
     async function init () {
       try {
+        const userId = 'testing-only'
+        const { accessManagerToken } = await getAuthKey(userId, isGuidedDemo ? true : false)
         const localChat = await Chat.init({
           publishKey: process.env.NEXT_PUBLIC_PUBNUB_PUBLISH_KEY as string,
           subscribeKey: process.env.NEXT_PUBLIC_PUBNUB_SUBSCRIBE_KEY as string,
-          userId: 'testing-only'
+          userId: userId,
+          authKey: accessManagerToken
         })
         setChat(localChat)
       } catch {}

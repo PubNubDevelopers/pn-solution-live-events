@@ -258,6 +258,7 @@ export default function ChatWidget ({
       //setWhoIsPresent(await chat.whoIsPresent(activeChannelId));
 
       // Get channel history
+      /*
       try {
         const history = await channel.getHistory()
 
@@ -266,6 +267,7 @@ export default function ChatWidget ({
         console.error('Error fetching message history:', error)
         setMessages([])
       }
+        */
 
       // Initialize cleanup functions
       let unsubscribeMessages = () => {}
@@ -401,7 +403,7 @@ export default function ChatWidget ({
 
     try {
       // Use PubNub Chat SDK to send the message
-      await activeChannel.sendText(messageInput, { storeInHistory: true })
+      await activeChannel.sendText(messageInput, { storeInHistory: false })
       // await activeChannel.rea(messageInput)
 
       // Clear input and typing indicator

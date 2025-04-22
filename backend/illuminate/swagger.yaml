@@ -1,0 +1,955 @@
+swaggerDoc:
+  openapi: 3.0.0
+  paths:
+    /illuminate/v1/accounts/{accountId}/business-objects:
+      post:
+        operationId: BusinessObjectController_create
+        parameters: []
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BusinessObjectDto'
+        responses:
+          "201":
+            description: ""
+        tags:
+          - BusinessObject
+      get:
+        operationId: BusinessObjectController_list
+        parameters: []
+        responses:
+          "200":
+            description: ""
+        tags:
+          - BusinessObject
+    /illuminate/v1/accounts/{accountId}/business-objects/{id}:
+      get:
+        operationId: BusinessObjectController_get
+        parameters: []
+        responses:
+          "200":
+            description: ""
+        tags:
+          - BusinessObject
+      put:
+        operationId: BusinessObjectController_edit
+        parameters: []
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BusinessObjectEditDto'
+        responses:
+          "200":
+            description: ""
+        tags:
+          - BusinessObject
+      delete:
+        operationId: BusinessObjectController_delete
+        parameters: []
+        responses:
+          "200":
+            description: ""
+        tags:
+          - BusinessObject
+    /illuminate/v1/accounts/{accountId}/business-objects/json-path-validation:
+      post:
+        operationId: BusinessObjectController_validateJsonPath
+        parameters: []
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonPathValidationDto'
+        responses:
+          "200":
+            description: ""
+        tags:
+          - BusinessObject
+    /illuminate/v1/accounts/{accountId}/business-objects/deactivate:
+      post:
+        operationId: BusinessObjectController_deactivateAll
+        parameters: []
+        responses:
+          "200":
+            description: ""
+        tags:
+          - BusinessObject
+    /illuminate/v1/accounts/{accountId}/metrics:
+      post:
+        operationId: MetricController_create
+        parameters: []
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MetricDto'
+        responses:
+          "201":
+            description: ""
+        tags:
+          - Metric
+      get:
+        operationId: MetricController_list
+        parameters: []
+        responses:
+          "200":
+            description: ""
+        tags:
+          - Metric
+    /illuminate/v1/accounts/{accountId}/metrics/{id}:
+      get:
+        operationId: MetricController_get
+        parameters: []
+        responses:
+          "200":
+            description: ""
+        tags:
+          - Metric
+      put:
+        operationId: MetricController_edit
+        parameters: []
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MetricDto'
+        responses:
+          "200":
+            description: ""
+        tags:
+          - Metric
+      delete:
+        operationId: MetricController_delete
+        parameters: []
+        responses:
+          "200":
+            description: ""
+        tags:
+          - Metric
+    /illuminate/v1/accounts/{accountId}/decisions:
+      post:
+        operationId: DecisionController_create
+        parameters: []
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DecisionDto'
+        responses:
+          "201":
+            description: ""
+        tags:
+          - Decision
+      get:
+        operationId: DecisionController_list
+        parameters: []
+        responses:
+          "200":
+            description: ""
+        tags:
+          - Decision
+    /illuminate/v1/accounts/{accountId}/decisions/{id}:
+      get:
+        operationId: DecisionController_get
+        parameters: []
+        responses:
+          "200":
+            description: ""
+        tags:
+          - Decision
+      put:
+        operationId: DecisionController_edit
+        parameters: []
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DecisionEditDto'
+        responses:
+          "200":
+            description: ""
+        tags:
+          - Decision
+      delete:
+        operationId: DecisionController_delete
+        parameters: []
+        responses:
+          "200":
+            description: ""
+        tags:
+          - Decision
+    /illuminate/v1/accounts/{accountId}/decisions/{id}/action-data:
+      post:
+        operationId: DecisionController_getActionData
+        parameters: []
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionDataQuery'
+        responses:
+          "201":
+            description: ""
+        tags:
+          - Decision
+    /illuminate/v1/accounts/{accountId}/decisions/{id}/action-log:
+      get:
+        operationId: DecisionController_getActionLog
+        parameters:
+          - name: format
+            required: false
+            in: query
+            schema:
+              type: string
+          - name: startDate
+            required: false
+            in: query
+            schema:
+              type: string
+          - name: endDate
+            required: false
+            in: query
+            schema:
+              type: string
+          - name: success
+            required: false
+            in: query
+            schema:
+              type: string
+          - name: search
+            required: false
+            in: query
+            schema:
+              type: string
+          - name: sort
+            required: false
+            in: query
+            schema:
+              type: string
+          - name: limit
+            required: false
+            in: query
+            schema:
+              type: string
+          - name: page
+            required: false
+            in: query
+            schema:
+              type: string
+        responses:
+          "200":
+            description: ""
+        tags:
+          - Decision
+    /illuminate/v1/accounts/{accountId}/decisions/{id}/action-limit-reset:
+      post:
+        operationId: DecisionController_resetActionLimit
+        parameters:
+          - name: all
+            required: false
+            in: query
+            schema:
+              type: boolean
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResetActionLimitListDto'
+        responses:
+          "200":
+            description: ""
+        tags:
+          - Decision
+    /illuminate/v1/accounts/{accountId}/dashboards:
+      post:
+        operationId: DashboardController_create
+        parameters: []
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DashboardDto'
+        responses:
+          "201":
+            description: ""
+        tags:
+          - Dashboard
+      get:
+        operationId: DashboardController_list
+        parameters: []
+        responses:
+          "200":
+            description: ""
+        tags:
+          - Dashboard
+    /illuminate/v1/accounts/{accountId}/dashboards/{id}:
+      get:
+        operationId: DashboardController_get
+        parameters: []
+        responses:
+          "200":
+            description: ""
+        tags:
+          - Dashboard
+      put:
+        operationId: DashboardController_edit
+        parameters: []
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DashboardDto'
+        responses:
+          "200":
+            description: ""
+        tags:
+          - Dashboard
+      delete:
+        operationId: DashboardController_delete
+        parameters: []
+        responses:
+          "200":
+            description: ""
+        tags:
+          - Dashboard
+    /illuminate/v1/accounts/{accountId}/metric-data:
+      post:
+        operationId: MetricDataController_get
+        parameters: []
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MetricDataQuery'
+        responses:
+          "201":
+            description: ""
+        tags:
+          - MetricData
+    /illuminate/v1/accounts/{accountId}/subscription:
+      get:
+        operationId: SubscriptionController_get
+        parameters: []
+        responses:
+          "200":
+            description: ""
+        tags:
+          - Subscription
+    /illuminate/v1/accounts/{accountId}/onboarding/ai/v2:
+      post:
+        operationId: OnboardingController_aiGeneratorV2
+        parameters: []
+        responses:
+          "201":
+            description: ""
+        tags:
+          - Onboarding
+    /illuminate/v1/accounts/{accountId}/demo-keyset/has-demo-keyset:
+      get:
+        operationId: DemoKeysetController_hasDemoKeyset
+        parameters:
+          - name: subkeys
+            required: true
+            in: query
+            schema:
+              type: array
+              items:
+                type: string
+        responses:
+          "200":
+            description: ""
+        tags:
+          - DemoKeyset
+    /illuminate/v1/accounts/{accountId}/event-generator/start:
+      post:
+        operationId: EventGeneratorController_startAll
+        parameters: []
+        responses:
+          "201":
+            description: ""
+        tags:
+          - EventGenerator
+    /illuminate/v1/accounts/{accountId}/event-generator/start/{businessObjectId}:
+      post:
+        operationId: EventGeneratorController_start
+        parameters:
+          - name: businessObjectId
+            required: true
+            in: path
+            schema:
+              type: string
+        responses:
+          "201":
+            description: ""
+        tags:
+          - EventGenerator
+    /illuminate/v1/accounts/{accountId}/event-generator/is-running:
+      get:
+        operationId: EventGeneratorController_isRunning
+        parameters: []
+        responses:
+          "200":
+            description: ""
+        tags:
+          - EventGenerator
+  info:
+    title: Illuminate API
+    description: The Illuminate API description
+    version: "1.0"
+    contact: {}
+  tags: []
+  servers: []
+  components:
+    schemas:
+      TimeDiffParams:
+        type: object
+        properties:
+          startSource:
+            type: string
+            enum:
+              - DATA_FIELD
+              - PUBLISH_TIMETOKEN
+          startFieldIndex:
+            type: number
+          endSource:
+            type: string
+            enum:
+              - DATA_FIELD
+              - PUBLISH_TIMETOKEN
+          endFieldIndex:
+            type: number
+        required:
+          - startSource
+          - endSource
+      DerivationDto:
+        type: object
+        properties:
+          operation:
+            type: string
+            enum:
+              - TIME_DIFF
+          params:
+            $ref: '#/components/schemas/TimeDiffParams'
+        required:
+          - operation
+          - params
+      FieldDto:
+        type: object
+        properties:
+          id:
+            type: string
+          name:
+            type: string
+            minLength: 1
+            maxLength: 50
+          source:
+            type: string
+            enum:
+              - JSONPATH
+              - DERIVED
+          jsonPath:
+            type: string
+            maxLength: 200
+          jsonFieldType:
+            type: string
+          isKeyset:
+            type: boolean
+          derivation:
+            $ref: '#/components/schemas/DerivationDto'
+        required:
+          - name
+      BusinessObjectDto:
+        type: object
+        properties:
+          name:
+            type: string
+            minLength: 1
+            maxLength: 50
+          isActive:
+            type: boolean
+          description:
+            type: string
+            maxLength: 200
+          fields:
+            type: array
+            items:
+              $ref: '#/components/schemas/FieldDto'
+          subkeys:
+            minItems: 1
+            type: array
+            items:
+              type: string
+          customerIds:
+            maxItems: 1
+            type: array
+            items:
+              type: string
+        required:
+          - name
+          - subkeys
+      BusinessObjectEditDto:
+        type: object
+        properties:
+          name:
+            type: string
+            minLength: 1
+            maxLength: 50
+          isActive:
+            type: boolean
+          description:
+            type: string
+            maxLength: 200
+          fields:
+            type: array
+            items:
+              $ref: '#/components/schemas/FieldDto'
+          subkeys:
+            minItems: 1
+            type: array
+            items:
+              type: string
+        required:
+          - name
+          - subkeys
+      JsonPathValidationDto:
+        type: object
+        properties:
+          jsonPath:
+            type: string
+        required:
+          - jsonPath
+      MetricFilterDto:
+        type: object
+        properties:
+          id:
+            type: string
+          sourceType:
+            type: object
+          sourceId:
+            type: string
+          operation:
+            type: object
+          arguments:
+            minItems: 1
+            maxItems: 2
+            type: array
+            items:
+              type: string
+        required:
+          - sourceType
+          - sourceId
+          - operation
+          - arguments
+      MetricDto:
+        type: object
+        properties:
+          name:
+            type: string
+            minLength: 1
+            maxLength: 50
+          id:
+            type: string
+          businessObjectId:
+            type: string
+          measureId:
+            type: string
+          evaluationWindow:
+            type: number
+            minimum: 1
+            maximum: 86400
+          function:
+            type: object
+          dimensionIds:
+            type: array
+            items:
+              type: string
+          filters:
+            type: array
+            items:
+              $ref: '#/components/schemas/MetricFilterDto'
+        required:
+          - name
+          - businessObjectId
+          - evaluationWindow
+          - function
+      DecisionInputFieldDto:
+        type: object
+        properties:
+          id:
+            type: string
+          name:
+            type: string
+            minLength: 1
+            maxLength: 50
+          sourceType:
+            type: object
+          sourceId:
+            type: string
+        required:
+          - name
+          - sourceType
+          - sourceId
+      DecisionOutputFieldDto:
+        type: object
+        properties:
+          id:
+            type: string
+          name:
+            type: string
+            minLength: 1
+            maxLength: 50
+          variable:
+            type: string
+            minLength: 1
+            maxLength: 50
+        required:
+          - name
+      DecisionInputValueDto:
+        type: object
+        properties:
+          inputFieldId:
+            type: string
+          operation:
+            type: string
+          argument:
+            type: string
+            maxLength: 92
+        required:
+          - operation
+      DecisionOutputValueDto:
+        type: object
+        properties:
+          outputFieldId:
+            type: string
+          value:
+            type: string
+            maxLength: 200
+        required:
+          - outputFieldId
+          - value
+      ActionValueDto:
+        type: object
+        properties:
+          actionId:
+            type: string
+          status:
+            type: boolean
+          executionLimitType:
+            type: object
+          executionLimitIntervalInSeconds:
+            type: number
+          executionLimitInputFieldIds:
+            type: array
+            items:
+              type: string
+        required:
+          - actionId
+          - status
+      DecisionRuleDto:
+        type: object
+        properties:
+          id:
+            type: string
+          inputValues:
+            type: array
+            items:
+              $ref: '#/components/schemas/DecisionInputValueDto'
+          outputValues:
+            type: array
+            items:
+              $ref: '#/components/schemas/DecisionOutputValueDto'
+          actionValues:
+            type: array
+            items:
+              $ref: '#/components/schemas/ActionValueDto'
+      ActionDto:
+        type: object
+        properties:
+          id:
+            type: string
+          name:
+            type: string
+            minLength: 1
+            maxLength: 50
+          description:
+            type: string
+            maxLength: 200
+          actionType:
+            type: object
+          template:
+            type: object
+          note:
+            type: string
+            maxLength: 2048
+        required:
+          - name
+      DecisionDto:
+        type: object
+        properties:
+          name:
+            type: string
+            minLength: 1
+            maxLength: 50
+          description:
+            type: string
+            maxLength: 200
+          sourceType:
+            type: string
+          sourceId:
+            type: string
+          hitType:
+            type: string
+          enabled:
+            type: boolean
+          activeFrom:
+            format: date-time
+            type: string
+          activeUntil:
+            format: date-time
+            type: string
+          executeOnce:
+            type: boolean
+          executionFrequency:
+            type: number
+            maximum: 86400
+          inputFields:
+            type: array
+            items:
+              $ref: '#/components/schemas/DecisionInputFieldDto'
+          outputFields:
+            type: array
+            items:
+              $ref: '#/components/schemas/DecisionOutputFieldDto'
+          rules:
+            type: array
+            items:
+              $ref: '#/components/schemas/DecisionRuleDto'
+          actions:
+            type: array
+            items:
+              $ref: '#/components/schemas/ActionDto'
+          customerId:
+            type: string
+            nullable: true
+        required:
+          - name
+          - sourceType
+          - sourceId
+      DecisionEditDto:
+        type: object
+        properties:
+          name:
+            type: string
+            minLength: 1
+            maxLength: 50
+          description:
+            type: string
+            maxLength: 200
+          sourceType:
+            type: string
+          sourceId:
+            type: string
+          hitType:
+            type: string
+          enabled:
+            type: boolean
+          activeFrom:
+            format: date-time
+            type: string
+          activeUntil:
+            format: date-time
+            type: string
+          executeOnce:
+            type: boolean
+          executionFrequency:
+            type: number
+            maximum: 86400
+          inputFields:
+            type: array
+            items:
+              $ref: '#/components/schemas/DecisionInputFieldDto'
+          outputFields:
+            type: array
+            items:
+              $ref: '#/components/schemas/DecisionOutputFieldDto'
+          rules:
+            type: array
+            items:
+              $ref: '#/components/schemas/DecisionRuleDto'
+          actions:
+            type: array
+            items:
+              $ref: '#/components/schemas/ActionDto'
+        required:
+          - name
+          - sourceType
+          - sourceId
+      ActionDataQuery:
+        type: object
+        properties:
+          startDate:
+            format: date-time
+            type: string
+          endDate:
+            format: date-time
+            type: string
+          utcOffsetSec:
+            type: number
+          aggregationWindow:
+            type: number
+            enum:
+              - 60
+              - 300
+              - 600
+              - 900
+              - 1800
+              - 3600
+              - 7200
+              - 10800
+              - 14400
+              - 21600
+              - 28800
+              - 43200
+              - 86400
+        required:
+          - startDate
+          - endDate
+      ResetActionLimitDto:
+        type: object
+        properties:
+          ruleId:
+            type: string
+          actionId:
+            type: string
+        required:
+          - ruleId
+          - actionId
+      ResetActionLimitListDto:
+        type: object
+        properties:
+          ruleActions:
+            minItems: 1
+            type: array
+            items:
+              $ref: '#/components/schemas/ResetActionLimitDto'
+      ChartDto:
+        type: object
+        properties:
+          name:
+            type: string
+            minLength: 1
+            maxLength: 50
+          id:
+            type: string
+          metric:
+            $ref: '#/components/schemas/MetricDto'
+          viewType:
+            type: string
+            enum:
+              - BAR
+              - LINE
+              - STACKED
+          size:
+            type: object
+          showDecisions:
+            type: boolean
+          dimensionIds:
+            type: array
+            items:
+              type: string
+          decisionIds:
+            type: array
+            items:
+              type: string
+        required:
+          - name
+          - metric
+          - viewType
+      DashboardDto:
+        type: object
+        properties:
+          name:
+            type: string
+            minLength: 1
+            maxLength: 50
+          charts:
+            type: array
+            items:
+              $ref: '#/components/schemas/ChartDto'
+          dateRange:
+            type: string
+          startDate:
+            format: date-time
+            type: string
+          endDate:
+            format: date-time
+            type: string
+        required:
+          - name
+          - dateRange
+      MetricDataQuery:
+        type: object
+        properties:
+          name:
+            type: string
+            minLength: 1
+            maxLength: 50
+          id:
+            type: string
+          businessObjectId:
+            type: string
+          measureId:
+            type: string
+          evaluationWindow:
+            type: number
+            minimum: 1
+            maximum: 86400
+          function:
+            type: object
+          dimensionIds:
+            type: array
+            items:
+              type: string
+          filters:
+            type: array
+            items:
+              $ref: '#/components/schemas/MetricFilterDto'
+          startDate:
+            format: date-time
+            type: string
+          endDate:
+            format: date-time
+            type: string
+          utcOffsetSec:
+            type: number
+          limit:
+            type: number
+            minimum: 1
+            maximum: 30
+          page:
+            type: number
+            minimum: 1
+          includeMeta:
+            type: boolean
+        required:
+          - name
+          - businessObjectId
+          - evaluationWindow
+          - function
+          - startDate
+          - endDate
+customOptions: {}

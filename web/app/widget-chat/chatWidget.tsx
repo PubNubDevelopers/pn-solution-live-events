@@ -401,7 +401,7 @@ export default function ChatWidget ({
 
     try {
       // Use PubNub Chat SDK to send the message
-      await activeChannel.sendText(messageInput, { storeInHistory: false })
+      await activeChannel.sendText(messageInput, { storeInHistory: true })
       // await activeChannel.rea(messageInput)
 
       // Clear input and typing indicator

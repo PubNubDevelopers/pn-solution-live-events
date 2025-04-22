@@ -148,7 +148,11 @@ export default function LiveStreamPoll ({
           <div className='text-neutral700 text-sm font-normal'>
             {poll.title ?? 'Unspecified Poll'}
           </div>
-          <div className='flex flex-row gap-3'>
+          <div
+            className={`flex ${
+              isMobilePreview ? 'flex-col' : 'flex-row'
+            } gap-3`}
+          >
             {poll?.options?.map((option, index) => (
               <LiveStreamPollButton
                 key={index}

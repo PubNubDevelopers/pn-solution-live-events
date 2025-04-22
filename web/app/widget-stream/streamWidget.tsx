@@ -51,6 +51,7 @@ export default function StreamWidget ({
   ])
   const [videoUrl, setVideoUrl] = useState(streamUrl)
   const [isVideoPlaying, setIsVideoPlaying] = useState(false)
+  const [isVideoStarted, setIsVideoStarted] = useState(false)
   const actualVideoProgressRef = useRef(0)
   const [requestedVideoProgress, setRequestedVideoProgress] = useState(0)
   const [muted, setMuted] = useState(true)
@@ -73,12 +74,12 @@ export default function StreamWidget ({
       }
     }
     chat.sdk
-    .hereNow({ channels: [streamReactionsChannelId] })
-    .then(hereNowResult => {
-      if (hereNowResult) {
-        setRealOccupancy(hereNowResult.totalOccupancy + 1)
-      }
-    })
+      .hereNow({ channels: [streamReactionsChannelId] })
+      .then(hereNowResult => {
+        if (hereNowResult) {
+          setRealOccupancy(hereNowResult.totalOccupancy + 1)
+        }
+      })
     reactionsSubscription.subscribe()
 
     //  Occupancy updates from Data Controls
@@ -118,7 +119,7 @@ export default function StreamWidget ({
       receivePresenceEvents: false
     })
     videoControlSubscription.onMessage = messageEvent => {
-      handleVideoControl(messageEvent, isVideoPlayingRef.current)
+      handleVideoControl(messageEvent, isVideoPlayingRef.current, isVideoStartedRef.current)
     }
     videoControlSubscription.subscribe()
     return () => {
@@ -127,9 +128,11 @@ export default function StreamWidget ({
   }, [chat])
 
   const isVideoPlayingRef = useRef(isVideoPlaying)
+  const isVideoStartedRef = useRef(isVideoStarted)
   useEffect(() => {
     isVideoPlayingRef.current = isVideoPlaying
-  }, [isVideoPlaying])
+    isVideoStartedRef.current = isVideoStarted
+  }, [isVideoPlaying, isVideoStarted])
 
   const previousReactionsRef = useRef(reactions)
 
@@ -174,7 +177,7 @@ export default function StreamWidget ({
     }
   }
 
-  function handleVideoControl (messageEvent, isVideoPlaying) {
+  function handleVideoControl (messageEvent, isVideoPlaying, isVideoStarted) {
     if (messageEvent.message.type == 'START_STREAM') {
       actualVideoProgressRef.current = 0
       setIsVideoPlaying(true)
@@ -188,14 +191,18 @@ export default function StreamWidget ({
         //  FYI video is about to loop
         setIsVideoPlaying(false)
       }
-      actualVideoProgressRef.current = messageEvent.message.params.playbackTime / 1000
+      actualVideoProgressRef.current =
+        messageEvent.message.params.playbackTime / 1000
       if (!isVideoPlaying) {
+        setIsVideoPlaying(true)
+      }
+      if (!isVideoStarted) {
         //  The video is not playing locally, but the stream is running on the back end.  Join game in progress
         setRequestedVideoProgress(actualVideoProgressRef.current)
-        setIsVideoPlaying(true)
       }
     } else if (messageEvent.message.type == 'END_STREAM') {
       setIsVideoPlaying(false)
+      setIsVideoStarted(false)
       actualVideoProgressRef.current = 0
       setRequestedVideoProgress(0)
     } else if (messageEvent.message.type == 'SEEK') {
@@ -214,7 +221,7 @@ export default function StreamWidget ({
   }
 
   function onVideoStart () {
-    //console.log('Video starting')
+    setIsVideoStarted(true)
     if (requestedVideoProgress > 0) {
       playerRef.current?.seekTo(requestedVideoProgress, 'seconds')
     }
@@ -226,7 +233,7 @@ export default function StreamWidget ({
   }
 
   function onVideoProgress (ev) {
-    actualVideoProgressRef.current = ev.playedSeconds
+    //actualVideoProgressRef.current = ev.playedSeconds
   }
 
   function upgradeEmoji (

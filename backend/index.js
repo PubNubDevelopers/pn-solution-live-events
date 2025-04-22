@@ -90,10 +90,8 @@ async function handleControlMessage (msg) {
     case 'ON_DEMAND_SCRIPT':
       if (!intervalId) return
       const scriptName = msg.params.scriptName
-      if (!scriptName) {
-        console.error('[Control] No script name provided')
-        return
-      }
+      const scriptEmoji = msg.params.emoji
+      
       var onDemandScript = null
       var delay = 0
       if (scriptName === 'fan-excitement') {
@@ -104,11 +102,13 @@ async function handleControlMessage (msg) {
         onDemandScript = goalScored
       } else if (scriptName === 'push-5mins') {
         onDemandScript = fiveMinutesRemaining
-      } else if (scriptName === 'angry') {
+      } else if (scriptEmoji === '😡') {
         onDemandScript = angry
+        console.log('Angry script')
         delay = 30000
-      } else if (scriptName === 'cheer') {
+      } else if (scriptEmoji === '🎉') {
         onDemandScript = cheer
+        console.log('Cheer script')
         delay = 30000
       } else {
         console.error('[Control] Unknown script name:', scriptName)

@@ -26,7 +26,7 @@ This repository contains a build script (`./build.sh`) that generates a Node.js 
    # Illuminate account and PubNub credentials
    ACCOUNT_ID=<your_demo_account_id>
 
-   # Timing settings (in milliseconds/seconds)
+   # Timing settings (in seconds)
    AGGREGATION_WINDOW_SEC=60
    ```
 

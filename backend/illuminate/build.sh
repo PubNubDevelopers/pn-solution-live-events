@@ -1,5 +1,12 @@
 #!/bin/sh
 
+## Validate OPENAI_API_KEY is set
+if [ -z "$OPENAI_API_KEY" ]; then
+  echo "Error: OPENAI_API_KEY is not set."
+  echo "Please set it in your environment before running this script."
+  exit 1
+fi
+
 echo 
 echo "Building illuminate.js... "
 echo "it will take 5 minutes... 🚧 🚀 🚧 "

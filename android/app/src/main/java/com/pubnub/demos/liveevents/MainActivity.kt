@@ -42,6 +42,12 @@ import com.pubnub.demos.liveevents.ui.theme.LiveEventsDemosTheme
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.RequestBody.Companion.toRequestBody
+import okhttp3.MediaType.Companion.toMediaType
+import org.json.JSONObject
+import java.io.IOException
 
 
 class MainActivity : ComponentActivity() {
@@ -61,6 +67,9 @@ class MainActivity : ComponentActivity() {
             pushNotificationPermission = false
         }
     }
+    private val client = OkHttpClient()
+    private val JSON = "application/json; charset=utf-8".toMediaType()
+    private val tempUserId = "pn-emulator${(10000..99999).random()}"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,18 +80,51 @@ class MainActivity : ComponentActivity() {
         val showDebug = applicationContext.getSharedPreferences("prefs.db", 0).getBoolean("showDebug", true)
         pushChannel =
             applicationContext.getSharedPreferences("prefs.db", 0).getString("pushChannel", null)
-                ?: "game.push-self"
+                ?: "game.push-sales"
         Log.d(logTag, "Subscribe Key is $subscribeKey")
         Log.d(logTag, "Push Channel is $pushChannel")
         this.pubnub = PubNub.create(
             PNConfiguration.builder(
-                UserId(FirebaseInstallations.getInstance().id.toString()),
+                UserId(tempUserId),
                 subscribeKey
             ).build()
         )
-        createNotificationChannel()
-        getToken()
-        pushNotificationPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
+        
+        // Make HTTP request using OkHttp
+        val requestBody = """{"UUID": "$tempUserId"}""".toRequestBody(JSON)
+        val request = Request.Builder()
+            .url("https://devrel-demos-access-manager.netlify.app/.netlify/functions/api/pillar-live-events-guided/grant")
+            .addHeader("Content-Type", "application/json")
+            .addHeader("Origin", "https://pn-solution-live-events-guided.netlify.app")
+            .post(requestBody)
+            .build()
+        
+        client.newCall(request).enqueue(object : okhttp3.Callback {
+            override fun onFailure(call: okhttp3.Call, e: IOException) {
+                Log.e(logTag, "Failed to get token: ${e.message}")
+            }
+
+            override fun onResponse(call: okhttp3.Call, response: okhttp3.Response) {
+                if (!response.isSuccessful) {
+                    Log.e(logTag, "Failed to get token: ${response.code}")
+                    return
+                }
+                try {
+                    val responseBody = response.body?.string()
+                    val token = JSONObject(JSONObject(responseBody).getString("body")).getString("token")
+                    Log.d(logTag, "PubNub Access Token: $token")
+                    //pubnub.setToken(token)
+                    Log.d(logTag, pubnub.parseToken(token).toString())
+                    createNotificationChannel()
+                    getToken()  //  Firebase token
+                    pushNotificationPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
+                } catch (e: Exception) {
+                    Log.e(logTag, "Error processing token response: ${e.message}")
+                }
+
+            }
+        })
+        
 
         //enableEdgeToEdge()
         setContent {

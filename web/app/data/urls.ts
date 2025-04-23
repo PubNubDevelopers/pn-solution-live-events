@@ -57,7 +57,7 @@ export const urls = {
       },
       salesLed: {
         view: "https://admin.pubnub.com/functions/",
-        endpoint: "https://ps.pndsn.com/v1/blocks/sub-key/sub-c-fa08eb13-6d22-48f9-91a4-1d6eae913127/dem"
+        endpoint: "https://ps.pndsn.com/v1/blocks/sub-key/sub-c-fa08eb13-6d22-48f9-91a4-1d6eae913127/demo"
       }
     },
   },

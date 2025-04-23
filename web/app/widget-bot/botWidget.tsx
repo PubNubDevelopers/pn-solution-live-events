@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useMemo } from 'react'
 import { Form, Input } from '@heroui/react'
 import { urls } from '../data/urls'
 
@@ -116,7 +116,7 @@ export default function BotWidget ({
           </Form>
         </div>
         <div className='flex flex-row px-6 pb-3 text-base whitespace-pre-line'>
-          <SlowText speed={10} text={answer} />
+          {useMemo(() => <SlowText speed={10} text={answer} />, [answer])}
         </div>
       </div>
     </div>

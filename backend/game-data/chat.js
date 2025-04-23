@@ -986,17 +986,6 @@ exports.chat = [
     },
   },
   {
-    timeSinceVideoStartedInMs: 67000,
-    persistInHistory: false,
-    action: {
-      channel: "game.chat",
-      data: {
-        user: "bot-02",
-        text: "What a run!",
-      },
-    },
-  },
-  {
     timeSinceVideoStartedInMs: 68000,
     persistInHistory: false,
     action: {
@@ -16298,17 +16287,6 @@ exports.chat = [
     },
   },
   {
-    timeSinceVideoStartedInMs: 1192000,
-    persistInHistory: false,
-    action: {
-      channel: "game.chat",
-      data: {
-        user: "bot-38",
-        text: "Keep the pressure on!",
-      },
-    },
-  },
-  {
     timeSinceVideoStartedInMs: 1193000,
     persistInHistory: false,
     action: {
@@ -16646,17 +16624,6 @@ exports.chat = [
       data: {
         user: "bot-29",
         text: "Ole, Ole, Ole, Ole!",
-      },
-    },
-  },
-  {
-    timeSinceVideoStartedInMs: 1223000,
-    persistInHistory: false,
-    action: {
-      channel: "game.chat",
-      data: {
-        user: "bot-01",
-        text: "We're by far the greatest team, the world has ever seen!",
       },
     },
   },

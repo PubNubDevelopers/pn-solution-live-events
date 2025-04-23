@@ -10,6 +10,9 @@ exports.goalScored = [
           data: {
             title: 'SOU 1 - 3 LEE',
             body: 'Southampton Score!'
+          },
+          android: {
+            priority: 'high',
           }
         }
       },

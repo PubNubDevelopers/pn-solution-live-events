@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { Chat, User, Channel } from '@pubnub/chat'
 import { testUsers, channelData } from '../data/constants'
+import { getAuthKey } from '../getAuthKey'
 
 export default function LoginPage ({
   setLoginPageShown,
@@ -51,10 +52,13 @@ export default function LoginPage ({
         return
       }
       try {
+        const tempUserId = 'user-02'
+        const { accessManagerToken } = await getAuthKey(tempUserId, isGuidedDemo)
         const localChat = await Chat.init({
           publishKey: process.env.NEXT_PUBLIC_PUBNUB_PUBLISH_KEY as string,
           subscribeKey: process.env.NEXT_PUBLIC_PUBNUB_SUBSCRIBE_KEY as string,
-          userId: 'user-02', //  Don't use the same user ID here as you use in the next line, to test whether any users already exist
+          userId: tempUserId, //  Don't use the same user ID here as you use in the next line, to test whether any users already exist
+          authKey: accessManagerToken,
           typingTimeout: 5000,
           storeUserActivityTimestamps: true,
           storeUserActivityInterval: 600000
@@ -162,10 +166,12 @@ export default function LoginPage ({
   }, [])
 
   async function login (userId) {
+    const { accessManagerToken } = await getAuthKey(userId, isGuidedDemo)
     const localChat = await Chat.init({
       publishKey: process.env.NEXT_PUBLIC_PUBNUB_PUBLISH_KEY as string,
       subscribeKey: process.env.NEXT_PUBLIC_PUBNUB_SUBSCRIBE_KEY as string,
       userId: userId,
+      authKey: accessManagerToken,
       typingTimeout: 5000,
       storeUserActivityTimestamps: true,
       storeUserActivityInterval: 600000

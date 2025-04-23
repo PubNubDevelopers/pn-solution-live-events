@@ -151,6 +151,12 @@ export default function PollsWidget ({
 
   function showPollAlert (pollText) {
     setAlert({ points: null, body: `${pollText ?? 'New poll available'}` })
+    //  Catch all
+    setTimeout(() => {
+      try {
+        setAlert(null)
+      } catch {}
+    }, 2000)
   }
 
   return (
@@ -406,7 +412,7 @@ export default function PollsWidget ({
   function PollButton ({ buttonText, isOpaque, onClick }) {
     return (
       <div
-        className={`flex py-1 px-3 w-fit ${
+        className={`flex py-1 px-3 w-fit whitespace-nowrap ${
           isOpaque
             ? 'text-neutral50 bg-navy900'
             : 'text-navy900 bg-navy50 border-1 border-navy300'

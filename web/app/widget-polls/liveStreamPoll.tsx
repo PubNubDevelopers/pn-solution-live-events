@@ -73,7 +73,6 @@ export default function LiveStreamPoll ({
 
   useEffect(() => {
     if (!chat) return
-    if (isGuidedDemo) return
     chat.sdk
       .fetchMessages({
         channels: [pollDeclarations, pollResults],
@@ -95,7 +94,7 @@ export default function LiveStreamPoll ({
           }
         }
       })
-  }, [chat, isGuidedDemo])
+  }, [chat])
 
   function handleNewLivePoll (messageEvent) {
     const newPoll = messageEvent.message
@@ -149,7 +148,11 @@ export default function LiveStreamPoll ({
           <div className='text-neutral700 text-sm font-normal'>
             {poll.title ?? 'Unspecified Poll'}
           </div>
-          <div className='flex flex-row gap-3'>
+          <div
+            className={`flex ${
+              isMobilePreview ? 'flex-col' : 'flex-row'
+            } gap-3`}
+          >
             {poll?.options?.map((option, index) => (
               <LiveStreamPollButton
                 key={index}

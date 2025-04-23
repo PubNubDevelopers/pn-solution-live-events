@@ -10,6 +10,9 @@ exports.fiveMinutesRemaining = [
           data: {
             title: '5 Mins Left',
             body: "It's nearly all over for Southampton"
+          },
+          android: {
+            priority: 'high',
           }
         }
       },

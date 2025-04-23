@@ -13,8 +13,10 @@ import {
   pushChannelSelfId,
   pushChannelSalesId,
   dynamicAdChannelId,
-  illuminateUpgradeReaction
+  illuminateUpgradeReaction,
+  serverVideoControlChannelId
 } from '../data/constants'
+import { getAuthKey } from '../getAuthKey'
 
 export default function Page () {
   const [chat, setChat] = useState<Chat | null>(null)
@@ -93,10 +95,16 @@ export default function Page () {
   useEffect(() => {
     async function init () {
       try {
+        const userId = 'testing-only'
+        const { accessManagerToken } = await getAuthKey(
+          userId,
+          isGuidedDemo ? true : false
+        )
         const localChat = await Chat.init({
           publishKey: process.env.NEXT_PUBLIC_PUBNUB_PUBLISH_KEY as string,
           subscribeKey: process.env.NEXT_PUBLIC_PUBNUB_SUBSCRIBE_KEY as string,
-          userId: 'testing-only'
+          userId: userId,
+          authKey: accessManagerToken
         })
         setChat(localChat)
       } catch {}
@@ -367,6 +375,9 @@ export default function Page () {
                 data: {
                   title: 'Somebody tagged you',
                   body: 'You were mentioned in the group chat'
+                },
+                android: {
+                  priority: 'high',
                 }
               }
             })
@@ -384,6 +395,9 @@ export default function Page () {
                 data: {
                   title: 'Goal!!',
                   body: 'A Team scored a Goal'
+                },
+                android: {
+                  priority: 'high',
                 }
               }
             })
@@ -514,10 +528,25 @@ export default function Page () {
         <div
           className={`${testStyle}`}
           onClick={() =>
-            sendPubNubMessage(illuminatePollTesting, { pollId: 2 })
+            sendPubNubMessage(serverVideoControlChannelId, {
+              type: 'ON_DEMAND_SCRIPT',
+              params: { scriptName: 'cheer' }
+            })
           }
         >
-          Mock Illuminate requesting a poll (DCC Testing only)
+          Mock Illuminate requesting a poll (Cheering)
+        </div>
+
+        <div
+          className={`${testStyle}`}
+          onClick={() =>
+            sendPubNubMessage(serverVideoControlChannelId, {
+              type: 'ON_DEMAND_SCRIPT',
+              params: { scriptName: 'angry' }
+            })
+          }
+        >
+          Mock Illuminate requesting a poll (Anger)
         </div>
 
         <div className='text-xl'>Match Statistics</div>

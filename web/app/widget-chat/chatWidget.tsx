@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react'
 import GuideOverlay from '../components/guideOverlay'
 import {
   dataControlOccupancyChannelId,
+  serverVideoControlChannelId,
   streamReactionsChannelId
 } from '../data/constants'
 import {
@@ -168,9 +169,13 @@ export default function ChatWidget ({
   /**
    * Scroll to bottom of messages when messages change
    */
+
   useEffect(() => {
     if (messages.length > 0) {
-      Message.streamUpdatesOn(messages, setMessages)
+      const lastMessageUser = messages[messages.length - 1].userId
+      if (lastMessageUser.startsWith('user-')) {
+        Message.streamUpdatesOn(messages, setMessages)
+      }
     }
 
     scrollToBottom()
@@ -257,6 +262,7 @@ export default function ChatWidget ({
       //setWhoIsPresent(await chat.whoIsPresent(activeChannelId));
 
       // Get channel history
+      /*
       try {
         const history = await channel.getHistory()
 
@@ -265,12 +271,14 @@ export default function ChatWidget ({
         console.error('Error fetching message history:', error)
         setMessages([])
       }
+        */
 
       // Initialize cleanup functions
       let unsubscribeMessages = () => {}
       let typingUnsubscribe = () => {}
 
       // Connect to channel to receive messages
+
       unsubscribeMessages = channel.connect(async (message: Message) => {
         setMessages(prevMessages => {
           // Check if message already exists
@@ -278,38 +286,10 @@ export default function ChatWidget ({
             m => m.timetoken === message.timetoken
           )
           if (messageExists) return prevMessages
-          return [...prevMessages, message]
+          const newMessages = [...prevMessages, message]
+          return newMessages.slice(-40)
         })
       })
-
-      const stopPresenceUpdates = await channel.streamPresence(userIds => {
-        //setWhoIsPresent(userIds);
-      })
-
-      // Set up typing indicator if not public channel
-      if (channel.type !== 'public') {
-        typingUnsubscribe = channel.getTyping(typingUserIds => {
-          // Convert user IDs to names
-          const getDisplayNames = async () => {
-            const names: string[] = []
-            for (const userId of typingUserIds) {
-              if (userId === chat.currentUser.id) continue
-
-              try {
-                const user = await chat.getUser(userId)
-                if (user) {
-                  names.push(user.name || userId)
-                }
-              } catch {
-                names.push(userId)
-              }
-            }
-            setTypingUsers(names)
-          }
-
-          getDisplayNames()
-        })
-      }
 
       //  Occupancy updates from Data Controls
       const occupancyChannel = chat.sdk.channel(dataControlOccupancyChannelId)
@@ -320,6 +300,20 @@ export default function ChatWidget ({
         setSimulatedOccupancy(+messageEvent.message.chatOccupancy)
       }
       occupancySubscription.subscribe()
+
+      const serverVideoControlChannel = chat.sdk.channel(
+        serverVideoControlChannelId
+      )
+      const serverVideoControlSubscription =
+        serverVideoControlChannel.subscription({
+          receivePresenceEvents: false
+        })
+      serverVideoControlSubscription.onMessage = (messageEvent: any) => {
+        if (messageEvent.message.type === 'START_STREAM') {
+          setMessages([])
+        }
+      }
+      serverVideoControlSubscription.subscribe()
 
       //  For consistency with the live stream, use the reactions channel for real occupancy
       const reactionsChannel = chat.sdk.channel(streamReactionsChannelId)
@@ -345,15 +339,11 @@ export default function ChatWidget ({
         if (typeof unsubscribeMessages === 'function') {
           unsubscribeMessages()
         }
-        if (typeof stopPresenceUpdates === 'function') {
-          stopPresenceUpdates()
-        }
-        if (typeof typingUnsubscribe === 'function') {
-          typingUnsubscribe()
-        }
         setMessages([])
         setTypingUsers([])
         occupancySubscription.unsubscribe()
+        reactionsSubscription.unsubscribe()
+        serverVideoControlSubscription.unsubscribe()
       }
     } catch (error) {
       console.error(`Error setting up channel ${activeChannelId}:`, error)
@@ -382,7 +372,7 @@ export default function ChatWidget ({
 
     try {
       // Use PubNub Chat SDK to send the message
-      await activeChannel.sendText(messageInput)
+      await activeChannel.sendText(messageInput, { storeInHistory: false })
       // await activeChannel.rea(messageInput)
 
       // Clear input and typing indicator
@@ -495,7 +485,7 @@ export default function ChatWidget ({
 
   return (
     <div
-      className={`${className} w-full h-full`}
+      className={`${className} w-full h-fit`}
       onClick={e => backgroundClicked(e)}
     >
       <GuideOverlay
@@ -507,7 +497,7 @@ export default function ChatWidget ({
           <span>
             The <span className='font-semibold'>PubNub Chat SDK</span> provides
             you with everything you need to develop a fully featured,
-            production-ready chat component::
+            production-ready chat component:
             <ul className='list-disc list-inside my-2'>
               <li>Public, private, and direct channels</li>
               <li>Send and receive real-time messages</li>
@@ -569,14 +559,6 @@ export default function ChatWidget ({
 
       {activeChannel && (
         <div className='text-lg border-b pb-2 flex items-center bg-navy900 overflow-hidden rounded-t px-[16px] py-[12px] text-white text-[16px] font-[600] leading-[24px] h-[56px]'>
-          {/*<button className="cursor-pointer" onClick={() => {*/}
-          {/*  setActiveChannel(null)*/}
-          {/*  setActiveChannelId(null)*/}
-          {/*}}>*/}
-          {/*  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">*/}
-          {/*    <path d="M14.8627 3.225L13.3794 1.75L5.1377 10L13.3877 18.25L14.8627 16.775L8.0877 10L14.8627 3.225Z" fill="#FAFAFA"/>*/}
-          {/*  </svg>*/}
-          {/*</button>*/}
           <div
             className={'rounded-full w-[32px] h-[32px] !bg-cover bg-gray-100'}
             style={
@@ -604,30 +586,6 @@ export default function ChatWidget ({
             {simulatedOccupancy + realOccupancy} online
           </div>
         </div>
-      )}
-
-      {/* Create Channel Form */}
-      {showChannelCreate && (
-        <CreateChannelForm
-          channelName={channelName}
-          setChannelName={setChannelName}
-          channelType={channelType}
-          setChannelType={setChannelType}
-          availableUsers={availableUsers}
-          selectedUsers={selectedUsers}
-          toggleUserSelection={toggleUserSelection}
-          createChannel={createChannel}
-        />
-      )}
-
-      {!activeChannel && !showChannelCreate && (
-        <ChannelList
-          publicChannels={publicChannels}
-          privateChannels={privateChannels}
-          directChannels={directChannels}
-          activeChannelId={activeChannelId}
-          setActiveChannelId={setActiveChannelId}
-        />
       )}
 
       {/* Chat Messages */}

@@ -27,12 +27,7 @@ This repository contains a build script (`./build.sh`) that generates a Node.js 
    ACCOUNT_ID=<your_demo_account_id>
 
    # Timing settings (in milliseconds/seconds)
-   COOL_DOWN_MS=60000
    AGGREGATION_WINDOW_SEC=60
-   POLL_COOLDOWN_MS=300000
-
-   # Build-time API key
-   OPENAI_API_KEY=<your_openai_api_key>
    ```
 
 3. Make the build script executable:
@@ -62,8 +57,6 @@ node illuminate.js
 This will:
   - Authenticate with the Illuminate Admin API
   - Provision or reset business objects, metrics, and decisions
-  - Subscribe to PubNub channels
-  - Aggregate reaction messages and trigger Illuminate actions
   - Simulate poll votes using the provided `polls.js` modules
 
 ## Further Details

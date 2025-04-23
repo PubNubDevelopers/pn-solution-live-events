@@ -68,9 +68,7 @@ To build and run the Node.js script that connects Illuminate with PubNub message
      ADMIN_EMAIL=demo@pubnub.com
      # ADMIN_PASSWORD will be prompted at runtime and should not be stored here
      ACCOUNT_ID=<your_demo_account_id>
-     COOL_DOWN_MS=60000
      AGGREGATION_WINDOW_SEC=60
-     POLL_COOLDOWN_MS=300000
      ```
 
 2. Script Flow

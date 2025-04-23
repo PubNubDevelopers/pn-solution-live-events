@@ -3,7 +3,7 @@
    - Install dependencies: `npm install axios inquirer dotenv`
 
 2. Configure credentials and environment
-   - Load `ADMIN_EMAIL`, `ACCOUNT_ID`, `PUBNUB_PUBLISH_KEY`, `PUBNUB_SUBSCRIBE_KEY`, `CONTROL_CHANNEL`, `MESSAGE_CHANNEL`, `COOL_DOWN_MS`, `AGGREGATION_WINDOW_SEC` from environment or prompt via `inquirer`. Prompt for `ADMIN_PASSWORD` via `inquirer` at runtime (do not load from environment).
+   - Load `ADMIN_EMAIL`, `ACCOUNT_ID`, `AGGREGATION_WINDOW_SEC` from environment or prompt via `inquirer`. Prompt for `ADMIN_PASSWORD` via `inquirer` at runtime (do not load from environment).
 
 3. Authenticate with Admin API
    - POST `https://admin.pubnub.com/api/me` with `{ email, password }`

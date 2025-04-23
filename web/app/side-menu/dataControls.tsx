@@ -37,8 +37,8 @@ export default function SideMenuDataControls ({ chat }) {
     'Goal + Push Message',
     'Fan excitement',
     'Fan frustration',
-    'Five minutes remaining',
-    '5mins + Push Message',
+    'Injury time',
+    'Injury time + Push',
     'End match'
   ]
   const [occupancy, setOccupancy] = useState<number | number[]>(0)
@@ -101,21 +101,21 @@ export default function SideMenuDataControls ({ chat }) {
           channel: serverVideoControlChannelId
         })
         break
-      case 'Five minutes remaining':
-        //  Seek to 5 minutes remaining
+      case 'Injury time':
+        //  Seek to 3 minutes remaining
         await chat.sdk.publish({
           message: {
             type: 'SEEK',
-            params: { playbackTime: 1100000 }
+            params: { playbackTime: 1146000 }
           },
           channel: serverVideoControlChannelId
         })
         break
-      case '5mins + Push Message':
+      case 'Injury time + Push':
         await chat.sdk.publish({
           message: {
             type: 'SEEK',
-            params: { playbackTime: 1100000 }
+            params: { playbackTime: 1146000 }
           },
           channel: serverVideoControlChannelId
         })

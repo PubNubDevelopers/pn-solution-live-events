@@ -8,7 +8,7 @@ exports.fiveMinutesRemaining = [
         text: 'PubNub Push Notification',
         pn_fcm: {
           data: {
-            title: '5 Mins Left',
+            title: 'Injury Time',
             body: "It's nearly all over for Southampton"
           },
           android: {

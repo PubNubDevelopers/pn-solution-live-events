@@ -287,7 +287,7 @@ export default function ChatWidget ({
           )
           if (messageExists) return prevMessages
           const newMessages = [...prevMessages, message]
-          return newMessages.slice(-20)
+          return newMessages.slice(-40)
         })
       })
 
@@ -338,12 +338,6 @@ export default function ChatWidget ({
       return () => {
         if (typeof unsubscribeMessages === 'function') {
           unsubscribeMessages()
-        }
-        if (typeof stopPresenceUpdates === 'function') {
-          stopPresenceUpdates()
-        }
-        if (typeof typingUnsubscribe === 'function') {
-          typingUnsubscribe()
         }
         setMessages([])
         setTypingUsers([])

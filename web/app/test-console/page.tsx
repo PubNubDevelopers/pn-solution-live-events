@@ -96,7 +96,10 @@ export default function Page () {
     async function init () {
       try {
         const userId = 'testing-only'
-        const { accessManagerToken } = await getAuthKey(userId, isGuidedDemo ? true : false)
+        const { accessManagerToken } = await getAuthKey(
+          userId,
+          isGuidedDemo ? true : false
+        )
         const localChat = await Chat.init({
           publishKey: process.env.NEXT_PUBLIC_PUBNUB_PUBLISH_KEY as string,
           subscribeKey: process.env.NEXT_PUBLIC_PUBNUB_SUBSCRIBE_KEY as string,
@@ -372,6 +375,9 @@ export default function Page () {
                 data: {
                   title: 'Somebody tagged you',
                   body: 'You were mentioned in the group chat'
+                },
+                android: {
+                  priority: 'high',
                 }
               }
             })
@@ -389,6 +395,9 @@ export default function Page () {
                 data: {
                   title: 'Goal!!',
                   body: 'A Team scored a Goal'
+                },
+                android: {
+                  priority: 'high',
                 }
               }
             })
@@ -519,7 +528,10 @@ export default function Page () {
         <div
           className={`${testStyle}`}
           onClick={() =>
-            sendPubNubMessage(serverVideoControlChannelId, { type: 'ON_DEMAND_SCRIPT', params: { scriptName: 'cheer' } })
+            sendPubNubMessage(serverVideoControlChannelId, {
+              type: 'ON_DEMAND_SCRIPT',
+              params: { scriptName: 'cheer' }
+            })
           }
         >
           Mock Illuminate requesting a poll (Cheering)
@@ -528,7 +540,10 @@ export default function Page () {
         <div
           className={`${testStyle}`}
           onClick={() =>
-            sendPubNubMessage(serverVideoControlChannelId, { type: 'ON_DEMAND_SCRIPT', params: { scriptName: 'angry' } })
+            sendPubNubMessage(serverVideoControlChannelId, {
+              type: 'ON_DEMAND_SCRIPT',
+              params: { scriptName: 'angry' }
+            })
           }
         >
           Mock Illuminate requesting a poll (Anger)

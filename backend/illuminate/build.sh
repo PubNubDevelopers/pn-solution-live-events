@@ -7,6 +7,18 @@ if [ -z "$OPENAI_API_KEY" ]; then
   exit 1
 fi
 
+# Check if jq is installed
+if ! command -v jq &> /dev/null; then
+    echo "jq could not be found. Please install jq to run this script."
+    exit 1
+fi
+
+# Check if curl is installed
+if ! command -v curl &> /dev/null; then
+    echo "curl could not be found. Please install curl to run this script."
+    exit 1
+fi
+
 echo 
 echo "Building illuminate.js... "
 echo "it will take 5 minutes... 🚧 🚀 🚧 "

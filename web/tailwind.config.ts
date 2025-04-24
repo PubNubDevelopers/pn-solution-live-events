@@ -80,6 +80,11 @@ export default {
         appYellow2: "#B59410",
 
       },
+      screens: {
+        '3xl': '120rem',
+        '4xl': '140rem',
+        '5xl': '160rem',
+      }
     },
   },
   darkMode: "selector",

@@ -69,6 +69,7 @@ class MainActivity : ComponentActivity() {
     }
     private val client = OkHttpClient()
     private val JSON = "application/json; charset=utf-8".toMediaType()
+    //  This is NOT the recommended way for most PubNub developers to specify the user ID - you should use an ID that is uniquely tied to the device or user.  I am just using a random ID for expediency
     private val tempUserId = "pn-emulator${(10000..99999).random()}"
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -11,7 +11,7 @@ export default function PreviewTablet ({
   currentScore,
 }) {
   return (
-    <div className={`${className} w-full border-4 border-navy100 rounded-3xl bg-black px-5 py-[14px] sm:w-[600px] md:w-[750px] lg:w-[1000px] xl:w-[1200px] 2xl:w-[1500px] min-h-[780px] max-h-[780px]`}>
+    <div className={`${className} w-full border-4 border-navy100 rounded-3xl bg-black px-5 py-[14px] sm:w-[1280px] sm:min-h-[853px] sm:max-h-[853px] 3xl:w-[1550px] 3xl:min-h-[1034px] 3xl:max-h-[1034px] 4xl:w-[1850px] 4xl:min-h-[1230px] 4xl:max-h-[1230px] 5xl:w-[2100px] `}>
       <TabletContents
         chat={chat}
         isGuidedDemo={isGuidedDemo}

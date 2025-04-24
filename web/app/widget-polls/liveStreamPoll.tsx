@@ -181,7 +181,7 @@ export default function LiveStreamPoll ({
     return (
       <div className='flex flex-row w-full items-center justify-center px-6 py-3 gap-1'>
         <div className='text-base font-semibold'>
-          Your predication for {poll.victoryPoints} points:{' '}
+          Your prediction for {poll.victoryPoints} points:{' '}
         </div>
         <div className='text-base font-normal'></div>
         {currentPollAnswer?.text}

@@ -95,11 +95,11 @@ export default function SportsEventPage ({
 
         <div className='overflow-y-auto w-full p-6 overscroll-none flex flex-col items-center justify-center'>
           <div className='flex flex-col gap-0'>
-            {isGuidedDemo && tabletPreview && (
+            {isGuidedDemo && (
               <a
                 href={`${urls.popoutView}`}
                 target='_blank'
-                className={`no-underline self-end pr-6`}
+                className={`no-underline self-end ${tabletPreview && 'pr-6'}`}
               >
                 <div className='flex flex-row items-center gap-1 py-2 text-white'>
                   <div className='text-white font-semibold text-base'>

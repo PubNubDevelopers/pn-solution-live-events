@@ -306,7 +306,7 @@ export default function StreamWidget ({
             </div>
           )}
         </div>
-        <div className='absolute top-0 right-0'>
+        <div className='absolute top-2 right-1'>
           <GuideOverlay
             id={'streamPresence'}
             guidesShown={guidesShown}

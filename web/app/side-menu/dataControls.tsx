@@ -272,12 +272,12 @@ function DataControlsDropDown ({
               <div
                 key={index}
                 className={`h-11 px-4 py-3 font-normal ${
-                  (index > 1 && isStarted) || (index == 1 && !isStarted)
+                  (index > 0 && isStarted) || (index == 1 && !isStarted)
                     ? 'hover:bg-navy800 cursor-pointer'
                     : 'text-navy400'
                 }`}
                 onClick={e => {
-                  if ((index > 1 && isStarted) || (index == 1 && !isStarted)) {
+                  if ((index > 0 && isStarted) || (index == 1 && !isStarted)) {
                     onClickOption(index)
                     setDropDownVisible(false)
                   }

@@ -85,7 +85,7 @@ function SideMenuContents ({ chat, isGuidedDemo, currentUser }) {
           <div className='font-semibold'>Demo features</div>
           <div className=''>
             This demo only uses a subset of PubNub features. Select 'How it
-            works' to see more information
+            works' (top right) to see more information
           </div>
         </div>
 
@@ -209,7 +209,7 @@ function SalesInstructionsToSwitchAccount ({ isGuidedDemo, instructionType }) {
   return (
     <>
       {isGuidedDemo && (
-        <div className='flex flex-col gap-2.5 pb-2 text-white font-normal text-base'>
+        <div className='flex flex-col gap-2.5 pb-2 text-white font-normal text-base -z-10'>
           <div className='font-semibold'>Sales Only</div>
           <div className=''>
             {instructionType == 'illuminate'

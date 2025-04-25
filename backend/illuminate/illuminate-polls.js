@@ -17,7 +17,6 @@ exports.angry = [
       },
     },
   },
-  //  todo - fake poll voting here
   {
     timeSinceVideoStartedInMs: 48000,
     persistInHistory: false,
@@ -28,7 +27,6 @@ exports.angry = [
         correctOption: 0,
         pollType: "side",
         options: [
-          //  todo - would be great if score was based on the actual fake poll data
           { id: 1, score: 50 },
           { id: 2, score: 50 },
         ],
@@ -56,7 +54,6 @@ exports.cheer = [
       },
     },
   },
-  //  todo - fake poll voting here
   {
     timeSinceVideoStartedInMs: 48000,
     persistInHistory: false,
@@ -67,7 +64,6 @@ exports.cheer = [
         correctOption: 0,
         pollType: "side",
         options: [
-          //  todo - would be great if score was based on the actual fake poll data
           { id: 1, score: 50 },
           { id: 2, score: 50 },
         ],

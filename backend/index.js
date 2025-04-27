@@ -90,6 +90,7 @@ async function handleControlMessage(msg) {
       await publishVideoEvent("END_STREAM", {});
       break;
     case "BOT_CHAT":
+      if (!intervalId) return;
       let messageText = "Messages Restarted";
       if (shouldSendChatMessages) {
         messageText = "Messages Paused";

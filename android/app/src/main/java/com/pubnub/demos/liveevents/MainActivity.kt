@@ -74,10 +74,9 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //  Default to my (Darryn's) test key if no subscribe key provided
         val subscribeKey =
             applicationContext.getSharedPreferences("prefs.db", 0).getString("subscribeKey", null)
-                ?: "sub-c-f19c6fb1-c3a7-4a3b-bfaa-d424634e59e7"
+                ?: "demo"
         val showDebug = applicationContext.getSharedPreferences("prefs.db", 0).getBoolean("showDebug", true)
         pushChannel =
             applicationContext.getSharedPreferences("prefs.db", 0).getString("pushChannel", null)

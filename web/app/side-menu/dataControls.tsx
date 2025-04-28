@@ -26,26 +26,29 @@ const Expand = props => {
   )
 }
 
-export default function SideMenuDataControls ({ chat }) {
-  const [dataControlsDropDownVisible, setDataControlsDropDownVisible] =
-    useState(false)
+export default function SideMenuDataControls ({
+  chat,
+  dataControlsDropDownVisible,
+  setDataControlsDropDownVisible
+}) {
   const [selectedSimulation, setSelectedSimulation] = useState(0)
   const simulationNames = [
     'Select',
-    'Kick off',
+    'Start / restart simulation',
     'Goal',
     'Goal + Push Message',
     'Fan excitement',
     'Fan frustration',
     'Injury time',
     'Injury time + Push',
-    'End match'
+    'Pause / Resume Bot chat',
+    'End simulation'
   ]
   const [occupancy, setOccupancy] = useState<number | number[]>(0)
   const [isStarted, setIsStarted] = useState(false)
   async function sendMessageToBackend (simulate) {
     switch (simulate) {
-      case 'Kick off':
+      case 'Start / restart simulation':
         //  Start the game
         setIsStarted(true)
         await chat.sdk.publish({
@@ -127,9 +130,18 @@ export default function SideMenuDataControls ({ chat }) {
           channel: serverVideoControlChannelId
         })
         break
+      case  'Pause / Resume Bot chat':
+        //  Toggle the bot chat
+        await chat.sdk.publish({
+          message: {
+            type: 'BOT_CHAT'
+          },
+          channel: serverVideoControlChannelId
+        })
 
-      case 'End match':
-        //  Start the game
+        break
+      case 'End simulation':
+        //  End the game
         await chat.sdk.publish({
           message: {
             type: 'END_STREAM'
@@ -265,7 +277,7 @@ function DataControlsDropDown ({
         !dropDownVisible && 'hidden'
       } absolute w-48 top-[8px] left-[0px] bg-navy900 border-1 border-white/20 rounded-lg shadow-xl select-none z-40`}
     >
-      <div className='flex flex-col z-50 pt-2 text-neutral-50 text-sm max-h-96 overflow-auto'>
+      <div className='flex flex-col z-50 pt-2 text-neutral-50 text-sm max-h-[420px] overflow-auto'>
         {simulationNames.map(
           (name, index) =>
             index > 0 && (

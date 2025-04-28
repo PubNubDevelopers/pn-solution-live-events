@@ -15,6 +15,7 @@
     "framer-motion": "^12.5.0",
     "motion": "^12.6.0",
     "next": "15.2.3",
+    "pubnub-demo-integration": "^1.0.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-player": "^2.16.0"

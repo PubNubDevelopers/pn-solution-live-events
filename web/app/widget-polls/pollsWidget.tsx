@@ -8,11 +8,13 @@ import {
   illuminatePollTesting,
   AlertType
 } from '../data/constants'
+import { actionCompleted } from 'pubnub-demo-integration'
 
 export default function PollsWidget ({
   className,
   isMobilePreview,
   chat,
+  isGuidedDemo,
   guidesShown,
   visibleGuide,
   setVisibleGuide,
@@ -264,7 +266,7 @@ export default function PollsWidget ({
               <PollRowWithButton
                 key={index}
                 poll={poll}
-                buttonText={`${isMobilePreview ? 'Results' : 'See Results'}`}
+                buttonText={`${poll.isPollOpen ? 'In Progress' : 'Closed'}`}
                 onButtonClick={() => {
                   setCurrentlyVisiblePoll(poll.id)
                 }}
@@ -296,6 +298,14 @@ export default function PollsWidget ({
                   },
                   channel: pollVotes
                 })
+                if (!isGuidedDemo) {
+                  //  This code is only used by the PubNub website
+                  actionCompleted({
+                    action: 'Vote in a poll',
+                    blockDuplicateCalls: false,
+                    debug: false
+                  })
+                } 
               }}
             />
           )

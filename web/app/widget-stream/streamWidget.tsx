@@ -13,6 +13,7 @@ import Alert from '../components/alert'
 import GuideOverlay from '../components/guideOverlay'
 import LiveStreamPoll from '../widget-polls/liveStreamPoll'
 import ReactPlayer from 'react-player'
+import { actionCompleted } from 'pubnub-demo-integration'
 
 export default function StreamWidget ({
   className,
@@ -119,7 +120,11 @@ export default function StreamWidget ({
       receivePresenceEvents: false
     })
     videoControlSubscription.onMessage = messageEvent => {
-      handleVideoControl(messageEvent, isVideoPlayingRef.current, isVideoStartedRef.current)
+      handleVideoControl(
+        messageEvent,
+        isVideoPlayingRef.current,
+        isVideoStartedRef.current
+      )
     }
     videoControlSubscription.subscribe()
     return () => {
@@ -200,6 +205,8 @@ export default function StreamWidget ({
         //  The video is not playing locally, but the stream is running on the back end.  Join game in progress
         setRequestedVideoProgress(actualVideoProgressRef.current)
       }
+      //console.log(actualVideoProgressRef.current)
+      //console.log(messageEvent.message.params.playbackTime / 1000)
     } else if (messageEvent.message.type == 'END_STREAM') {
       setIsVideoPlaying(false)
       setIsVideoStarted(false)
@@ -422,6 +429,14 @@ export default function StreamWidget ({
         } rounded-full px-1.5 pt-1 text-center cursor-pointer`}
         onClick={e => {
           emojiClicked(emoji)
+          if (!isGuidedDemo) {
+            //  This code is only used by the PubNub website
+            actionCompleted({
+              action: 'React to the stream with an emoji',
+              blockDuplicateCalls: false,
+              debug: false
+            })
+          }
           e.stopPropagation()
         }}
       >
@@ -432,6 +447,18 @@ export default function StreamWidget ({
 
   function LiveOccupancyCount () {
     const displayOccupancy = occupancy + realOccupancy
+    useEffect(() => {
+      if (occupancy > 50) {
+        const interval = setInterval(() => {
+          const randomPercentage = (Math.random() * 4 - 2) / 100 // Random value between -0.02 and +0.02
+          setOccupancy(prev =>
+            Math.max(0, Math.round(prev * (1 + randomPercentage)))
+          )
+        }, 3000)
+
+        return () => clearInterval(interval)
+      }
+    }, [occupancy])
     return (
       <div className='flex flex-row h-7 text-white bg-cherry shadow-md rounded-l-full rounded-r-full'>
         <div className='flex flex-row px-2 py-1 gap-1 items-center'>

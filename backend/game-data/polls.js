@@ -785,7 +785,7 @@ exports.polls = [
       data: {
         id: 21,
         title: "What was the most exciting moment of the match?",
-        victoryPoints: 99,
+        victoryPoints: 10,
         pollType: "side",
         options: [
           { id: 1, text: "Joël Piroe's hat trick" },

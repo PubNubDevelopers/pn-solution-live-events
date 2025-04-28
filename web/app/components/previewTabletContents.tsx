@@ -159,6 +159,7 @@ export default function TabletContents ({
               className={`${defaultWidgetClasses}`}
               isMobilePreview={false}
               chat={chat}
+              isGuidedDemo={isGuidedDemo}
               guidesShown={guidesShown}
               visibleGuide={visibleGuide}
               setVisibleGuide={setVisibleGuide}
@@ -205,6 +206,7 @@ export default function TabletContents ({
               className={`${defaultWidgetClasses}`}
               isMobilePreview={false}
               chat={chat}
+              isGuidedDemo={isGuidedDemo}
               guidesShown={guidesShown}
               visibleGuide={visibleGuide}
               setVisibleGuide={setVisibleGuide}
@@ -220,6 +222,7 @@ export default function TabletContents ({
               className={`${defaultWidgetClasses}`}
               isMobilePreview={false}
               chat={chat}
+              isGuidedDemo={isGuidedDemo}
               guidesShown={guidesShown}
               visibleGuide={visibleGuide}
               setVisibleGuide={setVisibleGuide}

@@ -24,6 +24,7 @@ interface ChatWidgetProps {
   className: string
   isMobilePreview: boolean
   chat: Chat
+  isGuidedDemo: boolean,
   guidesShown: boolean
   visibleGuide: string
   setVisibleGuide: (guide: string) => void
@@ -40,6 +41,7 @@ export default function ChatWidget ({
   className,
   isMobilePreview,
   chat,
+  isGuidedDemo,
   guidesShown,
   visibleGuide,
   setVisibleGuide,
@@ -137,6 +139,17 @@ export default function ChatWidget ({
       removeModerationListener()
     }
   }, [chat, activeChannel])
+
+  useEffect(() => {
+    if (simulatedOccupancy > 20) {
+      const interval = setInterval(() => {
+        const randomPercentage = (Math.random() * 0.2 - 0.1); // Random value between -0.1 and +0.1
+        setSimulatedOccupancy(prev => Math.max(0, Math.round(prev * (1 + randomPercentage))));
+      }, 3000);
+
+      return () => clearInterval(interval);
+    }
+  }, [simulatedOccupancy]);
 
   function updateActiveChannelRestrictions () {
     //  Update the restrictions of the currently active channel whenever that changes
@@ -373,6 +386,7 @@ export default function ChatWidget ({
     try {
       // Use PubNub Chat SDK to send the message
       await activeChannel.sendText(messageInput, { storeInHistory: true })
+
       // await activeChannel.rea(messageInput)
 
       // Clear input and typing indicator
@@ -643,6 +657,7 @@ export default function ChatWidget ({
             availableUsers={users}
             channel={activeChannel}
             activeChannelRestrictions={activeChannelRestrictions}
+            isGuidedDemo={isGuidedDemo}
           />
         </div>
       )}

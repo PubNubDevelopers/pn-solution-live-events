@@ -7,6 +7,7 @@ import {
   AwardIcon,
   CelebrateSuccessIcon
 } from './pollsIcons'
+import { actionCompleted } from 'pubnub-demo-integration'
 
 export default function LiveStreamPoll ({
   isMobilePreview,
@@ -168,6 +169,14 @@ export default function LiveStreamPoll ({
                     },
                     channel: pollVotes
                   })
+                  if (!isGuidedDemo) {
+                    //  This code is only used by the PubNub website
+                    actionCompleted({
+                      action: 'Predict the match outcome',
+                      blockDuplicateCalls: false,
+                      debug: false
+                    })
+                  } 
                 }}
               />
             ))}

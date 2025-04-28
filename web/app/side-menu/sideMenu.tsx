@@ -18,7 +18,13 @@ import SelfLedHelp from './selfLedHelp'
 import { chatChannelId } from '../data/constants'
 import { urls } from '../data/urls'
 
-export default function SideMenu ({ sideMenuOpen, isGuidedDemo, chat }) {
+export default function SideMenu ({
+  sideMenuOpen,
+  isGuidedDemo,
+  chat,
+  dataControlsDropDownVisible,
+  setDataControlsDropDownVisible
+}) {
   return (
     <AnimatePresence>
       {true && (
@@ -30,6 +36,10 @@ export default function SideMenu ({ sideMenuOpen, isGuidedDemo, chat }) {
                   chat={chat}
                   isGuidedDemo={isGuidedDemo}
                   currentUser={chat?.currentUser}
+                  dataControlsDropDownVisible={dataControlsDropDownVisible}
+                  setDataControlsDropDownVisible={
+                    setDataControlsDropDownVisible
+                  }
                 />
               </div>
             </div>{' '}
@@ -40,7 +50,13 @@ export default function SideMenu ({ sideMenuOpen, isGuidedDemo, chat }) {
   )
 }
 
-function SideMenuContents ({ chat, isGuidedDemo, currentUser }) {
+function SideMenuContents ({
+  chat,
+  isGuidedDemo,
+  currentUser,
+  dataControlsDropDownVisible,
+  setDataControlsDropDownVisible
+}) {
   function accordionIndicator (isOpen) {
     return isOpen ? (
       <AnchorIcon className='text-neutral-100' transform='rotate(90)' />
@@ -75,7 +91,13 @@ function SideMenuContents ({ chat, isGuidedDemo, currentUser }) {
               }
             >
               <div className='pt-2'>
-                <SideMenuDataControls chat={chat} />
+                <SideMenuDataControls
+                  chat={chat}
+                  dataControlsDropDownVisible={dataControlsDropDownVisible}
+                  setDataControlsDropDownVisible={
+                    setDataControlsDropDownVisible
+                  }
+                />
               </div>
             </AccordionItem>
           )}
@@ -368,14 +390,19 @@ function SideMenuFunctions ({ isGuidedDemo }) {
         }
       />
       <div className='flex flex-row text-neutral50 font-normal gap-2 items-center'>
-      <ChatBotIcon className='max-w-8 min-w-8 max-h-8 min-h-8 bg-white rounded-lg' /><div className=''>Find the Functions Widget in the demo and ask a question.</div>
+        <ChatBotIcon className='max-w-8 min-w-8 max-h-8 min-h-8 bg-white rounded-lg' />
+        <div className=''>
+          Find the Functions Widget in the demo and ask a question.
+        </div>
       </div>
     </div>
   )
 }
 function SideMenuPushNotifications ({ isGuidedDemo }) {
-  const actionUrl = isGuidedDemo ? './emulator/' : 'https://www.pubnub.com/company/contact-sales/'
-  const buttonText = isGuidedDemo ? 'Open emulator' : "Contact us for a demo"
+  const actionUrl = isGuidedDemo
+    ? './emulator/'
+    : 'https://www.pubnub.com/company/contact-sales/'
+  const buttonText = isGuidedDemo ? 'Open emulator' : 'Contact us for a demo'
   return (
     <div className='flex flex-col gap-4 text-base font-semibold'>
       <div className='text-neutral50 font-normal'>

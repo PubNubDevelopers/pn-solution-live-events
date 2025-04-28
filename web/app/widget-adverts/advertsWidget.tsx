@@ -3,11 +3,13 @@ import { useState, useEffect } from 'react'
 import { ads } from '../data/constants'
 import GuideOverlay from '../components/guideOverlay'
 import PointsOverlay from './pointsOverlay'
+import { actionCompleted } from 'pubnub-demo-integration'
 
 export default function AdvertsWidget ({
   className,
   isMobilePreview,
   chat,
+  isGuidedDemo,
   guidesShown,
   visibleGuide,
   setVisibleGuide,
@@ -42,6 +44,14 @@ export default function AdvertsWidget ({
         prevAds.map(a => (a.id === ad.id ? { ...a, clickPoints: 0 } : a))
       )
       onAdClick(clickPoints)
+      if (!isGuidedDemo) {
+        //  This code is only used by the PubNub website
+        actionCompleted({
+          action: 'Click an ad that awards points',
+          blockDuplicateCalls: false,
+          debug: false
+        })
+      }  
     }
   }
 

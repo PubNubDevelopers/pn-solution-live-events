@@ -3,6 +3,7 @@ import { reactions } from '@/app/data/constants'
 import { User, MessageDraftV2, Channel } from '@pubnub/chat'
 import { useHover } from '@uidotdev/usehooks'
 import { Restriction } from '../chatWidget'
+import { actionCompleted } from 'pubnub-demo-integration'
 
 interface MessageInputProps {
   messageInput: string
@@ -16,6 +17,7 @@ interface MessageInputProps {
   availableUsers: User[]
   channel: Channel
   activeChannelRestrictions: Restriction | null
+  isGuidedDemo: boolean
 }
 
 export default function MessageInput ({
@@ -29,7 +31,8 @@ export default function MessageInput ({
   setShowMentions,
   showReactions,
   setShowReactions,
-  activeChannelRestrictions
+  activeChannelRestrictions,
+  isGuidedDemo
 }: MessageInputProps) {
   const [ref, hovering] = useHover()
   const [mentionQuery, setMentionQuery] = useState('')
@@ -124,6 +127,14 @@ export default function MessageInput ({
     if (messageDraftRef.current && messageInput.trim()) {
       try {
         await messageDraftRef.current.send()
+        if (!isGuidedDemo) {
+          //  This code is only used by the PubNub website
+          actionCompleted({
+            action: 'Send a chat message',
+            blockDuplicateCalls: false,
+            debug: false
+          })
+        }  
         setMessageInput('')
         // Create new message draft for next message
         messageDraftRef.current = channel.createMessageDraftV2({

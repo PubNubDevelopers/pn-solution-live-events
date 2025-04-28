@@ -22,10 +22,13 @@ export default function SportsEventPage ({
   const [guidesShown, setGuidesShown] = useState(false)
   const [visibleGuide, setVisibleGuide] = useState('')
   const [currentScore, setCurrentScore] = useState(0)
+  const [dataControlsDropDownVisible, setDataControlsDropDownVisible] =
+  useState(false)
 
   function backgroundClicked () {
     //console.log('background clicked')
     setVisibleGuide('')
+    setDataControlsDropDownVisible(false)
   }
 
   function logout () {
@@ -91,6 +94,8 @@ export default function SportsEventPage ({
           sideMenuOpen={sideMenuOpen}
           isGuidedDemo={isGuidedDemo}
           chat={chat}
+          dataControlsDropDownVisible={dataControlsDropDownVisible}
+          setDataControlsDropDownVisible={setDataControlsDropDownVisible}
         ></SideMenu>
 
         <div className='overflow-y-auto w-full p-6 overscroll-none flex flex-col items-center justify-center'>

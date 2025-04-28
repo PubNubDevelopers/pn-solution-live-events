@@ -29,7 +29,7 @@ exports.commentary = [
     },
   },
   {
-    timeSinceVideoStartedInMs: 3100,
+    timeSinceVideoStartedInMs: 31000,
     persistInHistory: false,
     action: {
       channel: "game.commentary",
@@ -40,7 +40,7 @@ exports.commentary = [
     },
   },
   {
-    timeSinceVideoStartedInMs: 3600,
+    timeSinceVideoStartedInMs: 36000,
     persistInHistory: false,
     action: {
       channel: "game.commentary",

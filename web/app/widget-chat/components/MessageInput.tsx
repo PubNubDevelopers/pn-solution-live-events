@@ -12,7 +12,6 @@ interface MessageInputProps {
   setShowMentions: (input: boolean) => void
   showReactions: boolean
   setShowReactions: (input: boolean) => void
-  sendMessage: () => void
   availableUsers: User[]
   channel: Channel
   activeChannelRestrictions: Restriction | null
@@ -22,7 +21,6 @@ interface MessageInputProps {
 export default function MessageInput ({
   messageInput,
   setMessageInput,
-  sendMessage,
   availableUsers,
   channel,
   showMentions,

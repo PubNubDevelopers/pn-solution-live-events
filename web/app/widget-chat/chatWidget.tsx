@@ -360,25 +360,6 @@ export default function ChatWidget ({
   }
 
   /**
-   * Sends a message to the active channel
-   */
-  const sendMessage = async () => {
-    if (!chat || !activeChannel || !messageInput.trim()) return
-
-    try {
-      // Use PubNub Chat SDK to send the message
-      await activeChannel.sendText(messageInput, { storeInHistory: true })
-
-      // await activeChannel.rea(messageInput)
-
-      // Clear input and typing indicator
-      setMessageInput('')
-    } catch (error) {
-      console.error('Error sending message:', error)
-    }
-  }
-
-  /**
    * Creates a new channel based on selected type
    */
   const createChannel = async () => {
@@ -611,7 +592,6 @@ export default function ChatWidget ({
             setShowMentions={setShowMentions}
             showReactions={showReactions}
             setShowReactions={setShowReactions}
-            sendMessage={sendMessage}
             availableUsers={users}
             channel={activeChannel}
             activeChannelRestrictions={activeChannelRestrictions}

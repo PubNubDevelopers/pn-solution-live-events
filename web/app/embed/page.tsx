@@ -15,6 +15,10 @@ export default function Page() {
   useEffect(() => {
     async function init() {
       if (!process.env.NEXT_PUBLIC_PUBNUB_PUBLISH_KEY || !process.env.NEXT_PUBLIC_PUBNUB_SUBSCRIBE_KEY) {
+        console.error('Missing PubNub keys:', {
+          publishKey: !!process.env.NEXT_PUBLIC_PUBNUB_PUBLISH_KEY,
+          subscribeKey: !!process.env.NEXT_PUBLIC_PUBNUB_SUBSCRIBE_KEY
+        })
         setLoadMessage('Missing PubNub configuration')
         return
       }
@@ -23,6 +27,11 @@ export default function Page() {
         // Use a default user for embedded view
         const defaultUserId = 'Docs'
         const { accessManagerToken } = await getAuthKey(defaultUserId, false)
+        if (!accessManagerToken) {
+          console.error('Failed to get access token')
+          setLoadMessage('Failed to get access token')
+          return
+        }
         const localChat = await Chat.init({
           publishKey: process.env.NEXT_PUBLIC_PUBNUB_PUBLISH_KEY,
           subscribeKey: process.env.NEXT_PUBLIC_PUBNUB_SUBSCRIBE_KEY,
@@ -36,7 +45,7 @@ export default function Page() {
         setUserId(defaultUserId)
       } catch (error) {
         console.error('Failed to initialize chat:', error)
-        setLoadMessage('Failed to initialize demo')
+        setLoadMessage('Failed to initialize demo: ' + (error instanceof Error ? error.message : String(error)))
       }
     }
 

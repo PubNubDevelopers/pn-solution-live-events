@@ -12,7 +12,6 @@ interface MessageInputProps {
   setShowMentions: (input: boolean) => void
   showReactions: boolean
   setShowReactions: (input: boolean) => void
-  handleTyping: () => void
   sendMessage: () => void
   availableUsers: User[]
   channel: Channel
@@ -23,7 +22,6 @@ interface MessageInputProps {
 export default function MessageInput ({
   messageInput,
   setMessageInput,
-  handleTyping,
   sendMessage,
   availableUsers,
   channel,
@@ -76,7 +74,6 @@ export default function MessageInput ({
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
     setMessageInput(value)
-    handleTyping()
 
     // Update message draft text
     if (messageDraftRef.current) {

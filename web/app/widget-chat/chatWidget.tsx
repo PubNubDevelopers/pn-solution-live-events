@@ -14,10 +14,7 @@ import {
   Message,
   MixedTextTypedElement
 } from '@pubnub/chat'
-import TypingIndicator from './components/TypingIndicator'
 import ChatMessage from './components/ChatMessage'
-import ChannelList from './components/ChannelList'
-import CreateChannelForm from './components/CreateChannelForm'
 import MessageInput from './components/MessageInput'
 
 interface ChatWidgetProps {
@@ -51,13 +48,10 @@ export default function ChatWidget ({
   const [activeChannelId, setActiveChannelId] = useState<string | null>(null)
   const [activeChannel, setActiveChannel] = useState<Channel | null>(null)
   const [publicChannels, setPublicChannels] = useState<Channel[]>([])
-  const [privateChannels, setPrivateChannels] = useState<Channel[]>([])
-  const [directChannels, setDirectChannels] = useState<Channel[]>([])
 
   // Message state
   const [messages, setMessages] = useState<Message[]>([])
   const [messageInput, setMessageInput] = useState('')
-  const [typingUsers, setTypingUsers] = useState<string[]>([])
 
   // UI state
   const [showChannelCreate, setShowChannelCreate] = useState(false)
@@ -207,8 +201,6 @@ export default function ChatWidget ({
 
       // Sort channels by type
       const publicChan: Channel[] = []
-      const privateChan: Channel[] = []
-      const directChan: Channel[] = []
 
       for (const channel of channels) {
         if (!channel) continue
@@ -216,16 +208,10 @@ export default function ChatWidget ({
         // Add channel to appropriate array based on type
         if (channel.type === 'public') {
           publicChan.push(channel)
-        } else if (channel.type === 'group') {
-          privateChan.push(channel)
-        } else if (channel.type === 'direct') {
-          directChan.push(channel)
         }
       }
 
       setPublicChannels(publicChan)
-      setPrivateChannels(privateChan)
-      setDirectChannels(directChan)
 
       // Set default active channel if none selected
       if (!activeChannelId && publicChan.length > 0) {
@@ -260,7 +246,6 @@ export default function ChatWidget ({
 
     // Clear existing messages and typing users before setting up new channel
     setMessages([])
-    setTypingUsers([])
 
     try {
       // Fetch the selected channel using PubNub Chat SDK
@@ -288,7 +273,6 @@ export default function ChatWidget ({
 
       // Initialize cleanup functions
       let unsubscribeMessages = () => {}
-      let typingUnsubscribe = () => {}
 
       // Connect to channel to receive messages
 
@@ -353,7 +337,6 @@ export default function ChatWidget ({
           unsubscribeMessages()
         }
         setMessages([])
-        setTypingUsers([])
         occupancySubscription.unsubscribe()
         reactionsSubscription.unsubscribe()
         serverVideoControlSubscription.unsubscribe()
@@ -362,7 +345,6 @@ export default function ChatWidget ({
       console.error(`Error setting up channel ${activeChannelId}:`, error)
       return () => {
         setMessages([])
-        setTypingUsers([])
       }
     }
   }
@@ -391,23 +373,8 @@ export default function ChatWidget ({
 
       // Clear input and typing indicator
       setMessageInput('')
-      if (activeChannel.type !== 'public') {
-        activeChannel.stopTyping()
-      }
     } catch (error) {
       console.error('Error sending message:', error)
-    }
-  }
-
-  /**
-   * Handles typing indicator when user inputs text
-   */
-  const handleTyping = () => {
-    if (!chat || !activeChannel) return
-
-    // Typing indicators not supported in public channels
-    if (activeChannel.type !== 'public') {
-      activeChannel.startTyping()
     }
   }
 
@@ -515,7 +482,6 @@ export default function ChatWidget ({
             <ul className='list-disc list-inside my-2'>
               <li>Public, private, and direct channels</li>
               <li>Send and receive real-time messages</li>
-              <li>Display typing indicators</li>
               <li>Add emoji reactions to messages</li>
               <li>Track whether users are online or offline</li>
             </ul>
@@ -638,13 +604,6 @@ export default function ChatWidget ({
             )}
           </div>
 
-          {/* Typing indicator */}
-          <div className='h-5'>
-            {activeChannel && typingUsers.length > 0 && (
-              <TypingIndicator typingUsers={typingUsers} />
-            )}
-          </div>
-
           <MessageInput
             messageInput={messageInput}
             setMessageInput={setMessageInput}
@@ -652,7 +611,6 @@ export default function ChatWidget ({
             setShowMentions={setShowMentions}
             showReactions={showReactions}
             setShowReactions={setShowReactions}
-            handleTyping={handleTyping}
             sendMessage={sendMessage}
             availableUsers={users}
             channel={activeChannel}

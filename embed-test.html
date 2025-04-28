@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Events Embed Test</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: system-ui, -apple-system, sans-serif;
+            background: #f0f0f0;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .header {
+            margin-bottom: 20px;
+        }
+        .embed-container {
+            width: 100%;
+            height: 800px;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Live Events Demo Embed Test</h1>
+            <p>This page demonstrates how the Live Events demo looks when embedded in another website.</p>
+        </div>
+        <div class="embed-container">
+            <iframe 
+                src="http://localhost:3000/embed" 
+                allowfullscreen
+                allow="autoplay; fullscreen"
+            ></iframe>
+        </div>
+    </div>
+</body>
+</html> 

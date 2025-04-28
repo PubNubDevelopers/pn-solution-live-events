@@ -58,10 +58,7 @@ export default function LoginPage ({
           publishKey: process.env.NEXT_PUBLIC_PUBNUB_PUBLISH_KEY as string,
           subscribeKey: process.env.NEXT_PUBLIC_PUBNUB_SUBSCRIBE_KEY as string,
           userId: tempUserId, //  Don't use the same user ID here as you use in the next line, to test whether any users already exist
-          authKey: accessManagerToken,
-          typingTimeout: 5000,
-          storeUserActivityTimestamps: true,
-          storeUserActivityInterval: 600000
+          authKey: accessManagerToken
         })
 
         const testUser = await localChat.getUser('user-01')
@@ -171,10 +168,7 @@ export default function LoginPage ({
       publishKey: process.env.NEXT_PUBLIC_PUBNUB_PUBLISH_KEY as string,
       subscribeKey: process.env.NEXT_PUBLIC_PUBNUB_SUBSCRIBE_KEY as string,
       userId: userId,
-      authKey: accessManagerToken,
-      typingTimeout: 5000,
-      storeUserActivityTimestamps: true,
-      storeUserActivityInterval: 600000
+      authKey: accessManagerToken
     })
     setChat(localChat)
     setUserId(userId)

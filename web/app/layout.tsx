@@ -26,6 +26,9 @@ export default function RootLayout ({
 }>) {
   return (
     <html lang='en'>
+      <head>
+      <script src="https://www.pubnub.com/scripts/amplitude.js" defer></script>
+      </head>
       <Suspense>
         <body className={`${figtree.className} antialiased`}>
           <HeroUIProvider>{children}</HeroUIProvider>

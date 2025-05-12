@@ -84,6 +84,7 @@ export default {
         '3xl': '120rem',
         '4xl': '140rem',
         '5xl': '160rem',
+        'iframe': '847px',
       }
     },
   },

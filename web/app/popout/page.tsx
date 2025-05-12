@@ -46,6 +46,7 @@ export default function Page () {
         setUserId={setUserId}
         isGuidedDemo={isGuidedDemo}
         setLoadMessage={setLoadMessage}
+        isPopout={true}
       />
     )
   }

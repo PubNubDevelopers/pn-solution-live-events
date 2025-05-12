@@ -1,3 +1,5 @@
+'use client'
+
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { Chat, User, Channel } from '@pubnub/chat'
@@ -11,7 +13,8 @@ export default function LoginPage ({
   setChat,
   setUserId,
   isGuidedDemo,
-  setLoadMessage
+  setLoadMessage,
+  isPopout,
 }) {
   const [userArray, setUserArray] = useState<any | null>(null)
 
@@ -35,7 +38,13 @@ export default function LoginPage ({
   }
 
   //  App initialization
+  const [isLoginBypass, setIsLoginBypass] = useState(false)
+
   useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search)
+      setIsLoginBypass(params.get('loginbypass') === 'true')
+    }
     async function init () {
       if (!process.env.NEXT_PUBLIC_PUBNUB_PUBLISH_KEY) {
         setLoadMessage('No PubNub Publish Key Found')
@@ -53,7 +62,10 @@ export default function LoginPage ({
       }
       try {
         const tempUserId = 'user-02'
-        const { accessManagerToken } = await getAuthKey(tempUserId, isGuidedDemo)
+        const { accessManagerToken } = await getAuthKey(
+          tempUserId,
+          isGuidedDemo
+        )
         const localChat = await Chat.init({
           publishKey: process.env.NEXT_PUBLIC_PUBNUB_PUBLISH_KEY as string,
           subscribeKey: process.env.NEXT_PUBLIC_PUBNUB_SUBSCRIBE_KEY as string,
@@ -143,6 +155,15 @@ export default function LoginPage ({
           }
           await Promise.all(promises)
         }
+
+        const params = new URLSearchParams(window.location.search)
+        if (params.get('loginbypass') === 'true' && !isGuidedDemo) {
+          console.log('Login bypass detected:', params.get('loginbypass'))
+          const randomUserId = `user-${
+            Math.floor(Math.random() * (40 - 10 + 1)) + 10
+          }`
+          login(randomUserId)
+        }
       } catch {
         setLoadMessage(
           'Could not initialize Chat.  Please check your PubNub Keyset configuration'
@@ -179,39 +200,46 @@ export default function LoginPage ({
     setSalesIntroPageShown(true)
     setLoginPageShown(false)
   }
-
   return (
     <div className='flex items-center justify-center h-fit min-h-screen w-screen min-w-screen bg-[radial-gradient(circle_at_bottom,_var(--tw-gradient-stops))] from-[#334169] to-navy900 select-none'>
-      <div className='flex flex-col gap-20 items-center text-navy100 '>
-        <div className='flex flex-row gap-4 items-center'>
-          {isGuidedDemo && (
-            <div
-              className='cursor-pointer'
-              onClick={() => {
-                returnToSalesScreen()
-              }}
-            >
-              <ArrowBack />
-            </div>
-          )}
-          <div className='text-5xl font-extrabold'>Choose a user to log in</div>
+      {!isGuidedDemo && isLoginBypass ? (
+        <div className='flex flex-col gap-20 items-center text-navy100'>
+          <div className='text-5xl font-extrabold'>Loading...</div>
         </div>
-        <div className='flex flex-row gap-6'>
-          {userArray?.slice(0, 4).map((user, index) => {
-            return (
-              <LoginAvatar
-                key={index}
-                id={index}
-                name={user.name}
-                avatarUrl={user.avatar}
-                personSelected={key => {
-                  login(userArray[key].id)
+      ) : (
+        <div className='flex flex-col gap-20 items-center text-navy100 '>
+          <div className='flex flex-row gap-4 items-center'>
+            {isGuidedDemo && !isPopout && (
+              <div
+                className='cursor-pointer'
+                onClick={() => {
+                  returnToSalesScreen()
                 }}
-              ></LoginAvatar>
-            )
-          })}
+              >
+                <ArrowBack />
+              </div>
+            )}
+            {userArray && <div className='text-5xl font-extrabold'>
+              Choose a user to log in
+            </div>}
+          </div>
+          <div className='flex flex-row gap-6'>
+            {userArray?.slice(0, 4).map((user, index) => {
+              return (
+                <LoginAvatar
+                  key={index}
+                  id={index}
+                  name={user.name}
+                  avatarUrl={user.avatar}
+                  personSelected={key => {
+                    login(userArray[key].id)
+                  }}
+                ></LoginAvatar>
+              )
+            })}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   )
 }

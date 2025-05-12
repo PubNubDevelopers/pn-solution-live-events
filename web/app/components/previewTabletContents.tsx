@@ -123,7 +123,7 @@ export default function TabletContents ({
       />
       <div className='overflow-y-auto overscroll-none'>
         <div
-          className={`flex flex-col md:flex-row px-6 gap-3 w-full h-full ${
+          className={`flex flex-col iframe:flex-row items-center iframe:items-start px-6 gap-3 w-full h-full ${
             heightConstrained && 'sm:min-h-[630px] sm:max-h-[630px] 3xl:min-h-[834px] 3xl:max-h-[834px] 4xl:min-h-[1030px] 4xl:max-h-[1030px]'
           } rounded-b-2xl`}
         >

@@ -44,6 +44,7 @@ export default function Home () {
         setUserId={setUserId}
         isGuidedDemo={guidedDemo}
         setLoadMessage={setLoadMessage}
+        isPopout={false}
       />
     )
   }

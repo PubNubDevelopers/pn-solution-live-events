@@ -3,6 +3,7 @@ import { motion } from 'framer-motion'
 import {
   streamReactionsChannelId,
   clientVideoControlChannelId,
+  serverVideoControlChannelId,
   illuminateUpgradeReaction,
   dataControlOccupancyChannelId,
   AlertType,
@@ -279,34 +280,48 @@ export default function StreamWidget ({
       <div className='relative'>
         <div
           id={`live-stream-${isMobilePreview}`}
-          className={`bg-neutral200 ${
-            isMobilePreview ? '' : ''
-          } pointer-events-none`}
+          className={`bg-neutral200 ${isMobilePreview ? '' : ''}`}
         >
           {isVideoPlaying == true ? (
-            <ReactPlayer
-              ref={playerRef}
-              url={videoUrl}
-              playing={isVideoPlaying}
-              controls={false}
-              width={isMobilePreview ? 418 : 698}
-              height={isMobilePreview ? 235 : 393}
-              loop={false}
-              muted={isMobilePreview ? true : muted}
-              pip={false}
-              onReady={ev => onVideoReady(ev)}
-              onStart={() => onVideoStart()}
-              onPlay={() => onVideoPlay()}
-              onProgress={ev => onVideoProgress(ev)}
-              progressInterval={1000}
-            />
+            <div className='pointer-events-none'>
+              <ReactPlayer
+                ref={playerRef}
+                url={videoUrl}
+                playing={isVideoPlaying}
+                controls={false}
+                width={isMobilePreview ? 418 : 698}
+                height={isMobilePreview ? 235 : 393}
+                loop={false}
+                muted={isMobilePreview ? true : muted}
+                pip={false}
+                onReady={ev => onVideoReady(ev)}
+                onStart={() => onVideoStart()}
+                onPlay={() => onVideoPlay()}
+                onProgress={ev => onVideoProgress(ev)}
+                progressInterval={1000}
+              />
+            </div>
           ) : (
             <div
               className={`flex flex-row items-center justify-center ${
                 isMobilePreview ? 'w-[418px]' : 'w-[698px]'
               } ${isMobilePreview ? 'h-[235px]' : 'h-[393px]'}`}
             >
-              <div className='flex flex-col items-center'>
+              <div
+                className={`flex flex-col items-center ${
+                  isGuidedDemo && 'cursor-pointer'
+                }`}
+                onClick={() => {
+                  if (isGuidedDemo) {
+                    chat.sdk.publish({
+                      message: {
+                        type: 'START_STREAM'
+                      },
+                      channel: serverVideoControlChannelId
+                    })
+                  }
+                }}
+              >
                 <LiveStreamIcon />{' '}
                 <div className='font-medium text-lg'>Waiting for stream...</div>
               </div>

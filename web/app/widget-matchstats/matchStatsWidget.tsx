@@ -132,7 +132,7 @@ export default function MatchStatsWidget ({
           {giveStatsBox(matchStats?.statBox6)}
         </div>
         <div
-          className={`hidden lg:flex ${
+          className={`hidden md:flex ${
             isMobilePreview ? 'col-span-2' : 'col-span-2 row-span-3'
           }`}
         >

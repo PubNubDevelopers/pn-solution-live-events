@@ -5,6 +5,7 @@ import Cup from './icons/cup'
 
 export default function UserStatus ({ chat, logout, currentScore }) {
   const [currentUser, setCurrentUser] = useState<User | null>(null)
+    const [isLoginBypass, setIsLoginBypass] = useState(false)
 
   useEffect(() => {
     //  Get updates on the current user
@@ -16,6 +17,13 @@ export default function UserStatus ({ chat, logout, currentScore }) {
       setCurrentUser(updatedUser)
     })
   }, [chat])
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search)
+      setIsLoginBypass(params.get('loginbypass') === 'true')
+    }
+  }, [])
 
   return (
     <div className='flex flex-row self-end gap-4 items-center'>
@@ -30,7 +38,7 @@ export default function UserStatus ({ chat, logout, currentScore }) {
         <div className='text-lg font-semibold'>{currentUser?.name}</div>
       </div>
       <Avatar avatarUrl={currentUser?.profileUrl} />
-      <div className='text-base font-normal text-teal700 underline cursor-pointer' onClick={(e) => {logout();}}>Log out</div>
+      <div className='text-base font-normal text-teal700 underline cursor-pointer' onClick={(e) => {logout();}}>{isLoginBypass ? 'Switch User' : 'Log out'}</div>
     </div>
   )
 }

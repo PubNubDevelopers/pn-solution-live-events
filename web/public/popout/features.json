@@ -3,7 +3,7 @@
         "React to the stream with an emoji",
         "Send a chat message",
         "Predict the match outcome",
-        "Vote in a poll",
+        "Vote in a poll (when available)",
         "Click an ad that awards points"
     ]
 }

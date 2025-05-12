@@ -301,7 +301,7 @@ export default function PollsWidget ({
                 if (!isGuidedDemo) {
                   //  This code is only used by the PubNub website
                   actionCompleted({
-                    action: 'Vote in a poll',
+                    action: 'Vote in a poll (when available)',
                     blockDuplicateCalls: false,
                     debug: false
                   })

@@ -14,7 +14,7 @@ export default function LoginPage ({
   setUserId,
   isGuidedDemo,
   setLoadMessage,
-  isPopout,
+  isPopout
 }) {
   const [userArray, setUserArray] = useState<any | null>(null)
 
@@ -64,7 +64,8 @@ export default function LoginPage ({
         const tempUserId = 'user-02'
         const { accessManagerToken } = await getAuthKey(
           tempUserId,
-          isGuidedDemo
+          isGuidedDemo,
+          `-${process.env.NEXT_PUBLIC_ENVIRONMENT_NUMBER ?? ''}`
         )
         const localChat = await Chat.init({
           publishKey: process.env.NEXT_PUBLIC_PUBNUB_PUBLISH_KEY as string,
@@ -184,7 +185,11 @@ export default function LoginPage ({
   }, [])
 
   async function login (userId) {
-    const { accessManagerToken } = await getAuthKey(userId, isGuidedDemo)
+    const { accessManagerToken } = await getAuthKey(
+      userId,
+      isGuidedDemo,
+      `-${process.env.NEXT_PUBLIC_ENVIRONMENT_NUMBER ?? ''}`
+    )
     const localChat = await Chat.init({
       publishKey: process.env.NEXT_PUBLIC_PUBNUB_PUBLISH_KEY as string,
       subscribeKey: process.env.NEXT_PUBLIC_PUBNUB_SUBSCRIBE_KEY as string,
@@ -219,9 +224,11 @@ export default function LoginPage ({
                 <ArrowBack />
               </div>
             )}
-            {userArray && <div className='text-5xl font-extrabold'>
-              Choose a user to log in
-            </div>}
+            {userArray && (
+              <div className='text-5xl font-extrabold'>
+                Choose a user to log in
+              </div>
+            )}
           </div>
           <div className='flex flex-row gap-6'>
             {userArray?.slice(0, 4).map((user, index) => {

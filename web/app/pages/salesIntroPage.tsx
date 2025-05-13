@@ -1,11 +1,49 @@
+import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { urls } from '../data/urls'
+import { Chat } from '@pubnub/chat'
+import { getAuthKey } from '../getAuthKey'
+import { clientVideoControlChannelId } from '../data/constants'
 
 export default function SalesIntroPage ({
   setSalesIntroPageShown,
   setLoginPageShown
 }) {
+  const [instanceActivity, setInstanceActivity] = useState(false)
   const HomePagePubNubLogo = props => {
+    useEffect(() => {
+      async function init () {
+        try {
+          const tempUser = 'activityTest'
+          const { accessManagerToken } = await getAuthKey(
+            tempUser,
+            true,
+            `-${process.env.NEXT_PUBLIC_ENVIRONMENT_NUMBER ?? ''}`
+          )
+          const localChat = await Chat.init({
+            subscribeKey: process.env.NEXT_PUBLIC_PUBNUB_SUBSCRIBE_KEY,
+            userId: tempUser,
+            authKey: accessManagerToken
+          })
+          const channel = localChat.sdk.channel(clientVideoControlChannelId)
+          const channelSubscription = channel.subscription({
+            receivePresenceEvents: false
+          })
+          channelSubscription.onMessage = messageEvent => {
+            setInstanceActivity(true)
+          }
+          channelSubscription.subscribe()
+          return () => {
+            channelSubscription.unsubscribe()
+          }
+        } catch (error) {
+          console.log('Error initializing Chat:', error)
+        }
+      }
+
+      init()
+    }, [])
+
     return (
       <svg
         aria-hidden='true'
@@ -61,9 +99,27 @@ export default function SalesIntroPage ({
     )
   }
 
-  function proceed (shouldClearIlluminateObjects) {
+  function proceed () {
     setSalesIntroPageShown(false)
     setLoginPageShown(true)
+  }
+  const WarningIcon = props => {
+    return (
+      <svg
+        aria-hidden='true'
+        focusable='false'
+        height='32'
+        role='presentation'
+        viewBox='0 0 16 16'
+        width='32'
+        {...props}
+      >
+        <path
+          d='M7.99996 6.3265L13.02 14.9998H2.97996L7.99996 6.3265ZM7.99996 3.6665L0.666626 16.3332H15.3333L7.99996 3.6665ZM8.66663 12.9998H7.33329V14.3332H8.66663V12.9998ZM8.66663 8.99984H7.33329V11.6665H8.66663V8.99984Z'
+          fill='currentColor'
+        />
+      </svg>
+    )
   }
 
   return (
@@ -74,18 +130,54 @@ export default function SalesIntroPage ({
           Live Events Solution Showcase
         </div>
 
-        <div className='flex flex-row gap-6 pt-[112px] pr-6 pb-6 overflow-auto'>
+        <div className='pt-[50px]'>
+          {instanceActivity && (
+            <div className='flex flex-row border-1 w-fit border-warning500 p-6 mb-6 items-center rounded-xl text-base'>
+              <div className='text-warning500 pr-6'>
+                <WarningIcon />
+              </div>
+              <div className='flex flex-col gap-3 text-neutral-200'>
+                <div className='font-semibold text-2xl'>
+                  Activity detected in this demo environment
+                </div>
+                <div className=''>
+                  If this was not you, please consider using a different
+                  environment.
+                </div>
+                <div className='font-semibold'>
+                  Available environments:
+                  <ul className='px-4 pt-1 list-disc'>
+                    <li>
+                      <a href={`${urls.hostedUrls.salesLed1}`}>
+                        Demo Environment 1
+                      </a>
+                    </li>
+                    <li>
+                      <a href={`${urls.hostedUrls.salesLed2}`}>
+                        Demo Environment 2
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
+        <div className='flex flex-row gap-6 pt-[62px] pr-6 pb-6 overflow-auto'>
           <HomePageTemplateTile
+            instanceTitle={`Demo Environment: ${process.env.NEXT_PUBLIC_ENVIRONMENT_NUMBER ?? ''}`}
             title={'Accept & Continue'}
             subtitle={
               'This application uses a shared demo environment, if you modify anything on the backend, such as Illuminate Objects, please return them to their original state after using this demo.'
             }
             iconUrl={'/icons/start.svg'}
             tileClick={() => {
-              proceed(false)
+              proceed()
             }}
           />
           <HomePageTemplateTile
+            instanceTitle={''}
             title={'Visit the Wiki First'}
             subtitle={
               'If in doubt, visit the wiki for this application to understand how it works, and how to reset any backend objects if necessary.'
@@ -101,24 +193,38 @@ export default function SalesIntroPage ({
   )
 }
 
-function HomePageTemplateTile ({ title, subtitle, iconUrl, tileClick }) {
+function HomePageTemplateTile ({
+  instanceTitle,
+  title,
+  subtitle,
+  iconUrl,
+  tileClick,
+  instanceActivity
+}) {
   return (
     <div
       className='min-w-[320px] w-[460px] max-w-[460px] bg-white bg-opacity-[0.04] hover:bg-opacity-[0.12] border-1 border-white/20 rounded-xl p-8 flex flex-col cursor-pointer'
       onClick={() => tileClick()}
     >
-      <div className='w-16 min-w-16 h-16 min-h-16 bg-white/20 rounded-2xl mb-8 content-center'>
-        <Image
-          src={iconUrl}
-          alt={`${title} Icon`}
-          className='m-auto'
-          width={24}
-          height={24}
-          priority
-        />
+      <div className='flex flex-row gap-6'>
+        <div className='w-16 min-w-16 h-16 min-h-16 bg-white/20 rounded-2xl mb-8 content-center'>
+          <Image
+            src={iconUrl}
+            alt={`${title} Icon`}
+            className='m-auto'
+            width={24}
+            height={24}
+            priority
+          />
+        </div>
+        <div className='font-semibold text-white text-2xl h-16 min-h-16 content-center'>
+          {instanceTitle}
+        </div>
       </div>
       <div className='flex flex-col'>
-        <div className='font-semibold text-white text-2xl uppercase'>{title}</div>
+        <div className='font-semibold text-white text-2xl uppercase'>
+          {title}
+        </div>
         <div className='font-light text-neutral-200 text-base'>{subtitle}</div>
       </div>
     </div>

@@ -235,8 +235,8 @@ function SalesInstructionsToSwitchAccount ({ isGuidedDemo, instructionType }) {
           <div className='font-semibold'>Sales Only</div>
           <div className=''>
             {instructionType == 'illuminate'
-              ? `Switch organizations to '${urls.instructions.account}', then Illuminate dashboards and actions are named 'Showcase: Live Events...'`
-              : `Switch organizations to '${urls.instructions.account}', select the '${urls.instructions.appName}' app, then the '${urls.instructions.keysetName}' keyset`}
+              ? `Switch organizations to '${urls.instructions.account}', then Illuminate dashboards and actions are named 'Showcase: Live Events${typeof window !== 'undefined' && window.location.href.includes(urls.hostedUrls.salesLed2) ? ' 2' : ''}...'`
+              : `Switch organizations to '${urls.instructions.account}', select the '${urls.instructions.appName}' app, then the '${urls.instructions.keysetName}${typeof window !== 'undefined' && window.location.href.includes(urls.hostedUrls.salesLed2) ? '-2' : ''}' keyset`}
           </div>
         </div>
       )}

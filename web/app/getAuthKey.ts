@@ -1,12 +1,13 @@
 export async function getAuthKey(
     userId: string,
-    isGuidedDemo: boolean
+    isGuidedDemo: boolean,
+    customSuffix: string = ""
   ): Promise<{ accessManagerToken: string | undefined }> {
     try {
       const TOKEN_SERVER =
-        `https://devrel-demos-access-manager.netlify.app/.netlify/functions/api/pillar-live-events${isGuidedDemo ? '-guided' : ''}`;
+        `https://devrel-demos-access-manager.netlify.app/.netlify/functions/api/pillar-live-events${isGuidedDemo ? `-guided${customSuffix}` : ''}`;
       //const TOKEN_SERVER =
-      //  `http://localhost:8083/.netlify/functions/api/pillar-live-events${isGuidedDemo ? '-guided' : ''}`;
+      //  `http://localhost:8083/.netlify/functions/api/pillar-live-events${isGuidedDemo ? '-guided' : ''}${customSuffix}`;
       const response = await fetch(`${TOKEN_SERVER}/grant`, {
         method: "POST",
         headers: {

@@ -98,7 +98,8 @@ export default function Page () {
         const userId = 'testing-only'
         const { accessManagerToken } = await getAuthKey(
           userId,
-          isGuidedDemo ? true : false
+          isGuidedDemo ? true : false,
+          `-${process.env.NEXT_PUBLIC_ENVIRONMENT_NUMBER ?? ''}`
         )
         const localChat = await Chat.init({
           publishKey: process.env.NEXT_PUBLIC_PUBNUB_PUBLISH_KEY as string,

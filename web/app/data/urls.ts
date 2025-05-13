@@ -63,4 +63,10 @@ export const urls = {
   },
   popoutView: "./popout/",
   wiki: "https://pubnub.atlassian.net/wiki/spaces/GROW/pages/4415029276/Live+Events+Showcase+Pillar+Demo#Illuminate-Configuration",
+  hostedUrls: {
+    selfLed: "https://pn-solution-live-events.netlify.app/",
+    //  The following URLs are ONLY designed for use by the PubNub sales team
+    salesLed1: "https://pn-solution-live-events-guided.netlify.app/",
+    salesLed2: "https://pn-solution-live-events-guided-2.netlify.app/",
+  }
 };

@@ -21,7 +21,7 @@ export default function SalesIntroPage ({
             `-${process.env.NEXT_PUBLIC_ENVIRONMENT_NUMBER ?? ''}`
           )
           const localChat = await Chat.init({
-            subscribeKey: process.env.NEXT_PUBLIC_PUBNUB_SUBSCRIBE_KEY,
+            subscribeKey: process.env.NEXT_PUBLIC_PUBNUB_SUBSCRIBE_KEY as string,
             userId: tempUser,
             authKey: accessManagerToken
           })
@@ -199,7 +199,6 @@ function HomePageTemplateTile ({
   subtitle,
   iconUrl,
   tileClick,
-  instanceActivity
 }) {
   return (
     <div

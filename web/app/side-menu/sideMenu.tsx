@@ -184,22 +184,24 @@ function SideMenuContents ({
               <SideMenuFunctions isGuidedDemo={isGuidedDemo} />
             </div>
           </AccordionItem>
-          <AccordionItem
-            key={'6'}
-            indicator={({ isOpen }) => accordionIndicator(isOpen)}
-            className={`${accordionItemClass} mb-8`}
-            textValue={'Push Notifications'}
-            title={
-              <div className={accordionTitleClass}>
-                <PushNotificationsIcon />
-                Push Notifications
+          {process.env.NEXT_PUBLIC_ENVIRONMENT_NUMBER !== "2" && (
+            <AccordionItem
+              key={'6'}
+              indicator={({ isOpen }) => accordionIndicator(isOpen)}
+              className={`${accordionItemClass} mb-8`}
+              textValue={'Push Notifications'}
+              title={
+                <div className={accordionTitleClass}>
+                  <PushNotificationsIcon />
+                  Push Notifications
+                </div>
+              }
+            >
+              <div className='pt-2'>
+                <SideMenuPushNotifications isGuidedDemo={isGuidedDemo} />
               </div>
-            }
-          >
-            <div className='pt-2'>
-              <SideMenuPushNotifications isGuidedDemo={isGuidedDemo} />
-            </div>
-          </AccordionItem>
+            </AccordionItem>
+          )}
         </Accordion>
       </div>
       {!isGuidedDemo && <SelfLedHelp />}

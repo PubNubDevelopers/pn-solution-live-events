@@ -184,7 +184,7 @@ function SideMenuContents ({
               <SideMenuFunctions isGuidedDemo={isGuidedDemo} />
             </div>
           </AccordionItem>
-          {process.env.NEXT_PUBLIC_ENVIRONMENT_NUMBER !== "2" && (
+          {process.env.NEXT_PUBLIC_ENVIRONMENT_NUMBER !== "2" ? (
             <AccordionItem
               key={'6'}
               indicator={({ isOpen }) => accordionIndicator(isOpen)}
@@ -201,7 +201,7 @@ function SideMenuContents ({
                 <SideMenuPushNotifications isGuidedDemo={isGuidedDemo} />
               </div>
             </AccordionItem>
-          )}
+          ) : null}
         </Accordion>
       </div>
       {!isGuidedDemo && <SelfLedHelp />}

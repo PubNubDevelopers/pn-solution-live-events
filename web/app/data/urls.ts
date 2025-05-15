@@ -25,7 +25,7 @@ export const urls = {
     },
     moderation: {
       selfLed:
-        "https://demo-admin.pubnub.com/user/627747/account/632313/app/35517029/key/1268872/moderation/",
+        "https://demo-admin.pubnub.com/user/627747/account/632313/app/35517029/key/1268872/moderation",
       salesLed: "https://admin.pubnub.com/bizops/",
     },
   },

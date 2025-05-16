@@ -318,7 +318,7 @@ function SideMenuChatModeration ({ isGuidedDemo }) {
       />
       <TextWithLinkButton
         label={'Moderation'}
-        buttonText={'View Channel Monitor'}
+        buttonText={'Channel Monitor'}
         url={channelModerationUrl}
       />
       <TextWithLinkButton

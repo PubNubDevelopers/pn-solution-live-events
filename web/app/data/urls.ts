@@ -24,8 +24,9 @@ export const urls = {
         "https://www.pubnub.com/integrations/?sortBy=Most%20recent&categories=Language",
     },
     moderation: {
-      selfLed:
-        "https://demo-admin.pubnub.com/user/627747/account/632313/app/35517029/key/1268872/moderation",
+      //selfLed:
+      //  "https://demo-admin.pubnub.com/user/627747/account/632313/app/35517029/key/1268872/moderation",
+      selfLed: "https://www.pubnub.com/docs/bizops-workspace/channel-monitor",
       salesLed: "https://admin.pubnub.com/bizops/",
     },
   },

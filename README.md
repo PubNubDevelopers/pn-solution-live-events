@@ -65,7 +65,7 @@ To run this project yourself you will need a PubNub account
 
 1. Make sure your keyset has the following features enabled: Stream Controller, Presence, Persistence, App Context
 
-1. Leave Access Manager enabled for now (this is not needed for testing)
+1. Leave Access Manager disabled for now (this is not needed for testing)
 
 1. Copy the Publish and Subscribe keys and paste them into your app as specified in the next step.
 

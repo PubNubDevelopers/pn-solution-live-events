@@ -19,9 +19,9 @@ export const urls = {
   chatAndModeration: {
     translation: {
       selfLed:
-        "https://www.pubnub.com/integrations/?sortBy=Most%20recent&categories=Language",
+        "https://www.pubnub.com/integrations/",
       salesLed:
-        "https://www.pubnub.com/integrations/?sortBy=Most%20recent&categories=Language",
+        "https://www.pubnub.com/integrations/",
     },
     moderation: {
       //selfLed:

@@ -5,7 +5,7 @@ export async function getAuthKey(
   ): Promise<{ accessManagerToken: string | undefined }> {
     try {
       const TOKEN_SERVER =
-        `https://devrel-demos-access-manager.netlify.app/.netlify/functions/api/pillar-live-events${isGuidedDemo ? `-guided${customSuffix}` : ''}`;
+        `https://app.netlify.com/sites/devrel-demos-access-manager/.netlify/functions/api/pillar-live-events-guided`;
       //const TOKEN_SERVER =
       //  `http://localhost:8083/.netlify/functions/api/pillar-live-events${isGuidedDemo ? '-guided' : ''}${customSuffix}`;
       const response = await fetch(`${TOKEN_SERVER}/grant`, {
@@ -15,12 +15,13 @@ export async function getAuthKey(
         },
         body: JSON.stringify({ UUID: userId }),
       });
-  
+
       const data = await response.json();
       if (data.statusCode !== 200) {
         console.log(data.message);
       } else {
         const token = data.body.token;
+        console.log('🔑 Token received successfully:', token);
         return {
           accessManagerToken: token,
         };
@@ -30,9 +31,8 @@ export async function getAuthKey(
         "Failed to obtain the Access Manager token for demo:" + error.message
       );
     }
-  
+
     return {
       accessManagerToken: undefined,
     };
   }
-  

@@ -3,12 +3,10 @@
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { Chat, User } from '@pubnub/chat'
-import SalesIntroPage from './pages/salesIntroPage'
 import LoginPage from './pages/loginPage'
 import SportsEventPage from './pages/sportsEventPage'
 
 export default function Home () {
-  const [salesIntroPageShown, setSalesIntroPageShown] = useState(false)
   const [loginPageShown, setLoginPageShown] = useState(false)
   const [guidedDemo, setGuidedDemo] = useState(false)
   const [userId, setUserId] = useState<string | null>(null)
@@ -21,26 +19,15 @@ export default function Home () {
       ? process.env.NEXT_PUBLIC_GUIDED_DEMO
       : null
     setGuidedDemo(isGuidedDemo === 'true')
-    setSalesIntroPageShown(isGuidedDemo === 'true')
-    setLoginPageShown(!(isGuidedDemo === 'true'))
+    setLoginPageShown(true)
   }, [])
 
-  if (salesIntroPageShown) {
-    return (
-      <SalesIntroPage
-        setSalesIntroPageShown={setSalesIntroPageShown}
-        setLoginPageShown={setLoginPageShown}
-      />
-    )
-  }
-
-  if (!salesIntroPageShown && loginPageShown && !userId) {
+  if (loginPageShown && !userId) {
     return (
       <LoginPage
         chat={chat}
         setChat={setChat}
         setLoginPageShown={setLoginPageShown}
-        setSalesIntroPageShown={setSalesIntroPageShown}
         setUserId={setUserId}
         isGuidedDemo={guidedDemo}
         setLoadMessage={setLoadMessage}

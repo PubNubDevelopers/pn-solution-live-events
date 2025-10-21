@@ -2,8 +2,6 @@
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { Chat, User } from '@pubnub/chat'
-import Header from '../components/header'
-import SideMenu from '../side-menu/sideMenu'
 import PreviewTablet from '../components/previewTablet'
 import PreviewMobile from '../components/previewMobile'
 import { OpenInNewWindowIcon } from '../side-menu/sideMenuIcons'
@@ -18,17 +16,12 @@ export default function SportsEventPage ({
   isGuidedDemo
 }) {
   const [tabletPreview, setTabletPreview] = useState(true)
-  const [sideMenuOpen, setSideMenuOpen] = useState(true)
-  const [guidesShown, setGuidesShown] = useState(false)
   const [visibleGuide, setVisibleGuide] = useState('')
   const [currentScore, setCurrentScore] = useState(0)
-  const [dataControlsDropDownVisible, setDataControlsDropDownVisible] =
-  useState(false)
 
   function backgroundClicked () {
     //console.log('background clicked')
     setVisibleGuide('')
-    setDataControlsDropDownVisible(false)
   }
 
   function logout () {
@@ -76,29 +69,12 @@ export default function SportsEventPage ({
       className='h-screen flex bg-white select-none'
       onClick={() => backgroundClicked()}
     >
-      <Header
-        sideMenuOpen={sideMenuOpen}
-        setSideMenuOpen={setSideMenuOpen}
-        tabletPreview={tabletPreview}
-        setTabletPreview={setTabletPreview}
-        guidesShown={guidesShown}
-        setGuidesShown={setGuidesShown}
-      ></Header>
-
-      <div className='sm:hidden flex flex-col mt-10 h-screen justify-center w-full text-center gap-16 text-4xl'>
+      <div className='sm:hidden flex flex-col h-screen justify-center w-full text-center gap-16 text-4xl'>
         This app is not designed for mobile
       </div>
 
-      <div className='hidden sm:flex flex-row w-full mt-[92px] pb-0 bg-navy900/40 text-neutral-50'>
-        <SideMenu
-          sideMenuOpen={sideMenuOpen}
-          isGuidedDemo={isGuidedDemo}
-          chat={chat}
-          dataControlsDropDownVisible={dataControlsDropDownVisible}
-          setDataControlsDropDownVisible={setDataControlsDropDownVisible}
-        ></SideMenu>
-
-        <div className='overflow-y-auto w-full p-6 overscroll-none flex flex-col items-center justify-center'>
+      <div className='hidden sm:flex flex-row w-full pb-0 bg-white text-neutral-50'>
+        <div className='overflow-y-auto w-full overscroll-none flex flex-col items-center justify-center'>
           <div className='flex flex-col gap-0'>
             {isGuidedDemo && (
               <a
@@ -118,7 +94,7 @@ export default function SportsEventPage ({
               className={`${!tabletPreview && 'hidden'}`}
               chat={chat}
               isGuidedDemo={isGuidedDemo}
-              guidesShown={guidesShown}
+              guidesShown={false}
               visibleGuide={visibleGuide}
               setVisibleGuide={setVisibleGuide}
               logout={logout}
@@ -129,7 +105,7 @@ export default function SportsEventPage ({
             className={`${tabletPreview && 'hidden'}`}
             chat={chat}
             isGuidedDemo={isGuidedDemo}
-            guidesShown={guidesShown}
+            guidesShown={false}
             visibleGuide={visibleGuide}
             setVisibleGuide={setVisibleGuide}
             logout={logout}

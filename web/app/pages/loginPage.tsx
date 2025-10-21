@@ -8,7 +8,6 @@ import { getAuthKey } from '../getAuthKey'
 
 export default function LoginPage ({
   setLoginPageShown,
-  setSalesIntroPageShown,
   chat,
   setChat,
   setUserId,
@@ -185,26 +184,34 @@ export default function LoginPage ({
   }, [])
 
   async function login (userId) {
-    const { accessManagerToken } = await getAuthKey(
-      userId,
-      isGuidedDemo,
-      `-${process.env.NEXT_PUBLIC_ENVIRONMENT_NUMBER ?? ''}`
-    )
-    const localChat = await Chat.init({
-      publishKey: process.env.NEXT_PUBLIC_PUBNUB_PUBLISH_KEY as string,
-      subscribeKey: process.env.NEXT_PUBLIC_PUBNUB_SUBSCRIBE_KEY as string,
-      userId: userId,
-      authKey: accessManagerToken
-    })
-    setChat(localChat)
-    setUserId(userId)
-    setLoginPageShown(false)
+    console.log('🔵 Login function called with userId:', userId)
+    try {
+      console.log('🔵 Requesting auth key...')
+      const { accessManagerToken } = await getAuthKey(
+        userId,
+        isGuidedDemo,
+        `-${process.env.NEXT_PUBLIC_ENVIRONMENT_NUMBER ?? ''}`
+      )
+      console.log('🔵 Auth key received:', accessManagerToken ? '✓ Success' : '✗ Failed')
+
+      console.log('🔵 Initializing Chat...')
+      const localChat = await Chat.init({
+        publishKey: process.env.NEXT_PUBLIC_PUBNUB_PUBLISH_KEY as string,
+        subscribeKey: process.env.NEXT_PUBLIC_PUBNUB_SUBSCRIBE_KEY as string,
+        userId: userId,
+        authKey: accessManagerToken
+      })
+      console.log('🔵 Chat initialized successfully')
+
+      setChat(localChat)
+      setUserId(userId)
+      setLoginPageShown(false)
+      console.log('🔵 Login complete!')
+    } catch (error) {
+      console.error('🔴 Login error:', error)
+    }
   }
 
-  function returnToSalesScreen () {
-    setSalesIntroPageShown(true)
-    setLoginPageShown(false)
-  }
   return (
     <div className='flex items-center justify-center h-fit min-h-screen w-screen min-w-screen bg-[radial-gradient(circle_at_bottom,_var(--tw-gradient-stops))] from-[#334169] to-navy900 select-none'>
       {!isGuidedDemo && isLoginBypass ? (
@@ -214,16 +221,6 @@ export default function LoginPage ({
       ) : (
         <div className='flex flex-col gap-20 items-center text-navy100 '>
           <div className='flex flex-row gap-4 items-center'>
-            {isGuidedDemo && !isPopout && (
-              <div
-                className='cursor-pointer'
-                onClick={() => {
-                  returnToSalesScreen()
-                }}
-              >
-                <ArrowBack />
-              </div>
-            )}
             {userArray && (
               <div className='text-5xl font-extrabold'>
                 Choose a user to log in
@@ -256,6 +253,7 @@ function LoginAvatar ({ id, avatarUrl, name, personSelected }) {
     <div
       className='flex flex-col gap-3 p-2 items-center cursor-pointer hover:bg-navy800 rounded-lg'
       onClick={() => {
+        console.log('👤 Profile picture clicked:', name, 'ID:', id)
         personSelected(id)
       }}
     >

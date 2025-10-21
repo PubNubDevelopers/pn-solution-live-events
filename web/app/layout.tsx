@@ -29,11 +29,11 @@ export default function RootLayout ({
       <head>
       <script src="https://www.pubnub.com/scripts/amplitude.js" defer></script>
       </head>
-      <Suspense>
-        <body className={`${figtree.className} antialiased`}>
+      <body className={`${figtree.className} antialiased`}>
+        <Suspense>
           <HeroUIProvider>{children}</HeroUIProvider>
-        </body>
-      </Suspense>
+        </Suspense>
+      </body>
     </html>
   )
 }

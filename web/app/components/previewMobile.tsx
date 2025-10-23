@@ -144,6 +144,42 @@ export default function PreviewMobile ({
                 )
               }}
             />
+            <PollsWidget
+              className={`${defaultWidgetClasses}`}
+              isMobilePreview={true}
+              chat={chat}
+              isGuidedDemo={isGuidedDemo}
+              guidesShown={guidesShown}
+              visibleGuide={visibleGuide}
+              setVisibleGuide={setVisibleGuide}
+              awardPoints={(points, message) => {
+                AwardPoints(
+                  chat,
+                  points,
+                  message,
+                  currentScoreRef.current,
+                  showNewPointsAlert
+                )
+              }}
+            />
+            <AdvertsWidget
+              className={`${defaultWidgetClasses}`}
+              isMobilePreview={true}
+              chat={chat}
+              isGuidedDemo={isGuidedDemo}
+              guidesShown={guidesShown}
+              visibleGuide={visibleGuide}
+              setVisibleGuide={setVisibleGuide}
+              onAdClick={points => {
+                AwardPoints(
+                  chat,
+                  points,
+                  null,
+                  currentScoreRef.current,
+                  showNewPointsAlert
+                )
+              }}
+            />
             {dynamicAd && (
               <AdvertsOfferWidget
                 className={`${defaultWidgetClasses}`}
@@ -170,50 +206,7 @@ export default function PreviewMobile ({
                 }}
               />
             )}
-            <ChatWidget
-              className={`${defaultWidgetClasses}`}
-              isMobilePreview={true}
-              chat={chat}
-              isGuidedDemo={isGuidedDemo}
-              guidesShown={guidesShown}
-              visibleGuide={visibleGuide}
-              setVisibleGuide={setVisibleGuide}
-              userMentioned={messageText => {
-                setNotification({
-                  heading: 'You were mentioned',
-                  message: messageText,
-                  imageUrl: null
-                })
-              }}
-            />
-            <PollsWidget
-              className={`${defaultWidgetClasses}`}
-              isMobilePreview={true}
-              chat={chat}
-              isGuidedDemo={isGuidedDemo}
-              guidesShown={guidesShown}
-              visibleGuide={visibleGuide}
-              setVisibleGuide={setVisibleGuide}
-              awardPoints={(points, message) => {
-                AwardPoints(
-                  chat,
-                  points,
-                  message,
-                  currentScoreRef.current,
-                  showNewPointsAlert
-                )
-              }}
-            />
             <MatchStatsWidget
-              className={`${defaultWidgetClasses}`}
-              isMobilePreview={true}
-              chat={chat}
-              isGuidedDemo={isGuidedDemo}
-              guidesShown={guidesShown}
-              visibleGuide={visibleGuide}
-              setVisibleGuide={setVisibleGuide}
-            />
-            <BotWidget
               className={`${defaultWidgetClasses}`}
               isMobilePreview={true}
               chat={chat}
@@ -230,7 +223,7 @@ export default function PreviewMobile ({
               visibleGuide={visibleGuide}
               setVisibleGuide={setVisibleGuide}
             />
-            <AdvertsWidget
+            <ChatWidget
               className={`${defaultWidgetClasses}`}
               isMobilePreview={true}
               chat={chat}
@@ -238,15 +231,22 @@ export default function PreviewMobile ({
               guidesShown={guidesShown}
               visibleGuide={visibleGuide}
               setVisibleGuide={setVisibleGuide}
-              onAdClick={points => {
-                AwardPoints(
-                  chat,
-                  points,
-                  null,
-                  currentScoreRef.current,
-                  showNewPointsAlert
-                )
+              userMentioned={messageText => {
+                setNotification({
+                  heading: 'You were mentioned',
+                  message: messageText,
+                  imageUrl: null
+                })
               }}
+            />
+            <BotWidget
+              className={`${defaultWidgetClasses}`}
+              isMobilePreview={true}
+              chat={chat}
+              isGuidedDemo={isGuidedDemo}
+              guidesShown={guidesShown}
+              visibleGuide={visibleGuide}
+              setVisibleGuide={setVisibleGuide}
             />
           </div>
         </div>

@@ -146,15 +146,6 @@ export default function TabletContents ({
                 )
               }}
             />
-            <MatchStatsWidget
-              className={`${defaultWidgetClasses}`}
-              isMobilePreview={false}
-              chat={chat}
-              isGuidedDemo={isGuidedDemo}
-              guidesShown={guidesShown}
-              visibleGuide={visibleGuide}
-              setVisibleGuide={setVisibleGuide}
-            />
             <AdvertsWidget
               className={`${defaultWidgetClasses}`}
               isMobilePreview={false}
@@ -173,9 +164,36 @@ export default function TabletContents ({
                 )
               }}
             />
+            <MatchStatsWidget
+              className={`${defaultWidgetClasses}`}
+              isMobilePreview={false}
+              chat={chat}
+              isGuidedDemo={isGuidedDemo}
+              guidesShown={guidesShown}
+              visibleGuide={visibleGuide}
+              setVisibleGuide={setVisibleGuide}
+            />
             <div className='min-h-3'></div>
           </div>
           <div className='w-full flex flex-col gap-4'>
+            <PollsWidget
+              className={`${defaultWidgetClasses}`}
+              isMobilePreview={false}
+              chat={chat}
+              isGuidedDemo={isGuidedDemo}
+              guidesShown={guidesShown}
+              visibleGuide={visibleGuide}
+              setVisibleGuide={setVisibleGuide}
+              awardPoints={(points, message) => {
+                AwardPoints(
+                  chat,
+                  points,
+                  message,
+                  currentScoreRef.current,
+                  showNewPointsAlert
+                )
+              }}
+            />
             {dynamicAd && (
               <AdvertsOfferWidget
                 className={`${defaultWidgetClasses}`}
@@ -202,6 +220,14 @@ export default function TabletContents ({
                 }}
               />
             )}
+            <LiveCommentaryWidget
+              className={`${defaultWidgetClasses}`}
+              isMobilePreview={false}
+              chat={chat}
+              guidesShown={guidesShown}
+              visibleGuide={visibleGuide}
+              setVisibleGuide={setVisibleGuide}
+            />
             <ChatWidget
               className={`${defaultWidgetClasses}`}
               isMobilePreview={false}
@@ -218,37 +244,11 @@ export default function TabletContents ({
                 })
               }}
             />
-            <PollsWidget
-              className={`${defaultWidgetClasses}`}
-              isMobilePreview={false}
-              chat={chat}
-              isGuidedDemo={isGuidedDemo}
-              guidesShown={guidesShown}
-              visibleGuide={visibleGuide}
-              setVisibleGuide={setVisibleGuide}
-              awardPoints={(points, message) => {
-                AwardPoints(
-                  chat,
-                  points,
-                  message,
-                  currentScoreRef.current,
-                  showNewPointsAlert
-                )
-              }}
-            />
             <BotWidget
               className={`${defaultWidgetClasses}`}
               isMobilePreview={false}
               chat={chat}
               isGuidedDemo={isGuidedDemo}
-              guidesShown={guidesShown}
-              visibleGuide={visibleGuide}
-              setVisibleGuide={setVisibleGuide}
-            />
-            <LiveCommentaryWidget
-              className={`${defaultWidgetClasses}`}
-              isMobilePreview={false}
-              chat={chat}
               guidesShown={guidesShown}
               visibleGuide={visibleGuide}
               setVisibleGuide={setVisibleGuide}

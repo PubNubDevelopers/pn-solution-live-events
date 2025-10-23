@@ -179,20 +179,35 @@ export default function PollsWidget ({
         setVisibleGuide={setVisibleGuide}
         text={
           <span>
-            Polls are built on top of PubNub’s{' '}
-            <span className='font-semibold'>Core Messaging Service</span>, to
-            announce new polls, allow users to vote, and distribute results.{' '}
-            <span className='font-semibold'>Functions</span> allow you to
-            tabulate results with serverless processing.{' '}
-            <span className='font-semibold'>Access Manager</span> provides fine
-            grain access control so users cannot see results before they are
-            published.{' '}
+            <span className='font-semibold'>PubNub Illuminate</span> monitors fan reactions in real-time and automatically triggers contextual polls based on sentiment. When fans express anger or celebration, Illuminate instantly deploys relevant polls to capture engagement at the perfect moment. Polls are built on PubNub's{' '}
+            <span className='font-semibold'>Core Messaging Service</span> with{' '}
+            <span className='font-semibold'>Functions</span> for serverless result tabulation.{' '}
           </span>
         }
         xOffset={`${isMobilePreview ? 'left-[0px]' : '-left-[60px]'}`}
         yOffset={''}
         flexStyle={'flex-row items-start'}
       />
+
+      {/* Illuminate Header */}
+      <div className='flex items-center gap-2 bg-gradient-to-r from-purple-600 to-blue-600 overflow-hidden rounded-t -mx-6 -mt-3 px-[16px] py-[12px] text-white text-[16px] font-[600] leading-[24px] h-[56px]'>
+        <svg
+          xmlns='http://www.w3.org/2000/svg'
+          width='20'
+          height='20'
+          viewBox='0 0 20 20'
+          fill='none'
+        >
+          <path
+            d='M10 2L12.5 7.5L18 8L14 12L15 18L10 15L5 18L6 12L2 8L7.5 7.5L10 2Z'
+            fill='white'
+            stroke='white'
+            strokeWidth='1'
+            strokeLinejoin='round'
+          />
+        </svg>
+        <div>Illuminate-Powered Polls</div>
+      </div>
 
       {!currentlyVisiblePoll && polls?.length > 0 && <PollsToDisplay />}
       {!currentlyVisiblePoll && polls?.length == 0 && <NoOpenPollsToDisplay />}
@@ -220,8 +235,8 @@ export default function PollsWidget ({
   function NoOpenPollsToDisplay ({}) {
     return (
       <div className='text-base font-normal py-3'>
-        There are no unanswered, open polls, did you answer the poll under the
-        live stream?
+        <div className='mb-2'>Polls are dynamically triggered by <span className='font-semibold'>PubNub Illuminate</span> based on real-time fan sentiment.</div>
+        <div className='mt-2 text-sm text-gray-600'>💡 Tap reaction emojis in the live stream to trigger polls!</div>
       </div>
     )
   }
@@ -305,7 +320,7 @@ export default function PollsWidget ({
                     blockDuplicateCalls: false,
                     debug: false
                   })
-                } 
+                }
               }}
             />
           )

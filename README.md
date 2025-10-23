@@ -10,38 +10,52 @@ A hosted version of this demo can be found at **[https://pn-solution-live-events
 
 ## Things to Try:
 
-- React to the live stream by pressing the emoji below the video (if you press the buttons enough times, you will trigger events such as upgrades, and unlocked polls)
+- **Tap reaction emojis** below the live stream to trigger Illuminate-powered features:
+  - Press emojis multiple times to upgrade them in real-time
+  - Trigger sentiment-based polls (😡 for anger polls, 🎉 for celebration polls)
+  - Unlock dynamic premium ad offers
+- **Participate in dynamically triggered polls** that appear based on fan engagement
 - Send messages in the chat window (log in under a separate window to receive the message)
-- Participate in a poll
-- Explore the left-hand menu, this shows the portal data that powers the demo: 
+- Explore the left-hand menu to see the portal data that powers the demo:
+  - **Illuminate Dashboards** - Real-time analytics and decision engines
   - Users and Channels
   - Message moderation
-  - Illuminate (to trigger events if you tap the reaction emoji enough times)
   - PubNub Functions
 
 
 ## What does this demo show?
 
-- Mobile or Tablet view
-- Number of people watching the live event (PubNub Presence)
-- Reactions to the live event, e.g. cheering, anger, celebration (PubNub Messaging)
-- Polls - Starting a poll as well as real-time voting and results (PubNub Messaging, and appropriate Channel architecture)
-- Match stats in real-time and synchronized with the video feed (PubNub Messaging)
-- Chat - Send and receive messages (PubNub Chat SDK)
-- Chat - React to messages (PubNub Chat SDK)
-- Chat - Number of people participating (PubNub Presence)
-- Chat - Banning or Muting users (PubNub Channel Monitor)
-- Chat - Tag a user and be notified when you are tagged (PubNub Chat SDK)
-- How PubNub Functions can help extend the capabilities of the live event app
-- Live Commentary (PubNub Messaging)
-- Adverts, both static adverts as well as dynamic adverts triggered by Illuminate (PubNub Illuminate)
-- Gamification: user can earn points as they click ads, predict the match outcome, and interact with polls (App Context, PubNub Illuminate)
-- Gamification: Emoji can be upgraded if they are tapped enough (PubNub Illuminate)
+### 🌟 PubNub Illuminate Features (Primary Focus)
+
+- **Sentiment-Driven Polls**: Illuminate monitors fan reactions in real-time and automatically triggers contextual polls when specific emotional thresholds are reached (PubNub Illuminate)
+- **Dynamic Emoji Upgrades**: When fans tap reactions enough times, Illuminate upgrades emojis in real-time to enhanced versions (PubNub Illuminate)
+- **Dynamic Ad Serving**: Illuminate triggers premium ad offers based on fan engagement patterns and sentiment (PubNub Illuminate)
+- **Real-Time Analytics**: Dashboard showing engagement metrics, sentiment tracking, and actionable insights in milliseconds (PubNub Illuminate)
+
+### Fan Engagement Features
+
+- **Live Reactions**: Fans can react to events with emojis that float across the screen (PubNub Messaging)
+- **Interactive Polls**: Real-time voting with instant results visualization (PubNub Messaging, Functions)
+- **Gamification**: Users earn points by engaging with polls, ads, and content (App Context)
+- **Match Stats**: Real-time statistics synchronized with the video feed (PubNub Messaging)
+- **Live Commentary**: Automated commentary synchronized with game events (PubNub Messaging)
+- **Presence Tracking**: Number of people watching the live event (PubNub Presence)
+
+### Chat Features
+
+- Send and receive messages (PubNub Chat SDK)
+- React to messages with emojis (PubNub Chat SDK)
+- Tag users and receive notifications when mentioned (PubNub Chat SDK)
+- User moderation: Banning or Muting users (PubNub Channel Monitor)
+- Number of chat participants (PubNub Presence)
+
+### Additional Features
+
+- Mobile or Tablet responsive view
 - User and Channel Management (BizOps Workspace)
-- Moderation (PubNub Channel Monitor)
-- Push Messages for web 
-- Push Messages on mobile (contact our sales for a demo of this)
-- On-screen guides to show how each feature was implemented
+- Push Messages for web and mobile
+- PubNub Functions for serverless processing
+- On-screen guides showing implementation details
 
 ## Installation / Getting Started
 
@@ -71,7 +85,7 @@ To run this project yourself you will need a PubNub account
 
 ## Building and Running
 
-1. Clone the repository 
+1. Clone the repository
 
 1. You will need to install both the front-end and back-end application to get started
 

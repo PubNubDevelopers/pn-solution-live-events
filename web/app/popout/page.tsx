@@ -42,7 +42,6 @@ export default function Page () {
         chat={chat}
         setChat={setChat}
         setLoginPageShown={setLoginPageShown}
-        setSalesIntroPageShown={() => {}}
         setUserId={setUserId}
         isGuidedDemo={isGuidedDemo}
         setLoadMessage={setLoadMessage}

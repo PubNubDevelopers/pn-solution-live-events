@@ -24,8 +24,8 @@ export const serverVideoControlChannelId = "game.server-video-control";
 export const illuminateUpgradeReaction = "illuminate-upgrade-reaction";
 export const dataControlOccupancyChannelId = "game.dataControlsOccupancy"
 
-//export const streamUrl = "https://youtu.be/IprCMEH8Vt4";
-export const streamUrl = "https://vimeo.com/1073970603"
+// PubNub's original demo recording; the previous Vimeo embed is unavailable.
+export const streamUrl = "https://youtu.be/IprCMEH8Vt4";
 
 export const reactions = ["👍", "❤️", "😂", "😮", "👏"]
 

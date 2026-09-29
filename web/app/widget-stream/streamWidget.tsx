@@ -54,6 +54,8 @@ export default function StreamWidget ({
   const [videoUrl, setVideoUrl] = useState(streamUrl)
   const [isVideoPlaying, setIsVideoPlaying] = useState(false)
   const [isVideoStarted, setIsVideoStarted] = useState(false)
+  const [videoError, setVideoError] = useState(false)
+  const [playerAttempt, setPlayerAttempt] = useState(0)
   const actualVideoProgressRef = useRef(0)
   const [requestedVideoProgress, setRequestedVideoProgress] = useState(0)
   const [muted, setMuted] = useState(true)
@@ -225,7 +227,14 @@ export default function StreamWidget ({
   }
 
   function onVideoReady (ev) {
-    //console.log('Video ready')
+    setVideoError(false)
+  }
+
+  function retryVideo () {
+    setVideoError(false)
+    setIsVideoStarted(false)
+    setRequestedVideoProgress(actualVideoProgressRef.current)
+    setPlayerAttempt(attempt => attempt + 1)
   }
 
   function onVideoStart () {
@@ -283,23 +292,42 @@ export default function StreamWidget ({
           className={`bg-neutral200 ${isMobilePreview ? '' : ''}`}
         >
           {isVideoPlaying == true ? (
-            <div className='pointer-events-none'>
-              <ReactPlayer
-                ref={playerRef}
-                url={videoUrl}
-                playing={isVideoPlaying}
-                controls={false}
-                width={isMobilePreview ? 418 : 698}
-                height={isMobilePreview ? 235 : 393}
-                loop={false}
-                muted={isMobilePreview ? true : muted}
-                pip={false}
-                onReady={ev => onVideoReady(ev)}
-                onStart={() => onVideoStart()}
-                onPlay={() => onVideoPlay()}
-                onProgress={ev => onVideoProgress(ev)}
-                progressInterval={1000}
-              />
+            <div className='relative'>
+              <div className='pointer-events-none'>
+                <ReactPlayer
+                  key={playerAttempt}
+                  ref={playerRef}
+                  url={videoUrl}
+                  playing={isVideoPlaying}
+                  controls={false}
+                  width={isMobilePreview ? 418 : 698}
+                  height={isMobilePreview ? 235 : 393}
+                  loop={false}
+                  muted={isMobilePreview ? true : muted}
+                  pip={false}
+                  onReady={ev => onVideoReady(ev)}
+                  onStart={() => onVideoStart()}
+                  onPlay={() => onVideoPlay()}
+                  onProgress={ev => onVideoProgress(ev)}
+                  onError={() => {
+                    setVideoError(true)
+                    setIsVideoStarted(false)
+                  }}
+                  progressInterval={1000}
+                />
+              </div>
+              {videoError && (
+                <div role='alert' className='absolute inset-0 flex flex-col items-center justify-center gap-3 bg-neutral200 text-neutral700'>
+                  <p>Video could not be loaded.</p>
+                  <button
+                    type='button'
+                    className='rounded border border-neutral700 px-4 py-2'
+                    onClick={retryVideo}
+                  >
+                    Retry video
+                  </button>
+                </div>
+              )}
             </div>
           ) : (
             <div

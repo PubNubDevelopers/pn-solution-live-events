@@ -98,12 +98,10 @@ export default function ChatWidget ({
       return ''
     }
 
-    const removeMentionsListener = chat.listenForEvents({
-      user: chat.currentUser.id,
-      type: 'mention',
-      callback: async evt => {
-        const channel = await chat.getChannel(evt.payload.channel)
-        const message = await channel?.getMessage(evt.payload.messageTimetoken)
+    const removeMentionsListener = chat.currentUser.onMentioned(
+      async mention => {
+        const channel = await chat.getChannel(mention.channelId)
+        const message = await channel?.getMessage(mention.messageTimetoken)
         userMentioned(
           `${message
             ?.getMessageElements()
@@ -111,7 +109,7 @@ export default function ChatWidget ({
             .join('')}`
         )
       }
-    })
+    )
 
     return () => {
       removeMentionsListener()
@@ -121,13 +119,11 @@ export default function ChatWidget ({
   useEffect(() => {
     if (!chat || !activeChannel) return
     updateActiveChannelRestrictions()
-    const removeModerationListener = chat.listenForEvents({
-      channel: `PUBNUB_INTERNAL_MODERATION.${chat.currentUser.id}`,
-      type: 'moderation',
-      callback: async evt => {
+    const removeModerationListener = chat.currentUser.onRestrictionChanged(
+      () => {
         updateActiveChannelRestrictions()
       }
-    })
+    )
 
     return () => {
       removeModerationListener()
@@ -276,7 +272,7 @@ export default function ChatWidget ({
 
       // Connect to channel to receive messages
 
-      unsubscribeMessages = channel.connect(async (message: Message) => {
+      unsubscribeMessages = channel.onMessageReceived(async (message: Message) => {
         setMessages(prevMessages => {
           // Check if message already exists
           const messageExists = prevMessages.some(

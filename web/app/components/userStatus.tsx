@@ -13,7 +13,7 @@ export default function UserStatus ({ chat, logout, currentScore }) {
     if (!chat) return
     if (!chat.currentUser) return
     setCurrentUser(chat.currentUser)
-    return chat.currentUser.streamUpdates(updatedUser => {
+    return chat.currentUser.onUpdated(updatedUser => {
       setCurrentUser(updatedUser)
     })
   }, [chat])

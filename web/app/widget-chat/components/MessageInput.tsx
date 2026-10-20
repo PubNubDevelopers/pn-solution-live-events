@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import { reactions } from '@/app/data/constants'
-import { User, MessageDraftV2, Channel } from '@pubnub/chat'
+import { User, MessageDraft, Channel } from '@pubnub/chat'
 import { useHover } from '@uidotdev/usehooks'
 import { Restriction } from '../chatWidget'
 import { actionCompleted } from 'pubnub-demo-integration'
@@ -35,11 +35,11 @@ export default function MessageInput ({
   const [suggestedUsers, setSuggestedUsers] = useState<User[]>([])
   const [mentionStartIndex, setMentionStartIndex] = useState(-1)
   const inputRef = useRef<HTMLInputElement>(null)
-  const messageDraftRef = useRef<MessageDraftV2 | null>(null)
+  const messageDraftRef = useRef<MessageDraft | null>(null)
 
   useEffect(() => {
     // Initialize message draft when component mounts
-    messageDraftRef.current = channel.createMessageDraftV2({
+    messageDraftRef.current = channel.createMessageDraft({
       userSuggestionSource: 'channel'
     })
 
@@ -132,7 +132,7 @@ export default function MessageInput ({
         }  
         setMessageInput('')
         // Create new message draft for next message
-        messageDraftRef.current = channel.createMessageDraftV2({
+        messageDraftRef.current = channel.createMessageDraft({
           userSuggestionSource: 'channel'
         })
       } catch (error) {

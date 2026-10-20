@@ -63,9 +63,9 @@ export default function ChatMessage ({
     const counts: Record<string, number> = {}
 
     if (message.reactions) {
-      Object.entries(message.reactions).forEach(([type, users]) => {
-        if (Array.isArray(users)) {
-          counts[type] = users.length
+      message.reactions.forEach(reaction => {
+        if (reaction.userIds.length > 0) {
+          counts[reaction.value] = reaction.userIds.length
         }
       })
     }

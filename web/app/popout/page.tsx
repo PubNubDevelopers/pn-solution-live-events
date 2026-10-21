@@ -29,7 +29,7 @@ export default function Page () {
     if (!chat) return
     if (!chat.currentUser) return
     setCurrentScore(Number(chat.currentUser.custom?.score) || 0)
-    return chat.currentUser.streamUpdates(updatedUser => {
+    return chat.currentUser.onUpdated(updatedUser => {
       if (updatedUser.custom?.score) {
         setCurrentScore(Number(updatedUser.custom.score) || 0)
       }

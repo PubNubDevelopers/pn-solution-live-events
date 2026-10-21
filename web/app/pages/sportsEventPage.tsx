@@ -43,7 +43,7 @@ export default function SportsEventPage ({
     if (!chat) return
     if (!chat.currentUser) return
     setCurrentScore(chat.currentUser.custom?.score ?? 0)
-    return chat.currentUser.streamUpdates(updatedUser => {
+    return chat.currentUser.onUpdated(updatedUser => {
       if (updatedUser.custom?.score) {
         //console.log('user has updated - setting score to ' + updatedUser.custom.score)
         setCurrentScore(updatedUser.custom.score)
